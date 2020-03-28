@@ -59,3 +59,7 @@ You are allowed to create commercial derivatives of this engine as long as you c
 (quick summary: GPLv3 means that if you distribute this or your own version of this engine, even for free, 
 you must also convey the entirety of the source code to the end users).
 If you need a more permissive license, please contact me directly.
+
+## Contacts and links
+
+You can contact me through [Twitter](https://twitter.com/AndreaDProjects) or the [Schwarzerblitz Discord Server](https://discord.gg/vXKrvpV).
