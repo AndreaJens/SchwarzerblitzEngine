@@ -26,14 +26,12 @@ not reach stable 60fps on older systems.
 - The only 3D model format that the engine can use for skeletal models (i.e. characters) is .x (directX skeletal mesh file) without normal maps. 
 - irrlicht is **not** multithread. Implementing multi-threading for resource loading has not been an option.
 
-## Requirements
+## Notes
 
 The engine uses a custom version of the [irrlicht engine](http://irrlicht.sourceforge.net/) (nicknamed Schwarzerlicht)
 as a rendering engine and input manager, and SFML 2.3.2 as a backend for audio. 
-This project needs [DirectX 9 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=8109) to run 
-and the files included can be used with Visual Studio 2019 (I cannot provide project files for previous versions).
-Some redistributable for older versions (e.g. [the 2015 redistributable](https://www.microsoft.com/it-it/download/details.aspx?id=48145) 
-might also be needed to run some of the DLLs included.
+This project can be run and compiled using Visual Studio 2017 or 2019 (I cannot provide project files for previous versions).
+Some redistributable for older versions might also be needed to run some of the DLLs included.
 Concerning the Schwarzerlicht engine, only headers and binaries are included in this repository. Please, contact
 me in case you want/need to have access to the source code.
 This engine runs only on Windows and uses some Windows-specific libraries and headers. No support for Unix system is scheduled.
