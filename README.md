@@ -34,7 +34,10 @@ This project can be run and compiled using Visual Studio 2017 or 2019 (I cannot 
 Some redistributable for older versions might also be needed to run some of the DLLs included.
 Concerning the Schwarzerlicht engine, only headers and binaries are included in this repository. Please, contact
 me in case you want/need to have access to the source code.
-This engine runs only on Windows and uses some Windows-specific libraries and headers. No support for Unix system is scheduled.
+
+This engine runs only on Windows and uses some Windows-specific libraries and headers. 
+The engine has been developed on Windows 10, but it could probably be adapted for development on Windows 8.1 or previous. 
+I cannot offer support for this porting, as I don't have access to the relevant SDK. Please, notice that no support for Unix system is provided or planned.
 
 ## Installation
 - Download and install the [DirectX 9 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=8109);
@@ -44,7 +47,7 @@ This engine runs only on Windows and uses some Windows-specific libraries and he
 - Switch the configuration to Release / Win32 (or Debug, in case of need to debug some features);
 - Compile and run the engine with the sample resources;
 - The executable is placed inside the schwarzerblitz_engine/bin directory;
-- While running in Debug mode, an additional terminal window displays some diagnostic messages;
+- While running in Debug mode, an additional terminal window displays some diagnostic messages.
 
 ## License
 Please, refer to the license files in the *license* folder, these contain all the needed details. Long story short: my code is released under a 
