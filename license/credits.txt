@@ -1,0 +1,144 @@
+..\bgm\title(atmosphere)_cut.ogg 80.0 1.0
+
+** Schwarzerblitz Fighting Game Engine
+
+** Credits
+
+-- Creator
+Andrea Demetrio
+
+** Development
+
+-- Game engine
+Irrlicht Engine - Copyright (C) 2002-2010 Nikolaus Gebhardt (http://irrlicht.sourceforge.net/)
+[the Irrlicht Engine is based in part on the work of the Independent JPEG Group, and includes also zlib and libpng]
+XEffects addon by Ahmed Hilali (http://irrlicht.sourceforge.net/forum/viewtopic.php?t=30631)
+Advanced 2D drawing function by user Lonesome Ducky (http://irrlicht.sourceforge.net/forum/viewtopic.php?t=32388)
+Engine fixes by Michael Zeilfelder
+Rain particle effect code inspired by user omaremad @irrlicht.sourceforge.net
+SFML audio libraries (https://www.sfml-dev.org/)
+
+__
+-- Lead programmer
+Andrea Demetrio
+__
+
+-- Q.A. Team
+Berks
+YellowSlotCar
+SkreamnRedSkull
+Yeszomi
+Taylor Sussex
+__
+
+** Graphics
+-- 3D models and animations
+Andrea Demetrio
+-- Textures
+Andrea Demetrio
+The Irrlicht team
+Entrance gate in "Delta Team Outpost", "Containment Breach", "Military Hospital", and "Unreal Military Hospital" by Joakim Oloffson, edited by Andrea Demetrio
+-- Stage Backgrounds
+Various Creative Commons Zero-licensed pictures from Pixabay and cliparts from openclipart.org
+The background for "Door to Heaven" is an original photo from user Spike at commons.wikimedia.org, released under Creative Commons Attribution-Share Alike 4.0 International, edited by Andrea Demetrio.
+-- Icons and logos
+Cliparts from openclipart.org, licensed under a Creative Commons Zero license
+-- Fonts
+Ethnocentric Regular, by Ray Larabie
+-- Menu background
+Joakim Oloffson, edited by Andrea Demetrio
+-- Story CG
+3D: all rendered scenes created by Andrea Demetrio
+2D: various Creative Commons Zero-licensed pictures from Pixabay and cliparts from openclipart.org, edited by Andrea Demetrio
+__
+Schwarzerblitz banner edited from a drawing by TheFresco Art - all rights reserved
+
+** Music and sound effects
+-- Sound effects
+"Splash" ring out effect: "Splash, Jumping, B.wav" by InspectorJ at Freesound.org - Licensed under a Creative Commons Attribution license.
+"Brass Band" Wally trumpet sound effect: "Tada2.mp3" by usinggarageband at Freesound.org - Licensed under a Creative Commons Attribution license.
+"Collect coin" sound effect: "8BIT_COIN_01.wav" by Mattias Lahoud at Freesound.org - Licensed under a Creative Commons Attribution license.
+"Crush" effect in Krave's arcade ending: "Destruction, Wooden, A.wav" by InspectorJ of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Gun click" effect in Renzo's arcade ending: "Weapons_Gun_Small_Reload_001.wav" by duckduckpony of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Crowd Cheering" effect in Evilobster's arcade ending: "cheer 01.wav" by tim.kahn of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Screeching brakes" effect in story episode "Hunting Ground": "Volkswagen Golf II 1.6 Diesel Exterior Brake Tyres Friction Medium Mono.wav" by Soundholder of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Car ignition" effect in story episode "Hunting Ground": "Car Ignition, Exterior, A.wav" by InspectorJ (www.jshaw.co.uk) of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Car startup and run" effect in story episode "Hunting Ground": "Car door close, engine start.wav" by FedeFrede of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Squeaky Toy" effect used in Mr. Daevka's arcade ending: "Dog Toy.wav" by FairhavenCollection of Freesound.org - Licensed under a Creative Commons Attribution license.
+"Camera snap" used in Free Camera Mode: "camera-snap1.wav" by thecheeseman of Freesound.org - Licensed under a Creative Commons Attribution license.
+__
+-- Stages
+All the tracks have been edited in order to make them loop properly as background music, in agreement with the license they were released under.
+All my remixes/loops of Creative Common licensed music are released under a Creative Commons Attribution-ShareAlike license, except the tracks which are not marked as released under a Creative Commons license in the following list.
+__
+-- the-loathing.exe
+"Muse" by I'm Eating People - Licensed under a  Creative Commons Attribution (3.0) license
+-- V.R. Panic
+"Artifice" by Nihilore - Licensed under a  Creative Commons Attribution (3.0) license
+-- Practice Room
+"Come On (Get Serious)!"  by SkreamnRedSkull (Richie Kamikaze) - used with permission, all rights reserved
+__
+__
+-- Menu music
+"The Beach (Original Mix)" by Astral (c) copyright 2015 - Licensed under a Creative Commons Attribution (3.0) license. http://dig.ccmixter.org/files/Astral/50472 Ft: Platinum Butterfly
+__
+-- Title screen music / Story dialogue music
+"Through the Atmosphere" by MindsEye & Dr. Rinkel - Licensed under a Creative Commons Attribution-ShareAlike license
+__
+-- Announcer
+Microsoft Zira voice synthesizer
+
+** Special Thanks
+Luca Demetrio - my brother and first beta tester
+The Irrlicht team - without which this game wouldn't have been possible
+The Irrlicht support forum and Facebook group - for all the pieces of advice and help
+Michael Zeilfelder - for the precise fixes to the irrlicht engine (I owe you one dinner!)
+Jim R. Hoyer/Studio Monty - for his unrivaled and cheerful support
+Alessandro Angioi - for his 144Hz full HD nuclear powered desktop beast (yes, power and FPS matter!)
+Edoardo Milano - my rival for 5 years, the man I owe my reason to start coding aggressively ;)
+Marco Gatti - one of my first faithful supporters
+Chris Mada - the YouTuber who made me see my game from outside (I owe you also one dinner!)
+Doc Brock J. Oliverio - for his energetic support, his fighting knowledge, and for sharing my game
+Teralon - following the game and commenting on GameJolt since the early days of the first March 2017 alpha
+CCMixter - unrivaled source of free music
+Soundcloud - for exactly the same reason!
+Blender foundation - because... well, because of Blender!
+Seiichi Ishii - because without him and his team, I could have never played "Tekken 2" at the local arcade!
+Katsuhiro Harada - because in his hands Tekken became even more marvelous!
+SourceTree and GitLab - GIT saved my life more than once
+Paint.NET - useful and versatile tool in any possible scenario
+Shoryuken - source of very useful information on fighting game basics
+Pixabay and openclipart.org - without which, I would have run short of logos and backgrounds
+GoodFGIdeas - for the idea the "unlock all" prompt for players who don't like unlocking content by grinding
+__
+The amazing Schwarzerblitz Twitter and Discord community - guys, without you I don't know what I would have done!
+In no particular order and for different reasons (game feedback, bug reports, streaming, fan arts, suggesting game mechanics and more):
+Elton Borges
+SkreamnRedSkull
+"Can you Wavedash?" Vawes
+TB Suzuka
+Marc D. Wyzomirski
+Kami
+Mourossonero
+Masked Green & Masked Red (Masked Hero Studios)
+Chaouki Titouhi
+Noxid
+Rolling Boy
+Todokete
+Kotarou
+Moruma
+SantaAzul
+"The TRUE combo master" Berks
+GrapplerGoddess
+Mearks
+Toast Hatter
+Yeszomi
+YellowSlotCar
+Shlocklin
+Shimatora
+Studio Monty
+Mao
+__
+** Thank you for playing
+-- copyright (C) - 2016-2020 Andrea Demetrio
+-- all rights reserved

@@ -1,0 +1,38 @@
+    
+
+    *** Schwarzerblitz 3D Fighting Game Engine  ***
+
+    =================== Source Code ===================
+    Copyright (C) 2016-2020 Andrea Demetrio
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+    =============== Additional Components ==============
+    Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+    indications concerning those components. The irrlicht-schwarzerlicht engine and 
+    the SFML code and binaries are subject to their licenses and are *not* released 
+    under GNU General Public License, version 3 or higher - they instead retain their
+    own license.
+
+    =============== Assets and resources ================
+    Unless specificed otherwise in the Credits file, the assets and resources
+    bundled with this engine are to be considered "all rights reserved" and 
+    cannot be redistributed without the owner's consent. This includes but it is 
+    not limited to the characters concepts / designs, the 3D models, the music, 
+    the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+    Tutorial Man, Evil Tutor, and Random: 
+    Copyright (C) 2016-2020 Andrea Demetrio - all rights reserved
+    
