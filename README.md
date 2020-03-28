@@ -3,7 +3,7 @@
 Schwarzerblitz ([link to GameJolt page](https://gamejolt.com/games/schwarzerblitz/242456)) is a 
 free (as in beer) 3D fighting game project built by me, Andrea "Jens" Demetrio, in the time spanning from 2016 to 2020.
 It was originally intended as a stress relief project, a hobby I curated while pursuing my Ph.D. in physics, 
-but with time it evolved into a full fledged game, which achieved a moderate success.
+but with time it evolved into a fully fledged game, which achieved a certain degree of success and a couple dedicated tourneys.
 Since now I am moving on to work on other projects, I have decided to publish the source code of the engine 
 under a [**GPLv3 license**](https://www.gnu.org/licenses/gpl-3.0.html), with the goal of sharing it with
 other developers who might be going down the same path and need a reference or just something to look up.
@@ -38,11 +38,21 @@ Concerning the Schwarzerlicht engine, only headers and binaries are included in 
 me in case you want/need to have access to the source code.
 This engine runs only on Windows and uses some Windows-specific libraries and headers. No support for Unix system is scheduled.
 
+## Installation
+- Download and install the [DirectX 9 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=8109);
+- Download and install the [Visual C++ 2015 redistributable](https://www.microsoft.com/it-it/download/details.aspx?id=48145);
+- Clone or download this repository;
+- Open the solution file with Visual Studio (schwarzerblitz_engine/Schwarzerblitz Engine.sln);
+- Switch the configuration to Release / Win32 (or Debug, in case of need to debug some features);
+- Compile and run the engine with the sample resources;
+- The executable is placed inside the schwarzerblitz_engine/bin directory;
+- While running in Debug mode, an additional terminal window displays some diagnostic messages;
+
 ## License
 Please, refer to the license files in the *license* folder, these contain all the needed details. Long story short: my code is released under a 
 [*GPLv3 license*](https://www.gnu.org/licenses/gpl-3.0.html), the irrlicht engine and SFML have their own
 licenses untouched, the assets (unless specified in the file *licens/credits.txt*) **cannot** be redistributed
-or uploaded in another repository - specifically, the characters, stage and music files - all rights are 
+or uploaded to another repository - specifically, the characters, stage and music files - all rights are 
 reserved to their respective creator and they have been used with permission.
 You are allowed to create commercial derivatives of this engine as long as you comply with the above license terms 
 (quick summary: GPLv3 means that if you distribute this or your own version of this engine, even for free, 
