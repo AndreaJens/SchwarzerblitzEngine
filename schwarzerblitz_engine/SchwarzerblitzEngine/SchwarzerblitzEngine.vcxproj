@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2EFEAF25-CDEA-49BD-8AD4-B08B07B7BA9E}</ProjectGuid>
+    <RootNamespace>FinalKombat2016</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>Schwarzerblitz Engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)..\SFML-2.3.2\include;$(SolutionDir)..\irrlicht\schwarzerlicht\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\SFML-2.3.2\lib;$(SolutionDir)..\irrlicht\schwarzerlicht\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
+    <TargetName>schwarzerblitz-engine-debug</TargetName>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)..\SFML-2.3.2\include;$(SolutionDir)..\irrlicht\schwarzerlicht\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\SFML-2.3.2\lib;$(SolutionDir)..\irrlicht\schwarzerlicht\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
+    <TargetName>Schwarzerblitz Engine v1.0</TargetName>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>sfml-system.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CShaderPre.cpp" />
+    <ClCompile Include="EffectHandler.cpp" />
+    <ClCompile Include="ExternalAddons.cpp" />
+    <ClCompile Include="FK_AIManager.cpp" />
+    <ClCompile Include="FK_AnimationEndCallback.cpp" />
+    <ClCompile Include="FK_AnimationKeyMap.cpp" />
+    <ClCompile Include="FK_Announcer.cpp" />
+    <ClCompile Include="FK_ArcadeCluster.cpp" />
+    <ClCompile Include="FK_Bullet.cpp" />
+    <ClCompile Include="FK_CharacterAdditionalObject.cpp" />
+    <ClCompile Include="FK_CharacterAdvancedTextures.cpp" />
+    <ClCompile Include="FK_CharacterMaterialShaderCallback.cpp" />
+    <ClCompile Include="FK_Cheat.cpp" />
+    <ClCompile Include="FK_SceneArcadeCutscene.cpp" />
+    <ClCompile Include="FK_SceneCharacterSelectExtra.cpp" />
+    <ClCompile Include="FK_CharacterStatistics_Struct.cpp" />
+    <ClCompile Include="FK_DatabaseAccessor.cpp" />
+    <ClCompile Include="FK_DialogueWindow.cpp" />
+    <ClCompile Include="FK_FreeMatchStatistics.cpp" />
+    <ClCompile Include="FK_HUDManager_font.cpp" />
+    <ClCompile Include="FK_InGameMenu.cpp" />
+    <ClCompile Include="FK_MoveListMove.cpp" />
+    <ClCompile Include="FK_MoveListPanel.cpp" />
+    <ClCompile Include="FK_Options.cpp" />
+    <ClCompile Include="FK_PixelShaderSceneGameCallback.cpp" />
+    <ClCompile Include="FK_PixelShaderStageCallback.cpp" />
+    <ClCompile Include="FK_Reward.cpp" />
+    <ClCompile Include="FK_SceneChallengeSelectionTutorial.cpp" />
+    <ClCompile Include="FK_SceneCharacterSelectArcade.cpp" />
+    <ClCompile Include="FK_SceneCharacterSelectExtra_ArcadeEnding.cpp" />
+    <ClCompile Include="FK_SceneCharacterSelectExtra_Diorama.cpp" />
+    <ClCompile Include="FK_SceneCharacterSelect_Base.cpp" />
+    <ClCompile Include="FK_SceneCredits.cpp" />
+    <ClCompile Include="FK_SceneDiorama.cpp" />
+    <ClCompile Include="FK_SceneEpisodeSelectionStoryMode.cpp" />
+    <ClCompile Include="FK_SceneExtra.cpp" />
+    <ClCompile Include="FK_SceneGallery.cpp" />
+    <ClCompile Include="FK_SceneGameArcade.cpp" />
+    <ClCompile Include="FK_SceneGameAttractMode.cpp" />
+    <ClCompile Include="FK_SceneGameFreeMatch.cpp" />
+    <ClCompile Include="FK_SceneGameStory.cpp" />
+    <ClCompile Include="FK_SceneGameTraining.cpp" />
+    <ClCompile Include="FK_SceneGameTraining_TrainingOptionsMenu.cpp" />
+    <ClCompile Include="FK_SceneGameTutorial.cpp" />
+    <ClCompile Include="FK_SceneInputMapping.cpp" />
+    <ClCompile Include="FK_SceneInputMapping_Joypads.cpp" />
+    <ClCompile Include="FK_SceneInputMapping_MultiplayerKeyboard.cpp" />
+    <ClCompile Include="FK_SceneInputMapping_SingleplayerKeyboard.cpp" />
+    <ClCompile Include="FK_SceneIntro.cpp" />
+    <ClCompile Include="FK_SceneMainMenu.cpp" />
+    <ClCompile Include="FK_SceneOptions.cpp" />
+    <ClCompile Include="FK_SceneOptionsEmbedded.cpp" />
+    <ClCompile Include="FK_SceneStoryDialogue.cpp" />
+    <ClCompile Include="FK_SceneTitle.cpp" />
+    <ClCompile Include="FK_ScrollTextWindow.cpp" />
+    <ClCompile Include="FK_SoundManager.cpp" />
+    <ClCompile Include="FK_BoneFileParser.cpp" />
+    <ClCompile Include="FK_Character.cpp" />
+    <ClCompile Include="FK_FollowupMove.cpp" />
+    <ClCompile Include="FK_Hitbox.cpp" />
+    <ClCompile Include="FK_InputBuffer.cpp" />
+    <ClCompile Include="FK_InputMapper.cpp" />
+    <ClCompile Include="FK_InputReceiver.cpp" />
+    <ClCompile Include="FK_Move.cpp" />
+    <ClCompile Include="FK_MoveFileParser.cpp" />
+    <ClCompile Include="FK_Pose.cpp" />
+    <ClCompile Include="FK_SceneCharacterSelect.cpp" />
+    <ClCompile Include="FK_SceneGame.cpp" />
+    <ClCompile Include="FK_SceneWithInput.cpp" />
+    <ClCompile Include="FK_Stage.cpp" />
+    <ClCompile Include="FK_StageAdditionalObject.cpp" />
+    <ClCompile Include="FK_StageFog.cpp" />
+    <ClCompile Include="FK_StageWeather.cpp" />
+    <ClCompile Include="FK_StoryFlowCluster.cpp" />
+    <ClCompile Include="FK_Tutorial.cpp" />
+    <ClCompile Include="FK_Window.cpp" />
+    <ClCompile Include="FK_WorldCollisionCallback.cpp" />
+    <ClCompile Include="Irrlicht_TMovie.cpp" />
+    <ClCompile Include="Main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="FK_SceneViewUpdater.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CScreenQuad.h" />
+    <ClInclude Include="CShaderPre.h" />
+    <ClInclude Include="EffectCB.h" />
+    <ClInclude Include="EffectHandler.h" />
+    <ClInclude Include="EffectShaders.h" />
+    <ClInclude Include="ExternalAddons.h" />
+    <ClInclude Include="FK_AIManager.h" />
+    <ClInclude Include="FK_AnimationEndCallback.h" />
+    <ClInclude Include="FK_AnimationKeyMap.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="FK_Announcer.h" />
+    <ClInclude Include="FK_ArcadeCluster.h" />
+    <ClInclude Include="FK_Bullet.h" />
+    <ClInclude Include="FK_CharacterMaterialShaderCallback.h" />
+    <ClInclude Include="FK_Cheat.h" />
+    <ClInclude Include="FK_SceneArcadeCutscene.h" />
+    <ClInclude Include="FK_SceneCharacterSelectExtra.h" />
+    <ClInclude Include="FK_CharacterStatistics_Struct.h" />
+    <ClInclude Include="FK_DatabaseAccessor.h" />
+    <ClInclude Include="FK_DialogueWindow.h" />
+    <ClInclude Include="FK_FreeMatchStatistics.h" />
+    <ClInclude Include="FK_HUDManager_font.h" />
+    <ClInclude Include="FK_InGameMenu.h" />
+    <ClInclude Include="FK_MoveListMove.h" />
+    <ClInclude Include="FK_MoveListPanel.h" />
+    <ClInclude Include="FK_PixelShaderSceneGameCallback.h" />
+    <ClInclude Include="FK_PixelShaderStageCallback.h" />
+    <ClInclude Include="FK_Reward.h" />
+    <ClInclude Include="FK_SceneChallengeSelectionTutorial.h" />
+    <ClInclude Include="FK_SceneCharacterSelectArcade.h" />
+    <ClInclude Include="FK_SceneCharacterSelectExtra_ArcadeEnding.h" />
+    <ClInclude Include="FK_SceneCharacterSelectExtra_Diorama.h" />
+    <ClInclude Include="FK_SceneCharacterSelect_Base.h" />
+    <ClInclude Include="FK_SceneDiorama.h" />
+    <ClInclude Include="FK_SceneEpisodeSelectionStoryMode.h" />
+    <ClInclude Include="FK_SceneExtra.h" />
+    <ClInclude Include="FK_SceneGallery.h" />
+    <ClInclude Include="FK_SceneGameArcade.h" />
+    <ClInclude Include="FK_SceneGameAttractMode.h" />
+    <ClInclude Include="FK_SceneGameFreeMatch.h" />
+    <ClInclude Include="FK_SceneGameStory.h" />
+    <ClInclude Include="FK_SceneGameTutorial.h" />
+    <ClInclude Include="FK_SceneInputMapping.h" />
+    <ClInclude Include="FK_SceneInputMapping_Joypads.h" />
+    <ClInclude Include="FK_SceneInputMapping_MultiplayerKeyboard.h" />
+    <ClInclude Include="FK_SceneInputMapping_SingleplayerKeyboard.h" />
+    <ClInclude Include="FK_SceneIntro.h" />
+    <ClInclude Include="FK_SceneMainMenu.h" />
+    <ClInclude Include="FK_SceneOptions.h" />
+    <ClInclude Include="FK_SceneOptionsEmbedded.h" />
+    <ClInclude Include="FK_SceneStoryDialogue.h" />
+    <ClInclude Include="FK_SceneTitle.h" />
+    <ClInclude Include="FK_ScrollTextWindow.h" />
+    <ClInclude Include="FK_SoundManager.h" />
+    <ClInclude Include="FK_Character.h" />
+    <ClInclude Include="FK_FollowupMove.h" />
+    <ClInclude Include="FK_Hitbox.h" />
+    <ClInclude Include="FK_InputBuffer.h" />
+    <ClInclude Include="FK_InputMapper.h" />
+    <ClInclude Include="FK_InputReceiver.h" />
+    <ClInclude Include="FK_Move.h" />
+    <ClInclude Include="FK_Database.h" />
+    <ClInclude Include="FK_Options.h" />
+    <ClInclude Include="FK_Pose.h" />
+    <ClInclude Include="FK_Scene.h" />
+    <ClInclude Include="FK_SceneCharacterSelect.h" />
+    <ClInclude Include="FK_SceneGame.h" />
+    <ClInclude Include="FK_SceneViewUpdater.h" />
+    <ClInclude Include="FK_MoveFileParser.h" />
+    <ClInclude Include="FK_BoneFileParser.h" />
+    <ClInclude Include="FK_SceneWithInput.h" />
+    <ClInclude Include="FK_Stage.h" />
+    <ClInclude Include="FK_StageAdditionalObject.h" />
+    <ClInclude Include="FK_StageFog.h" />
+    <ClInclude Include="FK_StageWeather.h" />
+    <ClInclude Include="FK_StoryFlowCluster.h" />
+    <ClInclude Include="FK_Tutorial.h" />
+    <ClInclude Include="FK_Window.h" />
+    <ClInclude Include="FK_WorldCollisionCallback.h" />
+    <ClInclude Include="FK_SceneGameTraining.h" />
+    <ClInclude Include="FK_SceneCredits.h" />
+    <ClInclude Include="Irrlicht_TMovie.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="XEffects.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="schw2.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

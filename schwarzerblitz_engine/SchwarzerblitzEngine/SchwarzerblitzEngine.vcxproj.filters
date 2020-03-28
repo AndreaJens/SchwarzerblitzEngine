@@ -1,0 +1,526 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="File di origine">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="File di intestazione">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="File di risorse">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="File di origine\Shaders">
+      <UniqueIdentifier>{b0f487f9-b732-4905-a77a-70aeb0a58d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Shaders">
+      <UniqueIdentifier>{72933d95-c443-41b1-b3d7-edf4adf94a5b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CShaderPre.cpp">
+      <Filter>File di origine\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectHandler.cpp">
+      <Filter>File di origine\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_InputBuffer.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_InputMapper.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneViewUpdater.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Hitbox.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_MoveFileParser.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Move.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_FollowupMove.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Character.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_BoneFileParser.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Pose.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_InputReceiver.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGame.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_WorldCollisionCallback.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Window.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="ExternalAddons.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Stage.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCharacterSelect.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneWithInput.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_AnimationKeyMap.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_AIManager.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Announcer.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_AnimationEndCallback.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SoundManager.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Bullet.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_StageAdditionalObject.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneMainMenu.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_PixelShaderSceneGameCallback.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Options.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneOptions.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_InGameMenu.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_MoveListPanel.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_MoveListMove.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_HUDManager_font.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_FreeMatchStatistics.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameTraining.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameArcade.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCharacterSelectArcade.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_ArcadeCluster.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneInputMapping.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneInputMapping_SingleplayerKeyboard.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneInputMapping_MultiplayerKeyboard.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_StageFog.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCredits.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneInputMapping_Joypads.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Tutorial.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneIntro.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneTitle.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_CharacterStatistics_Struct.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Reward.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_StageWeather.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_DialogueWindow.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneStoryDialogue.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_StoryFlowCluster.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameStory.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneEpisodeSelectionStoryMode.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_CharacterAdditionalObject.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameTutorial.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCharacterSelect_Base.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_CharacterMaterialShaderCallback.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_CharacterAdvancedTextures.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameFreeMatch.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneChallengeSelectionTutorial.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameTraining_TrainingOptionsMenu.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_DatabaseAccessor.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_PixelShaderStageCallback.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneDiorama.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneExtra.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCharacterSelectExtra.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_ScrollTextWindow.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGallery.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCharacterSelectExtra_Diorama.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneCharacterSelectExtra_ArcadeEnding.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneArcadeCutscene.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Irrlicht_TMovie.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_Cheat.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneGameAttractMode.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneOptionsEmbedded.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FK_Character.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Move.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Hitbox.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="CScreenQuad.h">
+      <Filter>File di intestazione\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderPre.h">
+      <Filter>File di intestazione\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectCB.h">
+      <Filter>File di intestazione\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectHandler.h">
+      <Filter>File di intestazione\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectShaders.h">
+      <Filter>File di intestazione\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="XEffects.h">
+      <Filter>File di intestazione\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_InputBuffer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_InputMapper.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Database.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneViewUpdater.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_MoveFileParser.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_FollowupMove.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_BoneFileParser.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Pose.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_InputReceiver.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Scene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGame.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_WorldCollisionCallback.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Window.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Options.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="ExternalAddons.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Stage.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCharacterSelect.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneWithInput.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_AnimationKeyMap.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_AIManager.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Announcer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_AnimationEndCallback.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SoundManager.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Bullet.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_StageAdditionalObject.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneMainMenu.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_PixelShaderSceneGameCallback.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneOptions.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_InGameMenu.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_MoveListPanel.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_MoveListMove.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_HUDManager_font.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_FreeMatchStatistics.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGameTraining.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGameArcade.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCharacterSelectArcade.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_ArcadeCluster.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneInputMapping.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneInputMapping_SingleplayerKeyboard.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneInputMapping_MultiplayerKeyboard.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_StageFog.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCredits.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneInputMapping_Joypads.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Tutorial.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneIntro.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneTitle.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_CharacterStatistics_Struct.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Reward.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_StageWeather.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_DialogueWindow.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneStoryDialogue.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_StoryFlowCluster.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGameStory.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneEpisodeSelectionStoryMode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGameTutorial.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCharacterSelect_Base.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_CharacterMaterialShaderCallback.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGameFreeMatch.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneChallengeSelectionTutorial.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_DatabaseAccessor.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_PixelShaderStageCallback.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneDiorama.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneExtra.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCharacterSelectExtra.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_ScrollTextWindow.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneArcadeCutscene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGallery.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCharacterSelectExtra_Diorama.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneCharacterSelectExtra_ArcadeEnding.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Irrlicht_TMovie.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_Cheat.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneGameAttractMode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneOptionsEmbedded.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc">
+      <Filter>File di risorse</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="schw2.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
