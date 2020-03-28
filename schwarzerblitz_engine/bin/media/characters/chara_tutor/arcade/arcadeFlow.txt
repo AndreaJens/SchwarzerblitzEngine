@@ -1,0 +1,6 @@
+** ending **
+
+** climatic battle **
+
+#CLIMATIC_BATTLE_OPPONENT chara_dummy 0
+#CLIMATIC_BATTLE_STAGE vrTestGround

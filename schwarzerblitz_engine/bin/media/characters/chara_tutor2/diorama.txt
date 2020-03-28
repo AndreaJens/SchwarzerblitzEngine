@@ -1,0 +1,23 @@
+#stage
+vrTestGround\
+
+#character_camera
+45 30 10 5
+
+#character_info
+3
+-
+1.78m
+16PB
+Zero Day Exploit
+Photon Wave
+Virtual Machine Galore
+#character_info_end
+
+#profile
+Tutorial Man is a virtual entity created by combining data from several fighters. He's an advanced AI loaded on the computers of the Delta Base and used as a VR training companion for whoever needs to hone their skills.
+Tutorial Man is no living being, despite sometimes acting like one, and has a pre-programmed "teacher" personality which makes him consider anyone who's connected to the terminal as his pupil.
+He's intimately connected with the fabric of his own virtual world and can alter its appearance at will, reproducing several different places in the world, based on images and videos downloaded from the Internet.
+It is rumored that when the VR machine is not used, he's actually simulating fights with a range of different opponents, based on real-life fighters the Delta Team has faced or encountered.
+It's hard to say if he really "feels" anything, but one can't avoid to notice how proud his voice becomes whenever his pupils overcome one of his trials.
+#profile_end

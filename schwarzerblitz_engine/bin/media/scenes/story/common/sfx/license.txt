@@ -1,0 +1,33 @@
+*explosion.ogg*
+tommcann - explosion-01.wav CC0 / freesound.org
+
+*chime.ogg*
+skowm001 - 1-tone-chime.wav CC-BY-4.0 / freesound.org
+
+*static.ogg / static_short.ogg*
+jace - static.wave CC0 / freesound.org
+
+*thud.ogg*
+newagesoup punch-boxing-01.wav CC0 / freesound.org
+
+*clock_alarm.ogg*
+kwahmah-02 five-beeps.wav CC-By-4.0 / freesound.org
+
+*talkie.ogg*
+inequation walkietalkie-eot.wav CC-BY-4.0 / freesound.org
+
+*quake.ogg*
+el-bee landmass-earth-rumble.wav CC-BY-4.0 / freesound.org
+
+*phone.ogg*
+knufds ringtone-startac-cellphone.wave CC0 / freesound.org
+
+*cordless.ogg*
+cbakos cordless-phone-ring CC-BY-4.0 / freesound.org
+
+*beep1.ogg*
+plingativator phone-beeps.wav CC-BY-4.0 / freesound.org
+
+*lava_fizz.ogg*
+(used in Melting Point)
+jwsoundfoley open-24oz-soda-bottle-outdoors-long-fizz-explode CC0 / freesound.org

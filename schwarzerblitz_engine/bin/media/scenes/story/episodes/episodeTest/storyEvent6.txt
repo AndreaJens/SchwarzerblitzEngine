@@ -1,0 +1,268 @@
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+About two hours later
+#TEXT_END
+#CLOSE_WINDOW
+#PAUSE 600
+#END
+
+#TRANSITION cg\black.jpg 300
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+Okay, Blade, where are we putting these crates?
+#TEXT_END
+#STAGE_BACKGROUND docks\
+#PAUSE 600
+#BGM
+tension.ogg
+60.0
+1.0
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Leave them there. We have to wait for the ship. It looks like the Werza is late.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+Do you think we'll have problems with the border police?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Recently, they started being really annoying. I just hope Lady Luck is on our side, today.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+At least we have the lobster.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALAGALAGALASH!
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\ko.ogg
+100
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+Uh, yeah. Whatever.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Hey, you! Stop right there!
+#TEXT_END
+#PAUSE 600
+#CLOSE_WINDOW
+#BGM
+tension.ogg
+0.0
+1.0
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Are you speaking to me, Mister?
+#TEXT_END
+#TRANSITION cg\white.jpg 300
+#BACKGROUND cg\cg_docks1.jpg
+#PAUSE 600
+#BGM
+..\..\..\..\stages\docks\music\bgmCut.ogg
+35.0
+1.0
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Who are you? What's your business here?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+A sparrow whistled something about a night ride to Ireland. In which case, I would be interested in taking part to.
+#TEXT_END
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Who told you that?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Sorry, this is classified information. I don't want to put my informant in danger.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+And now, let's talk about business, since you asked. Would you allow me on your ship, provided I pay you a fee?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+You could be a cop. Or, worse, a saboteur. In both cases, you aren't welcome.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks1.jpg 300
+#BACKGROUND cg\cg_docks2.jpg
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+And what if I'm really a genuine customer? A customer who could... well, let's say, send a nice picture to the police right now? Something like a selfie with three fishfaces and a smuggled cargo, together with coordinates?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Listen, I'm not tender with whistleblowers. I'm pretty patient, but you are crossing the line.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+What if we make a deal? You give me a ride, I forget about what I saw.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks2.jpg 300
+#BACKGROUND cg\cg_docks1.jpg
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Oh, you'll forget that for sure. Don't believe that you'd be the first corpse to rest on the sand down there.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALAGALAGALASH!
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\ko.ogg
+100
+1.0
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks1.jpg 300
+#BACKGROUND cg\cg_docks2.jpg
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Then, unleash the lobster, Mr.~ Aural. I promise not to harm him too much. After all, I already ate two of them for dinner.
+#TEXT_END
+#BGM
+tension.ogg
+0.0
+1.0
+#END
+
+#TRANSITION cg\cg_docks2.jpg 300
+#BACKGROUND cg\cg_docks2b.jpg
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGA???
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\flight.ogg
+100
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Wait! Are you crazy?! Don't taunt him, for Poseidon's sake! He will...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+They were delicious. It was a real pleasure to see them getting boiled in the hot water, while they were still...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks2b.jpg 300
+#BACKGROUND cg\cg_docks2c.jpg
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALASH!!!!!
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\flight.ogg
+100
+1.0
+#BGM
+..\\..\\..\\..\\stages\\cage\\music\wreckit.ogg
+80.0
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALAGALAGALASH!!!!
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\ko.ogg
+100
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+No! Stop that! Don't listen! Don't...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks2c.jpg 300
+#BACKGROUND cg\cg_docks2d.jpg
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALAGALAGALASH!!!!
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\ko.ogg
+100
+1.0
+#PAUSE 600
+#END

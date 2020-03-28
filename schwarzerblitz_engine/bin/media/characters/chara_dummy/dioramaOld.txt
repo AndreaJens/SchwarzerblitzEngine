@@ -1,0 +1,19 @@
+#stage
+vrTestGround\
+
+#character_camera
+45 30 10 5
+
+#character_info
+#/&%$$$
+*-+++/
+££"!%€@
+//&(%$
+*-/)=?^
+#character_info_end
+
+#profile
+A glitch in the cyberspace who got animated and took the shape of a big question mark on a 3D floating cube. Random doesn't speak, doesn't eat, doesn't sleep. It is debatable if it is also not thinking, but since it shows an aggressive behavior against whoever approaches it, it is safe to assume that it has a sort of instinct.
+Random is anyway an anomaly that could alter the fabric of reality itself. Direct contact must be avoided at all cost.
+(4th wall breaking note: Random has glitchy hitboxes, glitchy hurtboxes and invisible limbs. Play him at your own risk or to play a prank on some of your friends who does not know about it being selectable!)
+#profile_end

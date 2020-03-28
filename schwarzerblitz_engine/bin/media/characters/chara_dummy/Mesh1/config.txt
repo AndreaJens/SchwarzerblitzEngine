@@ -1,0 +1,3 @@
+#MESH_FILENAME rotatingCubeRandom.x
+#OUTFIT_NAME Lemon_Yellow
+#AVAILABLE_FROM_START 1

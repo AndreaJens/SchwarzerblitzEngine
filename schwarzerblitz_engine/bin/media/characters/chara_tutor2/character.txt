@@ -1,0 +1,47 @@
+#NAME Evil_Tutor
+#SHORTNAME Evil_Tutor
+#BACKFACECULLINGOFF
+#AI_TYPE luchador
+#HIT_SFX hitEffect2.png
+#HIT_SFX_TRIGGER hitTrigger2.png
+#MOVESFILE moves.txt
+#BONESFILE bones.txt
+#HITBOXFILE hitboxes.txt
+#HURTBOXFILE hurtboxes.txt
+#LIFE 250.0
+#WEIGHT 75.0
+#WALKSPEED 60.0
+#JUMPSPEED 10.0
+/* from here one, the basic poses for the character are defined (start frame - end frame) */
+#STANCE TigerStanceUpdated 0 38
+#WALKING walkFast 0 14
+#RUNNING running 0 10
+#SIDESTEP sidestepFast 0 10
+#STANDGUARD guard 0 4
+#CROUCHGUARD lowStanceGuard 0 4
+#CROUCHING crouching 0 5
+#LOWSTANCE lowStanceNew 0 22
+#HITHIGHWEAKFRONT reaction_HitWeakHigh 0 4
+#HITMEDWEAKFRONT  reaction_HitWeakMedium 0 4
+#HITLOWWEAKFRONT  reaction_HitWeakMedium 0 4
+#HITHIGHWEAKBACK  reaction_HitWeakMedium 0 4
+#HITMEDWEAKBACK   reaction_HitWeakMediumBack 0 4
+#HITLOWWEAKBACK   reaction_HitWeakMediumBack 0 4
+#HITMEDSTRONG    reaction_hitStrongMid 0 13
+#HITMEDSTRONGBACK    reaction_hitStrongHigh 0 13
+#HITLOWSTRONG    reaction_hitStrongMid 0 13
+#HITLOWSTRONGBACK    reaction_hitStrongMid 0 13
+#HITHIGHSTRONG    reaction_hitStrongHigh 0 13
+#HITHIGHSTRONGBACK    reaction_hitStrongMid 0 13
+#HITFLIGHTSTRONG    reaction_heavyHitAirRevolt 0 8
+#HITFLIGHTSTRONGBACK    reaction_heavyHitAirRevoltBack 0 8
+#WAKEUP wakeUpAnimation 0 8
+/* Here, one should list medium and low reactions for heavy hits - still work in progress */
+#GROUNDEDSUPINE  supine 0 6
+#GROUNDEDPRONE  proneRotation 0 0
+#GROUNDEDSUPINEROTATION proneRotation 0 9
+#GROUNDEDPRONEROTATION proneRotation 0 9
+#SUPINELANDING reaction_landing 0 5
+#WINPOSE TigerWinPose 0 74
+#INTRO TigerIntroPose2 0 49
+#JUMPING jump2 0 13

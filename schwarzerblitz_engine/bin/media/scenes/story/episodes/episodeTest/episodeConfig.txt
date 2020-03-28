@@ -1,0 +1,20 @@
+#EPISODE_NAME
+Faceless in the Crowd
+#DESCRIPTION
+Johnson is like a ghost: he has no past and his 
+real name was forgotten long ago. 
+But his resolution has never faded away. Nor his 
+connection to the "Black Lightning Disaster".
+#DESCRIPTION_END
+#EVENT storyEvent0
+#EVENT storyEvent1
+#MATCH storyMatch0
+#EVENT storyEvent2
+#EVENT storyEvent3
+#EVENT storyEvent4
+#MATCH storyMatch1
+#EVENT storyEvent5
+#EVENT storyEvent6
+#MATCH storyMatch2
+#EVENT storyEvent7
+#EVENT storyEvent8

@@ -1,0 +1,209 @@
+#CHARA_MUGSHOT chara_johnson\
+#BACKGROUND cg\cg_river2a.jpg
+#TEXT_BEGIN
+So, Mr.~ Rubecca? Is it everything fine, now?
+#TEXT_END
+#PAUSE 600
+#BGM
+..\\..\\..\\..\\stages\\strasbourg\\music\fast_accordion.ogg
+50.0
+0.9
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+Okay, okay! Time up! Time up!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I can't hear you. Were you saying anything?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+S... stop! That hurts! Damn, what are your heels made up of?!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Learn a bit of respect, you idiot. I'm sick of scum like you telling me "You ruined my life!~ You are the bad guy!" and so on and so forth.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+You used a certain name before. You called me "Mr.~ Schwarzer Blitz", am I wrong?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+I... I'll only speak in presence of my lawyer.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_river2a.jpg 300
+#BACKGROUND cg\cg_river2b.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Do you know that the channel here is quite deep? I wonder how many days would pass, before someone found a corpse...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Accidents happen. People disappear. It's a sad world.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+W... wait! Okay, no more jokes! I speak! Lo giuro!
+#TEXT_END
+#PAUSE 600
+#END
+
+
+#TRANSITION cg\cg_river2b.jpg 300
+#BACKGROUND cg\cg_river2a.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Answer my questions! How did you find me, youngster?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+I was looking for a man without face. I just happened to find information on you, Johnson.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+How are you connected to Euterpe?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+My brother died there. I want to understand why. The only thing I knew was... to look for a faceless guy.
+And my informants... they say that they saw a guy like that recently, in Northern Algol.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+I arrived here yesterday, wanted to get there... but, then, I saw you.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_river2a.jpg 300
+#BACKGROUND cg\cg_river2b.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I've never been to that scary place, you know? The one you look for, the one who did that... I'm also looking for him.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+He ruined my life as well.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+How can I believe you?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_river2b.jpg 300
+#BACKGROUND cg\cg_river2a.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Do you think that I would have left you alive, if I were him?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I'm not him, kid. And now, it's time to do something for this hot weather. You know how to swim, right?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+W...?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_river2a.jpg 300
+#BACKGROUND cg\cg_river3.jpg
+#SOUND
+splash.ogg
+100
+1.0
+#AUTO
+#NO_BACKGROUND
+#TEXT_BEGIN
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+WAAAAH! You bastard!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I hope we won't meet anytime soon, Mr.~ Rubecca. In any case, thank you for the precious information.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I will make good use of it.
+#TEXT_END
+#PAUSE 600
+#END

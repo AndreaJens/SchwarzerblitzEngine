@@ -1,0 +1,891 @@
+#CHARACTER chara_tutor 0
+#OPPONENT chara_tutor 1
+#STAGE vrTestGround
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Welcome to this VR simulation! I'm Tutorial Man and I'm here to guide you through the game basics!
+#MESSAGE_END
+#MESSAGE_BEGIN
+I've been built by putting together datasets from several fighters, so my moveset is precisely crafted for the task of showing you all the features you ought to know to play.
+#MESSAGE_END
+#MESSAGE_BEGIN
+During this tutorial you'll have to move a lot through the stage.
+#MESSAGE_END
+#MESSAGE_BEGIN
+In case you lock yourself in some strange situation which prevents you from proceeding, press BACK (SELECT) on the joypad or BACKSPACE to reset the position of the characters.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE movementFWD 
+N 60.0
+#TYPE_END
+#MESSAGE_BEGIN
+Let's start with the basics, and - more specifically - with movement. You have to learn to manage space, if you want to win a match.
+#MESSAGE_END
+#MESSAGE_BEGIN
+You can freely move inside the arena by using UP, DOWN, LEFT, RIGHT or any diagonal combination. These controls are mapped by the direction arrows by default, both on a joypad or on the keyboard.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Use LEFT or RIGHT to control the distance between you and your opponent, UP or DOWN to sidestep and flank him. Now, it's your turn: follow the HINTS displayed at the bottom of the screen and move your character!
+#MESSAGE_END
+#HINT
+Move towards the opponent
+#INPUT
+H6
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE movementBKW 
+N 150.0
+#TYPE_END
+#HINT
+Move away from the opponent
+#INPUT
+H4
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE movementSide
+N -0.8
+N 0.02
+#TYPE_END
+#HINT
+Move around the stage, using UP or DOWN
+#INPUT
+H2 0 H8
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Perfect! Managing the space between you and your opponent is one of the keys to your victory!
+#MESSAGE_END
+#MESSAGE_BEGIN
+It looks like you are learning fast. It's time to move on to the remaining basic stances.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE crouch
+N 1000
+#TYPE_END
+#MESSAGE_BEGIN
+As you can freely move in the arena, you can also crouch and jump. These action require you to input a direction while you keep the GUARD button pressed. The GUARD button default is the D key for the keyboard and the A button on a joypad.
+#MESSAGE_END
+#MESSAGE_BEGIN
+In order to crouch, you have to press the DOWN button while the GUARD button is pressed. You can stop pressing GUARD when you have crouched and you remain in the stance as long as you keep DOWN pressed.
+#MESSAGE_END
+#MESSAGE_BEGIN
+In order to jump, press either UP, UP + RIGHT, or UP + LEFT while you keep GUARD pressed. You can release the GUARD button when the jump starts.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Now, follow the hints and try it out!
+#MESSAGE_END
+#HINT
+Crouch and remain crouched for one second
+#INPUT
+2 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE jump
+N 1
+S stand
+#TYPE_END
+#HINT
+Perform a standing jump
+#INPUT
+8 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE jump
+N 1
+S forward
+#TYPE_END
+#HINT
+Perform a forward jump
+#INPUT
+9 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE jump
+N 1
+S back
+#TYPE_END
+#HINT
+Perform a backward jump
+#INPUT
+7 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Perfect! Let's move on to some other movement maneuvers!
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE backstep
+S BackStep
+N 3
+#TYPE_END
+#MESSAGE_BEGIN
+Sometimes, instead of rushing against the enemy, you could need to quickly retreat. One way to do this is the so-called BACKDASH.
+#MESSAGE_END
+#MESSAGE_BEGIN
+The BACKDASH is a universal move which is available to all characters. You can perform it by quickly tapping LEFT two times (mirror as usual when on right side).
+#MESSAGE_END
+#MESSAGE_BEGIN
+During the starting frames of a backdash, you are invincible. This means that you can use it to avoid some really damaging attacks, if you time it right!
+#MESSAGE_END
+#HINT
+Backdash 3 times
+#INPUT
+4 4
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE run
+N 750
+#TYPE_END
+#MESSAGE_BEGIN
+Sometimes, instead, you need to rush fast. And when I mean fast, I mean REALLY fast. In that case, you just have to press RIGHT two times and keep RIGHT pressed (mirror the input if you are on the other side).
+#MESSAGE_END
+#MESSAGE_BEGIN
+Doing so, you will start running towards your opponent. Now, move far away from them and rush!
+#MESSAGE_END
+#HINT
+Run towards your opponent, starting from afar
+#INPUT
+6 H6
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+We cleared up the basic movements. Now, what about some pummeling?
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Left_Jab
+#TYPE_END
+#MESSAGE_BEGIN
+Every character has two basic attacks: PUNCH and KICK. These can be combined with direction buttons to create new combinations or unleash more powerful attacks.
+#MESSAGE_END
+#MESSAGE_BEGIN
+You can check the available combinations at any time in the Pause Menu (default: ESC key / START button).
+#MESSAGE_END
+#MESSAGE_BEGIN
+Now, let's start with punches! Hit your opponent with all the punch-based attack shown in the HINTS! The default PUNCH button is W key on a keyboard / Y button on a joypad.
+#MESSAGE_END
+#MESSAGE_BEGIN
+If you see a direction in the input, remember that you have to press the direction and then the PUNCH button while the direction is kept pressed. LEFT and RIGHT have to be mirrored, if you switch side with the opponent.
+#MESSAGE_END
+#HINT
+Hit the opponent with a neutral punch (no direction input)
+#INPUT
+P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Right_Left_Punch
+#TYPE_END
+#HINT
+Hit your opponent (keep FORWARD pressed and press PUNCH two times)
+#INPUT
+6 + P 0 P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Gyaku_Zuki_Combo3
+#TYPE_END
+#HINT
+Hit your opponent (keep DOWN pressed and press PUNCH)
+#INPUT
+2 + P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Jump_Punch
+#TYPE_END
+#HINT
+Hit your opponent (jump, then press the PUNCH button while falling)
+#INPUT
+9 + G P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S CrouchingPunch
+#TYPE_END
+#HINT
+Hit your opponent (crouch, keep DOWN pressed, release GUARD and then press the PUNCH)
+#INPUT
+2 + G P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Quick_Kick
+#TYPE_END
+#MESSAGE_BEGIN
+Time to kick your opponent's back! The KICK button is assigned by default to the A key on a keyboard or the X button on a joypad.
+#MESSAGE_END
+#MESSAGE_BEGIN
+As usual, follow the the HINTS and hit your opponent hard!
+#MESSAGE_END
+#HINT
+Hit the opponent with a neutral kick (no direction input)
+#INPUT
+K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Heavy_Kick
+#TYPE_END
+#HINT
+Hit your opponent (keep BACKWARD pressed and press KICK)
+#INPUT
+4 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Cartwheel_kick
+#TYPE_END
+#HINT
+Hit your opponent (keep DOWN and FORWARD pressed and press KICK)
+#INPUT
+3 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S WaveSweeper
+#TYPE_END
+#HINT
+Hit your opponent (keep DOWN and BACKWARD pressed and press KICK)
+#INPUT
+1 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE specific
+N 1
+S Rotary_Kick
+#TYPE_END
+#HINT
+Hit your opponent (while running, press KICK while keeping RIGHT pressed)
+#INPUT
+6 H6 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+You may have noticed the flag showing up while hitting your opponent. These flags tell you (only in training mode) if the attack which connected was LOW, MID or HIGH.
+#MESSAGE_END
+#MESSAGE_BEGIN
+HIGH attacks can't hit CROUCHED opponents, while LOW attacks are ineffective against JUMPING opponents.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Before focusing on the defense, let's spend a couple words on CHAIN. Most of the attacks can be chained together, forming a CHAIN. A CHAIN is not guaranteed to hit with all the moves, but can be used to apply pressure on the opponent.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Every characters has their own chains. Be sure to check them in the movelist.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Axe_Kick
+S Axe_Kick
+S Heavy_Kick
+S RoundhouseLow_Followup
+#TYPE_END
+#MESSAGE_BEGIN
+Now, what about trying out some strings? Remember that you can have to input the next move before the first one is concluded!
+#MESSAGE_END
+#HINT
+Hit the opponent with the chain
+#INPUT
+8 + K 0 4 + K 0 4 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Right_Punch_Combo
+S Right_Left_Punch
+S Gyaku_Zuki_Combo2 
+#TYPE_END
+#HINT
+Hit the opponent with the chain
+#INPUT
+6 + P 0 P 0 P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Right_Punch_Combo
+S Right_Left_Punch
+S Right_Left_Punch_Kick
+#TYPE_END
+#HINT
+Hit the opponent with the chain
+#INPUT
+6 + P 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Left_Jab
+S Dual_Punch
+S Cartwheel_kick
+S Rotary_Kick
+#TYPE_END
+#HINT
+Hit the opponent with the chain
+#INPUT
+P 0 P 0 3 + K 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE guard
+N 55
+N 1000
+S Right_Punch_Combo
+S Right_Left_Punch
+S Right_Left_Punch_Kick
+#TYPE_END
+#MESSAGE_BEGIN
+It seems you are mastering attack... but what about defense?
+#MESSAGE_END
+#MESSAGE_BEGIN
+As you may remember, by keeping GUARD pressed you can defend yourself from your opponent's assault.
+#MESSAGE_END
+#MESSAGE_BEGIN
+A standing guard (i.e. only GUARD pressed) will protect you against HIGH and MID attack, while a crouching GUARD (DOWN + GUARD) will protect you from LOW attacks.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Notice that a MID attack will crush your crouching guard, no matter what.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Now, use what you learned to guard all of your opponent attacks! Remember to shift your guard from standing to crouching when the opponent delivers a low attack, and vice versa!
+#MESSAGE_END
+#INPUT
+G
+#INPUT_END
+#HINT
+Guard against all of your opponent attacks
+#PHASE_END
+
+
+#PHASE
+#TYPE guard
+N 55.0
+N 1000.0
+S Gyaku_Zuki_Combo3
+S WaveSweeper
+S RoundhouseLow_Followup
+#TYPE_END
+#INPUT
+2 + G
+#INPUT_END
+#HINT
+Guard against all of your opponent attacks
+#PHASE_END
+
+#PHASE
+#TYPE guard
+N 60.0
+N 1000.0
+S Quick_Kick
+S Heavy_Kick
+S RoundhouseLow_Followup
+#TYPE_END
+#INPUT
+G 0 2 + G
+#INPUT_END
+#HINT
+Guard against all of your opponent attacks
+#PHASE_END
+
+#PHASE
+#TYPE guard
+N 60.0
+N 1000.0
+S CrouchingKick
+S Cartwheel_kick
+S Rotary_Kick
+#TYPE_END
+#INPUT
+2 + G 0 G
+#INPUT_END
+#HINT
+Guard against all of your opponent attacks
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+You've learned how to guard, as I can see. Good!
+#MESSAGE_END
+#PHASE_END
+
+
+#PHASE
+#TYPE specific
+N 1
+S TW_KneeBash
+#TYPE_END
+#MESSAGE_BEGIN
+Actually, not all the attacks can be guarded. There is a specific class of attacks - named THROWS - which beat the guard.
+#MESSAGE_END
+#MESSAGE_BEGIN
+To perform a throw, you should press the TECH button without any directional input. The default is S key on a keyboard / B button on a joypad.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Some characters can chain throws after attacks. Try both combinations!
+#MESSAGE_END
+#INPUT
+T
+#INPUT_END
+#HINT
+Throw your opponent
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S WaveSweeper
+S TW_KneeBash_CRC
+#TYPE_END
+#INPUT
+1 + K 0 T
+#INPUT_END
+#HINT
+Throw your opponent after the combo (hit with every attack)
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Right_Punch_Combo
+S Right_Left_Punch
+S Gyaku_Zuki_Combo2 
+S TW_KneeBash_CRC
+#TYPE_END
+#INPUT
+6 + P 0 P 0 P 0 T
+#INPUT_END
+#HINT
+Throw your opponent after the combo (hit with every attack)
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Remember that - as powerful throws may be - they can't be used on an attacking opponent. You have to choose the timing well, if you want them to connect.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE throw
+N 55
+N 1000
+N 3
+S Throw
+#TYPE_END
+#MESSAGE_BEGIN
+Moreover, throws can be escaped by pressing an input just after being caught by one. The default input is TECH, but certain throws have different escape inputs - and certain have none at all.
+#MESSAGE_END
+#MESSAGE_BEGIN
+As a concrete example, Evilobster's command throws have to be guarded like a normal attack.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Now, what about trying to escape a throw? Wait for the opponent to start the attack, then press TECH while he's grabbing you. If the camera angle changes, is already too late!
+#MESSAGE_END
+#MESSAGE_BEGIN
+As an additional hint, try to press the button as soon as you hear the "swing" noise when the opponent starts moving.
+#MESSAGE_END
+#INPUT
+T
+#INPUT_END
+#HINT
+Press the input to escape the throw 3 times
+#PHASE_END
+
+#PHASE
+#TYPE throw
+N 55
+N 2000
+N 3
+S WaveSweeper
+S Right_Punch_Throw_CRC
+#TYPE_END
+#INPUT
+T
+#INPUT_END
+#HINT
+Press the input to escape the throw 3 times (right after the low kick)
+#PHASE_END
+
+#PHASE
+#TYPE throw
+N 55
+N 1000
+N 1
+S Right_Punch_Combo
+S Right_Left_Punch
+S Gyaku_Zuki_Combo2
+S Right_Punch_Throw
+#TYPE_END
+#INPUT
+T
+#INPUT_END
+#HINT
+Press the input to escape the throw (right after the third attack)
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+You have really nice reflexes! Now, let's delve a bit more into TECH!
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE backstep
+S Rollout_Front
+N 1
+#TYPE_END
+#MESSAGE_BEGIN
+The TECH button is not used only for throwing: certain characters have some special movement options which can be activated using the same button, in conjunction with one ore more directions.
+#MESSAGE_END
+#MESSAGE_BEGIN
+An example are both my "Rollback" moves. Usually, moves like this provide some sort of invincibility or access to new moves.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Try them out a couple of times!
+#MESSAGE_END
+#HINT
+Execute a "Rollback" (towards foreground)
+#INPUT
+2 + T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE backstep
+S Rollout_Back
+N 1
+#TYPE_END
+#HINT
+Execute a "Rollback" (towards background)
+#INPUT
+8 + T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE ukemi
+N 60.0
+N 1000.0
+N 3
+N 1
+S Roundhouse_Kick
+S Ukemi
+#TYPE_END
+#MESSAGE_BEGIN
+Usually, after a TECH movement you wiil be unable to move for a short amount of time. You can cancel this amount by performing a followup attack which chains with the previous move.
+#MESSAGE_END
+#MESSAGE_BEGIN
+As an additional note, if you press the TECH button right before hitting the ground - after being hit by an opponent attack, you will perform a Recovery Ukemi.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Why don't you try it out a couple of times?
+#MESSAGE_END
+#HINT
+Execute a Recovery Ukemi 3 times (TECH while hitting ground)
+#INPUT
+T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Ok, now it's time again for some game basics...
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE ringout
+#TYPE_END
+#MESSAGE_BEGIN
+You can win the match in basically three ways: either you deplete your opponent energy, you have more energy when the timer ends, or you send him flying out of the ring.
+#MESSAGE_END
+#MESSAGE_BEGIN
+The first two are quite straightforward, so we will focus on the third one. In order to perform a ring out, you have to hit the opponent with an IMPACT ATTACK while he's near the border of the arena.
+#MESSAGE_END
+#MESSAGE_BEGIN
+An Impact Attack is a usually slow move which sends the opponent flying if it connects. An example is your "Version Update", a slow, high-damaging roundhouse kick, as well as both your running attacks.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Not all the stages allows for a ring out. For example, until now this stage was protected by invisible walls... that I've conveniently deactivated.
+#MESSAGE_END
+#MESSAGE_BEGIN
+That's it. Now, send your opponent flying!
+#MESSAGE_END
+#INPUT
+6 + K
+#INPUT_END
+#HINT
+Push your opponent towards the border and the hit them with an Impact Attack
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+As you've seen, it's important to manage your position in the arena. A ring out will make you win or lose a round independently on the amount of health left.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE trigger
+S Right_Punch_Combo
+S Right_Left_Punch
+S Gyaku_Zuki_Combo2
+S Roundhouse_Kick
+#TYPE_END
+#MESSAGE_BEGIN
+Okay, time to start the last part of the class! We will talk about TRIGGERS.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Triggers are one of the most important mechanics to master in Schwarzerblitz. Your success at high difficulties will heavily depend on their good or bad use.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Have a look at the corner, below your health bar. You will see that a small green BULLET COUNTER has appeared. To use a Trigger, you have to spend a bullet counter.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Triggers can be used to make an attack more powerful. A Triggered move will break the opponent guard and inflict more damage. Moreover, it will slow down time, allowing you to input combo in a easier way, and increase the opponent hitstun.
+#MESSAGE_END
+#MESSAGE_BEGIN
+This means, that you can use a trigger to transform a CHAIN in a proper COMBO. The Trigger Mode stays active until you miss an attack or you stop the chain.
+#MESSAGE_END
+#MESSAGE_BEGIN
+To perform a Trigger attack, you have first to READY a Bullet Counter. Do this by pressing the TRIGGER BUTTON. By default, this is E on a keyboard and RIGHT BUMPER on a joypad. One of the Bullet counters will then start flashing RED.
+#MESSAGE_END
+#MESSAGE_BEGIN
+If you then input the attack while the TRIGGER BUTTON is kept pressed, the attack will become a Trigger Attack and you will hear a loud gunshot. After the first Trigger Attack, you can release the TRIGGER BUTTON.
+#MESSAGE_END
+#MESSAGE_BEGIN
+I've spent enough words on it. Try it out!
+#MESSAGE_END
+
+#HINT
+Hit the opponent while in TRIGGER mode (E / RB kept pressed).
+#INPUT
+6 + P 0 P 0 P 0 6 + K
+#INPUT_END
+
+#PHASE_END
+
+#PHASE
+#TYPE trigger
+S WaveSweeper
+S TW_KneeBash_CRC
+#TYPE_END
+#HINT
+Hit the opponent while in TRIGGER mode
+#INPUT
+1 + K 0 T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE trigger
+S LowPunch2_FWP
+S Cartwheel_kick
+#TYPE_END
+#HINT
+Hit with the TRIGGER chain, after a side roll
+#INPUT
+2 + T 0 P 0 3 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Oh, I was just almost forgetting! Trigger Throws have one important additional property: they can not be evaded. Once they connect, no input will save you from the throw - not even a Trigger Guard!
+#MESSAGE_END
+#MESSAGE_BEGIN
+What's a Trigger Guard? Well... it's the topic of our next training session!
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE triggerGuard
+N 55
+N 1000
+N 1
+N 0
+S Right_Punch_Combo
+S Right_Left_Punch
+#TYPE_END
+#MESSAGE_BEGIN
+Basically, Triggers can also be used in a defensive fashion. While you are hit, you can use a Bullet counter to exit hitstun and retaliate. This action is called TRIGGER GUARD.
+#MESSAGE_END
+#MESSAGE_BEGIN
+To activate a TRIGGER GUARD, you must press together TRIGGER + GUARD right after the opponent successfully hit you.
+#MESSAGE_END
+#MESSAGE_BEGIN
+If you time it correctly, the following attack will be parried - provided it is in a short time window since the buttons are pressed.
+#MESSAGE_END
+#MESSAGE_BEGIN
+If the opponent is attacking with a Trigger Attack, he will suffer an Impact and will be sent away flying. You must keep the buttons pressed, otherwise you will be vulnerable to a followup.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Now, this will require a bit of timing and reflexes, so do not despair if you can't do it at once!
+#MESSAGE_END
+#MESSAGE_BEGIN
+Try it out and remember: to succesfully Trigger Guard a low attack, you need to keep DOWN pressed while activating it.
+#MESSAGE_END
+#HINT
+Perform a Trigger Guard (right after the first hit)
+#INPUT
+G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE triggerGuard
+N 50
+N 1000
+N 1
+N 1
+S Right_Punch_Combo
+S Right_Left_Punch
+S Right_Left_Punch_Kick
+#TYPE_END
+#HINT
+Perform a Trigger Guard (while being hit by opponent)
+#INPUT
+G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE triggerGuard
+N 55
+N 1000
+N 1
+N 0
+S CrouchingKick_2
+S CrouchingPunch
+#TYPE_END
+#HINT
+Perform a Trigger Guard (while being hit by opponent)
+#INPUT
+2 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE triggerGuard
+N 55
+N 1000
+N 1
+N 1
+S CrouchingKick_2
+S CrouchingPunch
+#TYPE_END
+#HINT
+Perform a Trigger Guard (while being hit by opponent)
+#INPUT
+2 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Now, just some closing notes... Bullet counters are a limited resource: you start each match with 6 counters and you can restore 1 or 2 of them only at the end of the round, if you win or lose respectively.
+#MESSAGE_END
+#MESSAGE_BEGIN
+A careful management of the Bullet counters (both offensive and defensive) is the key to success.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+The basic training is now over. If you want to meet me again, you have to show me that you understood my teachings. I've heard about a nasty cloaked guy which would likely need a lesson...
+#MESSAGE_END
+#MESSAGE_BEGIN
+But enough with words! Now, show the world what you are able to do! Be always a proud pupil of Tutorial Man!
+#MESSAGE_END
+#PHASE_END
+
+#END

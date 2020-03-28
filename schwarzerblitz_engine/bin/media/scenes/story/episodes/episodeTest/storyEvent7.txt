@@ -1,0 +1,215 @@
+#BACKGROUND cg\cg_docks3.jpg
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALAGA...
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\ko.ogg
+100
+1.0
+#BGM
+tension.ogg
+50.0
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+...he bashed the lobster.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Yeah, I saw it, genius. I've got eyes too.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGALAGA...
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\ko.ogg
+100
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+Hey, pal, don't worry. You did good, 'kay?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_lobster
+#TEXT_BEGIN
+SBLAGA...
+#TEXT_END
+#SOUND 
+..\..\..\..\characters\chara_lobster\sounds\flight.ogg
+100
+1.0
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+Seriously, pal. Just take a rest now, I'm sure you'll feel better...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks3.jpg 300
+#BACKGROUND cg\cg_docks4.jpg
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Now that your "superweapon" is gone, can we PLEASE resume our business conversation?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Are you kidding?! Nobody can tame the lobster this way! We need up to four people to even restrain it! And you... you pummeled him alone?!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Are you a freakin' monster?! I can't even understand what colour is your skin, goddammit!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+My appearance is an unfortunate consequence of some events of the recent past, which bear no weight in this conversation.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+I'm ready to do to you what I did to the lobster, if you still think you can't help me. And then, I'll hijack your ship and go to Ireland alone, if necessary.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks4.jpg 300
+#BACKGROUND cg\cg_docks4b.jpg
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+I shoot him, Blade!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Hell, no! Stop! If you shoot, it's like calling the police and telling them "hey guys, can you please take us under arrest?".
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+The Werza is arriving anytime soon! We can't lose time!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Shut up and let me manage this!
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks4b.jpg 300
+#BACKGROUND cg\cg_docks4.jpg
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+I don't know who you are, Mister...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Johnson. My name is Johnson.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Mr.~ Johnson. I'm not going to say it's a pleasure to meet you, but at the moment I see no other possibility than helping you.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+You sound quite reasonable, Mr.~ Aural. Very well, I suppose we have a deal.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+...yeah, I suppose so.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks4.jpg 300
+#BACKGROUND cg\cg_docks4b.jpg
+#CHARA_MUGSHOT chara_shark\Mesh99
+#TEXT_BEGIN
+What?! Don Ottari won't...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Shut. The Hell. Up. I take full responsibility.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Wise decision. Now, let me help you patch the lobster...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_docks4b.jpg 300
+#BACKGROUND cg\cg_docks4.jpg
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Huh, sure...
+#TEXT_END
+#PAUSE 600
+#END
+
+#AUTO
+#TRANSITION cg\cg_docks4.jpg 300
+#STAGE_BACKGROUND docks\
+#PAUSE 500
+#NO_BACKGROUND
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+(I didn't know monsters like him existed. Heck, we are all mutants, fair and square, but this guy...)
+#TEXT_END
+#PAUSE 600
+#END

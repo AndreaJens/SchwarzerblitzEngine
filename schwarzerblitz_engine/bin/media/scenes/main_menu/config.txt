@@ -1,0 +1,202 @@
+** Extended configuration for alpha+ plus blinking **
+
+#bgm
+menu(astral)_cut2.ogg
+60.0
+1.0
+
+#background_picture 		menuBackground.png
+#caption_background 		caption_overlay.png
+#item_bar_texture 		menuItemBarSmall.png
+#selected_item_bar_texture 	menuItemBarSelected.png
+
+#main_item_viewport		0 58 640 296
+#main_item_size 		0 36 320 36
+#main_item_text_offset 		32 -3 6 0
+#main_item_text_alignment	-1
+#sub_item_viewport		380 58 640 296
+#sub_item_size			0 32 260 28
+#sub_item_text_offset		12 0 15 0
+#sub_item_text_alignment	1
+
+#secret_modes_menu_caption	This mode is still [TOP SECRET]. Play more to unlock it!
+#show_captions			1
+#show_menu_and_submenu		1
+
+#back_to_title_CANCEL_button 	1
+
+#selected_item_blinking_color
+1000.0
+255 220 220 190
+255 255 255 255
+
+------------- Tutorial ------------------
+
+#show_tutorial_prompt		1
+#tutorial_prompt_message
+
+Would you like to access the game tutorial?
+You can also access it later by selecting Fight Lab > Tutorial.
+(Select menu items with C key / A button, cancel with X key / B button)
+
+#tutorial_prompt_message_end
+
+------------- Easy Unlock ------------------
+
+#show_unlockables_prompt		1
+#unlockables_prompt_message
+
+Some characters and stages are unlocked through Arcade and Story.
+Do you wish to have them all from the beginning instead?
+(this choice cannot be undone)
+
+#unlockables_prompt_message_end
+
+------------- Unlockables ---------------
+
+#character_unlocked_message
+You have unlocked a new character:
+
+#character_outfit_unlocked_message
+You have unlocked a new outfit for %chara_name:
+
+#stage_unlocked_message
+You have unlocked a new stage:
+
+#diorama_unlocked_message
+You have unlocked a new profile:
+
+#game_mode_unlocked_message
+You have unlocked a new game mode:
+
+#story_episode_unlocked_message
+You have unlocked a new story episode:
+
+#challenge_unlocked_message
+You have unlocked a new trial in Fight Lab:
+
+------------- Main Menu -----------------
+
+#main_menu_items
+
+##STORY
+Story Mode
+Discover the origin of the Black Lightning, following an overarching storyline narrated in a visual novel-like fashion, with special fights in between 
+1
+
+##ARCADE
+Arcade Mode
+Fight in a series of matches of increasing difficulty. You can also take the challenge and try out the various special modes to spice things up
+1
+
+##FREE_MATCH
+Free Match
+Fight against another player or a computer-controlled opponent. You can also watch a computer vs. computer match
+1
+
+##TRAINING
+Fight Lab
+Hone your skills through an intense training session, either against a dummy or through a series of in-depth tutorials and challenges
+1
+
+##EXTRA
+Extra
+Browse through character profiles, CGI pictures from story mode, illustrations and much more - the more you play, the more you unlock!
+1
+
+##OPTIONS
+Options
+Modify various options and settings, such as difficulty, video, and audio options
+1
+
+##QUIT
+Quit
+Quit game and return to Windows
+1
+
+#main_menu_items_end
+
+------------- Free Match -----------------
+
+#free_match_menu_items
+
+##P_V_CPU
+Player vs AI
+Test your skill against a computer-controlled opponent. The AI level can be set in the Options menu (the player who selects this mode will play against the AI)
+1
+
+##P_V_P
+Player vs Player
+Fight against a friend in a player vs player match (if no joypad is connected, the keyboard layout is split for the two players - see KEYBOARD SETTINGS for more information)
+1
+
+##CPU_V_CPU
+AI vs AI
+Watch an exhibition match performed by two computer-controlled players. The AI level can be set in the Options menu
+1
+
+#free_match_menu_items_end
+
+------------- Arcade -----------------------
+
+#arcade_menu_items
+
+##CLASSIC
+Classic
+Fight your way through opponents of increasing difficulty level and discover more about the story of Schwarzerblitz
+1
+
+##SURVIVAL
+Survival
+An 8-match arcade ladder where your health carries over to the next encounter. Can you climb it until the top? - note: the number of rounds and the timer are set and cannot be modified in Options
+1
+
+##TIME_ATTACK
+Time Attack
+Time is your most dreaded opponent in this mode. Fight against the clock to see how fast you can complete arcade mode - note: the number of rounds and the timer are set and cannot be modified in Options
+1
+
+#arcade_menu_items_end
+
+
+------------- Training -----------------------
+
+#training_menu_items
+
+##TRAINING
+Training
+Improve your skills and try out a character against a dummy, learning how to manage every possible game situation
+1
+
+##TUTORIAL
+Tutorial
+Learn the game basics through in-depth tutorials with the help of the almighty Tutorial Man
+1
+
+##TRIALS
+Trials
+Challenge yourself and learn every characters' combos and mechanics
+0
+
+#training_menu_items_end
+
+------------- Extra -----------------------
+
+#extra_menu_items
+
+##DIORAMA
+Character Profiles
+Read about each character's story, while watching a 3D diorama with free control on the camera
+0
+
+##ARCADE_ENDINGS
+Arcade Endings
+Watch the ending cutscenes unlocked by completing Arcade mode with different characters 
+0
+
+##GALLERY
+Gallery
+Watch the CG pictures that you have unlocked in Story Mode and Arcade Mode, plus some extras such as concept arts and sketches
+0
+
+#extra_menu_items_end

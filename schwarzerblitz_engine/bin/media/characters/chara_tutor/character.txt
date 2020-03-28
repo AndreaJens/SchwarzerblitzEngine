@@ -1,0 +1,44 @@
+#NAME Tutorial_Man
+#SHORTNAME Tutorial_Man
+#AI_TYPE aggressor
+#BACKFACECULLINGOFF
+#HIT_SFX hit.png
+#HIT_SFX_TRIGGER hitTrigger.png
+#MOVESFILE moves.txt
+#BONESFILE bones.txt
+#HITBOXFILE hitboxes.txt
+#HURTBOXFILE hurtboxes.txt
+#LIFE 250.0
+#WALKSPEED 60.0
+/* from here one, the basic poses for the character are defined (start frame - end frame) */
+#STANCE tutorStance 0 101
+#WALKING walkFast 0 14
+#RUNNING running 0 9
+#SIDESTEP sidestepFast 0 10
+#STANDGUARD guard 0 4
+#CROUCHGUARD lowStanceGuard 0 4
+#CROUCHING crouching 0 5
+#LOWSTANCE lowStanceNew 0 23
+#HITHIGHWEAKFRONT reaction_HitWeakHigh 0 4
+#HITMEDWEAKFRONT  reaction_HitWeakMedium 0 4
+#HITLOWWEAKFRONT  reaction_HitWeakMedium 0 4
+#HITHIGHWEAKBACK  reaction_HitWeakMedium 0 4
+#HITMEDWEAKBACK   reaction_HitWeakMediumBack 0 4
+#HITLOWWEAKBACK   reaction_HitWeakMediumBack 0 4
+#HITMEDSTRONG    reaction_hitStrongMid 0 13
+#HITMEDSTRONGBACK    reaction_hitStrongHigh 0 13
+#HITLOWSTRONG    reaction_hitStrongMid 0 13
+#HITLOWSTRONGBACK    reaction_hitStrongMid 0 13
+#HITHIGHSTRONG    reaction_hitStrongHigh 0 13
+#HITHIGHSTRONGBACK    reaction_hitStrongMid 0 13
+#HITFLIGHTSTRONG    reaction_heavyHitAirRevolt 0 8
+#HITFLIGHTSTRONGBACK    reaction_heavyHitAirRevoltBack 0 8
+#WAKEUP wakeUpAnimation 0 8
+#GROUNDEDSUPINE  supine 0 6
+#GROUNDEDPRONE  proneRotation 0 0
+#GROUNDEDSUPINEROTATION proneRotation 0 9
+#GROUNDEDPRONEROTATION proneRotation 0 9
+#WINPOSE johnsonIntroPose2 0 35
+#INTRO tutorIntro 0 68
+#SUPINELANDING reaction_landing 0 5
+#JUMPING jump2 0 13

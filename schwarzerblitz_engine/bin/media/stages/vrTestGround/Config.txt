@@ -1,0 +1,84 @@
+#NAME 
+V.R._Panic
+#SKYBOX
+#MESH
+matrixPlane2.x
+#SCALE 
+30.0 30.0 30.0
+#POSITION 
+50 -11 0
+#DESCRIPTION
+Shaping worlds to learn how to fight.
+#DESCRIPTION_END
+#AMBIENT_COLOR 
+180 220 180
+#BACKGROUND_COLOR 
+192 192 192
+#BGM
+music/NihiloreArtifice.ogg
+#BGM_VOLUME
+40.0
+#BGM_PITCH
+1.0
+#BGM_METADATA
+Artifice
+Nihilore
+#MATERIAL_EFFECT
+alpha_ref
+#RINGOUT_DEPTH
+-60.0
+#WALLBOX
+-160 -120 -210
+260 120 210
+
+#RINGOUT_BOX
+-140 -120 -190
+240 120 190
+
+#ALLOW_RINGOUT
+1 1 1 1
+
+#ADDITIONAL_OBJECT
+#mesh
+sphere\\matrixSphere2.x
+#position
+99 0 0
+#rotation
+0 0 0
+#ADDITIONAL_OBJECT_END
+
+#ADDITIONAL_OBJECT
+#mesh
+matrixPlaneC1.x
+#position
+99 -25 0
+#rotation
+0 0 0
+#effect
+alpha_ref
+#ADDITIONAL_OBJECT_END
+
+#ADDITIONAL_OBJECT
+#mesh
+matrixPlaneC2.x
+#position
+99 -25 0
+#rotation
+0 0 0
+#effect
+alpha_ref
+#ADDITIONAL_OBJECT_END
+
+#AMBIENT_COLOR_GRADIENT
+1000 180 220 180
+200 180 220 180
+200 220 255 220
+1000 220 255 220
+200 220 255 220
+#AMBIENT_COLOR_GRADIENT_END
+
+#DIORAMA_DESCRIPTION
+A computer generated landscape used by Delta Team for fighting simulations. The program is the home of the so-called Tutorial Man, a virtual entity programmed using movements and techniques from various different fighters.
+This simulation can be directly connected with the brain of the user, allowing one to train their skills directly and feel like they are fighting for real.
+Still, unlike in a classic movies from the '90s, dying here doesn't result in a permanent death in the real world.
+#DIORAMA_DESCRIPTION_END

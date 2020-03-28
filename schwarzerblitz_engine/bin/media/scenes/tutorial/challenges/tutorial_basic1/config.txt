@@ -1,0 +1,8 @@
+#NAME
+Basic Tutorial #1 - Movement
+#ID
+Movement
+#DESCRIPTION
+Delve into the basic movement game mechanics, 
+helped by the almighty Tutorial Man!
+#DESCRIPTION_END

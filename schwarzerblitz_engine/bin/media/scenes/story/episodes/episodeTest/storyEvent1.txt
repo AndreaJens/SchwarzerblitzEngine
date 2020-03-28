@@ -1,0 +1,118 @@
+#STAGE_BACKGROUND Strasbourg\
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+...
+#TEXT_END
+#PAUSE 600
+#BGM
+..\\..\\..\\..\\stages\\strasbourg\\music\fast_accordion.ogg
+50.0
+0.9
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+You can stop pretending you are not following me, Mister.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\white.jpg 300
+#BACKGROUND cg\cg_river1.jpg
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+Okay, okay. I won't waste my and your time.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+You could start by presenting yourself and telling me why you started playing the stalker.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+My name is Renzo, Renzo Rubecca. Like the famous composer, you know? I'm his son.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I don't like neoclassical music. And I don't like you. What's your business with me?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+Your face... I can't really see it. That was kinda curious.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Oh, someone who noticed. Well done, you won a cookie.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+You think I'm not serious.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Wasn't that obvious?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+What if I say something like... "Black Lightning Disaster"?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\white.jpg 100
+#BACKGROUND cg\cg_river1.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+...
+#TEXT_END
+#PAUSE 600
+#BGM
+..\\..\\..\\..\\stages\\strasbourg\\music\fast_accordion.ogg
+0.0
+0.9
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+You are speechless, ain't you? It was exactly as I felt when you...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Listen. Whatever deeds you think I did, I didn't do them.
+I'm not the person you are looking for.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_renzo\
+#TEXT_BEGIN
+Oh, really? Well, let's see if pummeling you will help your memory, Mr.~ Schwarzer Blitz!
+#TEXT_END
+#PAUSE 600
+#END

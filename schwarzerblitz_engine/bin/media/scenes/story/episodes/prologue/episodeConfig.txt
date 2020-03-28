@@ -1,0 +1,8 @@
+#EPISODE_NAME
+Prologue
+#DESCRIPTION
+In 2064, the Black Lightning Disaster left a deep
+scar in Euterpe...
+#DESCRIPTION_END
+#EVENT storyEventHelp
+#EVENT storyEvent0

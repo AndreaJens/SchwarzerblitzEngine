@@ -1,0 +1,1119 @@
+#MOVE Run1
+#RANGE 60.0 230.0
+#NO_SOUNDS
+#ANIMATION running
+#FRAMES 0 0
+#STANCE Ground
+#NEWSTANCE Running
+#DELAY_AFTER_MOVE_MS 200
+#INPUT 
+> >
+#INPUT_END
+
+#MOVE BackStepOld
+#FOLLOWUP_ONLY
+#RANGE 60.0 75.0
+#NO_SOUNDS
+#ANIMATION walkFast
+#FRAMES 0 5
+#STANCE Ground
+#INVINCIBILITY_FRAMES 0 2
+#DELAY_AFTER_MOVE_MS 300
+#MOVEMENT
+> 3 -40 0 0
+#MOVEMENT_END
+#FOLLOWUP
+SideStepBackgroundCancel 1 5
+SideStepForegroundCancel 1 5
+#FOLLOWUP_END
+#INPUT 
+< <
+#INPUT_END
+
+#MOVE Ukemi
+#DISPLAY_NAME Ukemi
+#RANGE 80.0 200.0
+#NO_DELAY
+#ANIMATION rolloutRight
+#ANIMATION_RIGHTSIDE rollout
+#FRAMES 5 12
+#NO_DIRECTION_LOCK
+#STANCE Landing
+#NEWSTANCE Ground
+#INVINCIBILITY_FRAMES 5 8
+#MOVEMENT
+> 12 0 60 0
+#MOVEMENT_END
+#INPUT 
+T
+#INPUT_END
+
+#MOVE ! Rollout_Front
+#DISPLAY_NAME Rollback
+#RANGE 30.0 90.0
+#ANIMATION rolloutRight
+#ANIMATION_RIGHTSIDE rollout
+#INVINCIBILITY_FRAMES_AGAINST 
+UpperbodyAtks 0 5
+#INVINCIBILITY_FRAMES_AGAINST_END
+#DELAY_AFTER_MOVE_MS 200
+#FRAMES 0 12
+#NO_DIRECTION_LOCK
+#STANCE Ground
+#MOVEMENT
+> 12 0 60 0
+#MOVEMENT_END
+#FOLLOWUP
+Cartwheel_kick_2 0 12
+LowPunch2_FWP 0 12
+TwinVirtual 0 12
+SlowPhotonWave 0 12
+PhotonWave 0 12
+#FOLLOWUP_END
+#INPUT 
+v + T
+#INPUT_END
+
+#MOVE ! Rollout_Back
+#DISPLAY_NAME Rollback_(II)
+#RANGE 30.0 90.0
+#ANIMATION rollout
+#ANIMATION_RIGHTSIDE rolloutRight
+#INVINCIBILITY_FRAMES_AGAINST 
+UpperbodyAtks 0 5
+#INVINCIBILITY_FRAMES_AGAINST_END
+#DELAY_AFTER_MOVE_MS 200
+#FRAMES 0 12
+#NO_DIRECTION_LOCK
+#STANCE Ground
+#MOVEMENT
+> 12 0 -60 0
+#MOVEMENT_END
+#FOLLOWUP
+Cartwheel_kick_2 0 12
+LowPunch2_FWP 0 12
+TwinVirtual 0 12
+SlowPhotonWave 0 12
+PhotonWave 0 12
+#FOLLOWUP_END
+#INPUT 
+^ + T
+#INPUT_END
+
+#MOVE ! RunSwitch
+#FOLLOWUP_ONLY
+#RANGE 0.0 200.0
+#NO_SOUNDS
+#ANIMATION running
+#DELAY_AFTER_MOVE_MS 200
+#FRAMES 0 0
+#STANCE Ground
+#NEWSTANCE Running
+#INPUT 
+H6
+#INPUT_END
+
+#MOVE ! RunningTackle
+#DISPLAY_NAME Ransomware_Annihilation
+#ANIMATION grafShoulderThrust
+#RANGE 0.0 75.0
+#FRAMES 0 14
+#STANCE Running
+#NEWSTANCE Ground
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 13 60 0 0
+#MOVEMENT_END
+#HITBOX
+RightElbow 3 5 18 1Hit 0 Flight Mid
+#HITBOX_END
+
+#MOVE ! Jump_Punch
+#DISPLAY_NAME GIT_Commit
+#ANIMATION defaultJumpPunch2
+#RANGE 0.0 65.0
+#FRAMES 0 5
+#STANCE Air
+#INPUT 
+P
+#INPUT_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#MOVEMENT
+> 4 15 0 -10
+#MOVEMENT_END
+#FOLLOWUP
+Left_Jab 0 5
+CrouchingKick 0 6
+#FOLLOWUP_END
+#HITBOX
+RightPunch 1 2 8 1Hit 0 StrongHigh High
+#HITBOX_END
+
+#MOVE ! Jump_Kick
+#DISPLAY_NAME SVN_Commit
+#ANIMATION defaultJumpKick
+#RANGE 0.0 65.0
+#FRAMES 0 6
+#STANCE Air
+#FOLLOWUP
+CrouchingKick 0 6
+WaveSweeper 0 6
+Quick_Kick 0 6
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#MOVEMENT
+> 4 15 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 3 6 10 1Hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! WaveSweeper
+#DISPLAY_NAME Empty_Recycle_Bin
+#ANIMATION waveSweeperBackTurn
+#RANGE 40.0 85.0
+#FRAMES 0 15
+#VS_GROUNDED
+#STANCE Ground
+#NEWSTANCE Crouch
+#NO_DIRECTION_LOCK
+#CANCEL_INTO
+Rotary_Kick 11 15
+WaveSweeperDiskWipe 13 15
+#CANCEL_INTO_END
+#FOLLOWUP
+Right_Punch_Throw_CRC 0 15
+#FOLLOWUP_END
+#INPUT 
+1 + K
+#INPUT_END
+#MOVEMENT
+4 0 0 0
+> 11 30 35 0
+15 -2 0 0
+#MOVEMENT_END
+#HITBOX
+RightKnee 4 10 4 1Hit 0 WeakLow Low
+RightFoot 4 10 12 1Hit 0 StandFlight Low
+#HITBOX_END
+
+#MOVE ! WaveSweeperDiskWipe
+#DISPLAY_NAME Disk_Wiping
+#ANIMATION waveSweeperBackTurnMidMirror
+#RANGE 40.0 85.0
+#FRAMES 0 15
+#VS_GROUNDED
+#STANCE Crouch
+#NO_DIRECTION_LOCK
+#CANCEL_INTO
+WaveSweeper 13 15
+#CANCEL_INTO_END
+#FOLLOWUP
+PaperShredder 0 15
+#FOLLOWUP_END
+#INPUT 
+3 + K
+#INPUT_END
+#MOVEMENT
+4 0 0 0
+> 11 30 35 0
+15 -2 0 0
+#MOVEMENT_END
+#HITBOX
+RightKnee 4 10 4 1Hit 0 WeakMid Mid
+RightFoot 4 10 12 1Hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! WaveSweeperLauncher
+#DISPLAY_NAME Wave_Sweeper_Launcher_(Chain)
+#ANIMATION punchKickCombo
+#FOLLOWUP_ONLY
+#FRAMES 19 31
+#STANCE Crouch
+#NEWSTANCE Ground
+#RANGE 0.0 85.0
+#MOVEMENT
+> 24 12 0 0
+#MOVEMENT_END
+#INPUT 
+K
+#INPUT_END
+#HITBOX
+RightFoot 23 25 19 1hit 0 Flight High
+#HITBOX_END
+
+#MOVE ! Throw
+#DISPLAY_NAME Customer_Service
+#ANIMATION throwStart_step
+#RANGE 0.0 55.0
+#FRAMES 0 8
+#STANCE Ground
+#FOLLOWUP
+TW_KneeBash 0 8
+#FOLLOWUP_END
+#INPUT 
+T
+#INPUT_END
+#SOUNDS
+3 swing
+#SOUNDS_END
+#MOVEMENT
+> 3 0 0 0
+> 5 5 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 6 6 0 1hit 0 WeakHigh Throw
+#HITBOX_END
+
+#MOVE ! Right_Punch_Throw
+#FOLLOWUP_ONLY
+#DISPLAY_NAME Customer_Service_T
+#ANIMATION throwStart_step
+#RANGE 0.0 55.0
+#FRAMES 0 8
+#STANCE Ground
+#FOLLOWUP
+TW_KneeBash_CRC 0 8
+#FOLLOWUP_END
+#INPUT 
+T
+#INPUT_END
+#SOUNDS
+3 swing
+#SOUNDS_END
+#MOVEMENT
+> 3 0 0 0
+> 5 12 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 6 6 0 1hit 0 WeakHigh Throw
+#HITBOX_END
+
+#MOVE ! Right_Punch_Throw_CRC
+#DISPLAY_NAME Customer_Service_(Chain)
+#ANIMATION throwStart_step
+#FOLLOWUP_ONLY
+#RANGE 0.0 55.0
+#FRAMES 2 7
+#STANCE Crouch
+#NEWSTANCE Ground
+#FOLLOWUP
+TW_KneeBash_CRC 2 7
+#FOLLOWUP_END
+#INPUT 
+T
+#INPUT_END
+#MOVEMENT
+> 6 5 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 5 6 0 1hit 0 WeakHigh Throw
+#HITBOX_END
+
+#MOVE ! Heavy_Kick
+#DISPLAY_NAME New_Release
+#ANIMATION heavyKick
+#RANGE 0.0 85.0
+#FRAMES 0 12
+#STANCE Ground
+#CANCEL_INTO
+Roundhouse_Kick_High_FWP 9 11
+RoundhouseLow_Followup 9 11
+Crouching_Kick 9 11
+CrouchingPunch 9 11
+Roundhouse_Kick 9 11
+#CANCEL_INTO_END
+#INPUT 
+4 + K
+#INPUT_END
+#MOVEMENT
+> 8 40 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 3 7 18 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! Geforce
+#DISPLAY_NAME G-force
+#ANTI_AIR_ONLY
+#ANIMATION rolloverTitan
+#RANGE 0.0 80.0
+#FRAMES 0 34
+#STANCE Ground
+#INPUT 
+7 + P
+#INPUT_END
+#SOUNDS
+0 swing
+13 trip
+#SOUNDS_END
+#MOVEMENT
+> 4 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 5 10 multiHit 0 StandFlight High
+RightPunch 6 7 10 multiHit 0 WeakMid High
+RightPunch 8 10 10 multiHit 0 WeakMid High
+RightPunch 14 15 10 multiHit 0 Flight Mid
+LeftPunch 3 5 10 multiHit 0 StandFlight High
+LeftPunch 6 7 10 multiHit 0 WeakMid High
+LeftPunch 8 10 10 multiHit 0 WeakMid High
+LeftPunch 14 15 10 multiHit 0 Flight Mid
+#HITBOX_END
+
+#MOVE ! TW_KneeBash
+#DISPLAY_NAME _
+#FOLLOWUP_ONLY
+#ANIMATION kneeThrow_slow
+#FRAMES 0 18
+
+#THROW 
+#animation
+kneeThrowReaction_slow 0 22
+#starting_distance
+34
+#target_movement
+> 18 0 0 0
+> 21 -30 0 0
+#target_movement_end
+#THROW_END
+
+#STANCE Ground
+#MOVEMENT
+> 8 0 0 0
+> 12 10 0 0
+#MOVEMENT_END
+#SOUNDS
+8 swing
+#SOUNDS_END
+#HITBOX
+! RightKnee 10 18 45 1Hit 0 None High
+#HITBOX_END
+
+#MOVE ! TW_KneeBash_CRC
+#DISPLAY_NAME _
+#FOLLOWUP_ONLY
+#ANIMATION kneeThrow_slow
+#FRAMES 0 18
+#THROW 
+#animation
+kneeThrowReaction_slow 0 22
+#starting_distance
+34
+#target_movement
+> 18 0 0 0
+> 21 -30 0 0
+#target_movement_end
+#THROW_END
+#STANCE Ground
+#MOVEMENT
+> 8 0 0 0
+> 12 10 0 0
+#MOVEMENT_END
+#SOUNDS
+8 swing
+#SOUNDS_END
+#HITBOX
+! RightKnee 10 18 25 1Hit 0 None High
+#HITBOX_END
+
+#MOVE ! Quick_Kick
+#DISPLAY_NAME Quick_Scan
+#ANIMATION quickKick
+#RANGE 0.0 55.0
+#FRAMES 0 6
+#STANCE Ground
+#FOLLOWUP
+Axe_Kick  0 6
+WaveSweeper 0 6
+RoundhouseLow_Followup 0 6
+CrouchingPunch 0 6
+CrouchingKick 0 6
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 3 6 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 4 5 10 1Hit 0 WeakHigh Mid
+#HITBOX_END
+
+#MOVE ! Axe_Kick
+#DISPLAY_NAME V.R._Crusher
+#VS_GROUNDED
+#ANIMATION axeKick
+#DELAY_AFTER_MOVE_MS 210
+#FRAMES 0 10
+#RANGE 0.0 75.0
+#STANCE Ground
+#FOLLOWUP
+Rotary_Kick 3 10
+Heavy_Kick 0 10
+CrouchingPunch 0 10
+#FOLLOWUP_END
+#INPUT 
+8 + K
+#INPUT_END
+#MOVEMENT
+> 6 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 2 5 10 multiHit 0 WeakHigh Mid
+RightFoot 5 10 8 1Hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! Gyaku_Zuki
+#DISPLAY_NAME Breaking_the_Firewall
+#ANIMATION gyakuZuki
+#RANGE 0.0 60.0
+#FRAMES 0 10
+#STANCE Ground
+#FOLLOWUP
+Heavy_Kick 0 10
+#FOLLOWUP_END
+#CANCEL_INTO
+Gyaku_Zuki_Combo1 7 8
+Right_Punch_Throw_CRC 7 8
+#CANCEL_INTO_END
+#MOVEMENT
+> 5 20 0 0
+> 11 15 0 0
+#MOVEMENT_END
+#INPUT 
+4 + P
+#INPUT_END
+#HITBOX
+LeftPunch 4 5 8 1hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! Gyaku_Zuki_Combo1
+#DISPLAY_NAME Oi_Zuki_(Chain)
+#FOLLOWUP_ONLY
+#ANIMATION gyakuZuki_Combo
+#RANGE 0.0 50.0
+#FRAMES 7 12
+#STANCE Ground
+#FOLLOWUP
+Gyaku_Zuki_Combo2 7 12
+#FOLLOWUP_END
+#MOVEMENT
+> 12 20 0 0
+#MOVEMENT_END
+#INPUT 
+P
+#INPUT_END
+#HITBOX
+RightPunch 10 12 8 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Gyaku_Zuki_Combo2
+#FOLLOWUP_ONLY
+#DISPLAY_NAME Palm_Strike_(Chain)
+#ANIMATION gyakuZuki_Combo
+#RANGE 0.0 70.0
+#FRAMES 12 21
+#STANCE Ground
+#DELAY_AFTER_MOVE_MS 120
+#FOLLOWUP
+Gyaku_Zuki_Combo3 12 21
+Roundhouse_Kick 12 21
+Right_Punch_Throw 12 21
+#FOLLOWUP_END
+#MOVEMENT
+> 19 35 0 0
+#MOVEMENT_END
+#INPUT 
+P
+#INPUT_END
+#HITBOX
+LeftPunch 19 20 12 1hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! Gyaku_Zuki_Combo3
+#DISPLAY_NAME Bug_Fix
+#NO_DIRECTION_LOCK
+#ANIMATION gyakuZuki_Combo
+#RANGE 0.0 70.0
+#FRAMES 21 27
+#STANCE Ground
+#NEWSTANCE Crouch
+#DELAY_AFTER_MOVE_MS 120
+#FOLLOWUP
+CrouchingKick_2 21 27
+CrouchingPunch 23 27
+#FOLLOWUP_END
+#MOVEMENT
+> 23 24 15 0
+#MOVEMENT_END
+#INPUT 
+2 + P
+#INPUT_END
+#HITBOX
+RightPunch 24 24 8 1hit 0 StrongLow Low
+#HITBOX_END
+
+#MOVE ! Right_Punch_Combo
+#DISPLAY_NAME Patch
+#ANIMATION punchKickCombo
+#RANGE 0.0 60.0
+#FRAMES 0 6
+#STANCE Ground
+#FOLLOWUP
+Right_Punch_Kick 0 6
+Right_Left_Punch 0 6
+Heavy_Kick 0 7
+Axe_Kick 0 7
+#FOLLOWUP_END
+#MOVEMENT
+> 2 10 0 0
+#MOVEMENT_END
+#INPUT 
+> + P
+#INPUT_END
+#HITBOX
+LeftPunch 3 4 6 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Right_Left_Punch
+#DISPLAY_NAME Motodachi_Gyaku_Zuki_(Chain)
+#FOLLOWUP_ONLY
+#RANGE 0.0 60.0
+#ANIMATION punchKickCombo
+#FRAMES 6 11
+#STANCE Ground
+#FOLLOWUP
+Rotary_Kick 6 11
+Axe_Kick 6 11
+Heavy_Kick 6 11
+RoundhouseLow 6 11
+Crouching_Kick 6 11
+Gyaku_Zuki_Combo2 7 11
+#FOLLOWUP_END
+#MOVEMENT
+> 11 12 0 0
+#MOVEMENT_END
+#INPUT 
+P
+#INPUT_END
+#HITBOX
+RightPunch 7 11 7 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Right_Left_Punch_Kick
+#DISPLAY_NAME Ushiro_Ura_Mawashi_(Chain)
+#FOLLOWUP_ONLY
+#RANGE 65.0 85.0
+#ANIMATION punchKickCombo
+#FRAMES 11 31
+#STANCE Ground
+#MOVEMENT
+> 24 30 0 0
+#MOVEMENT_END
+#INPUT 
+K
+#INPUT_END
+#HITBOX
+RightFoot 23 25 20 1hit 0 Flight High
+RightFoot 25 27 14 1hit 0 WeakMedium High
+#HITBOX_END
+
+#MOVE ! RoundhouseLow_Followup
+#FOLLOWUP_ONLY
+#DISPLAY_NAME Roundabout_(Chain)
+#RANGE 0.0 85.0
+#ANIMATION roundhouseLow
+#FRAMES 0 15
+#CANCEL_INTO
+Roundhouse_Kick_High_FWP 11 13
+CrouchingPunch 11 13
+CrouchingKick 11 13
+#CANCEL_INTO_END
+#FOLLOWUP
+WaveSweeper 0 15
+#FOLLOWUP_END
+#STANCE Ground
+#MOVEMENT
+> 8 15 0 0
+#MOVEMENT_END
+#INPUT 
+4 + K
+#INPUT_END
+#HITBOX
+RightFoot 7 9 20 1hit 0 StrongLow Low
+#HITBOX_END
+
+#MOVE ! Roundhouse_Kick
+#DISPLAY_NAME Version_Update
+#ANIMATION quickRoundhouse
+#FRAMES 0 16
+#STANCE Ground
+#RANGE 65.0 65.0
+#MOVEMENT
+> 9 20 0 0
+#MOVEMENT_END
+#INPUT 
+6 + K
+#INPUT_END
+#HITBOX
+RightFoot 8 9 22 1hit 0 Flight High
+RightFoot 8 10 14 1hit 0 WeakMedium Mid
+#HITBOX_END
+
+#MOVE ! Roundhouse_Kick_High_FWP
+#DISPLAY_NAME Quick_Ushiro_Ura_Mawashi_(Chain)
+#FOLLOWUP_ONLY
+#ANIMATION quickRoundhouse
+#FRAMES 0 16
+#STANCE Ground
+#RANGE 0.0 85.0
+#MOVEMENT
+> 9 20 0 0
+#MOVEMENT_END
+#INPUT 
+K
+#INPUT_END
+#HITBOX
+RightFoot 8 9 22 1hit 0 StrongHigh High
+RightFoot 8 10 14 1hit 0 WeakMedium Mid
+#HITBOX_END
+
+#MOVE ! Cartwheel_kick
+#DISPLAY_NAME Kernel_Panic
+#ANIMATION amyRolloverKick
+#VS_GROUNDED
+#RANGE 20.0 70.0
+#FRAMES 0 17
+#STANCE Ground
+#INPUT 
+3 + K
+#INPUT_END
+#FOLLOWUP
+RoundhouseLow_Followup 4 17
+#FOLLOWUP_END
+#CANCEL_INTO
+Rotary_Kick 11 17
+#CANCEL_INTO_END
+#MOVEMENT
+> 9 35 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 6 9 18 1hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! Cartwheel_kick_2
+#FOLLOWUP_ONLY
+#DISPLAY_NAME Kernel_Panic_II
+#ANIMATION amyRolloverKick
+#VS_GROUNDED
+#RANGE 20.0 70.0
+#FRAMES 0 17
+#STANCE Ground
+#INPUT 
+K
+#INPUT_END
+#FOLLOWUP
+RoundhouseLow_Followup 4 17
+#FOLLOWUP_END
+#CANCEL_INTO
+Rotary_Kick 11 17
+#CANCEL_INTO_END
+#MOVEMENT
+> 9 35 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 6 9 18 1hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! CrouchingKick_2
+#RANGE 0.0 55.0
+#DISPLAY_NAME Battery_Low
+#STANCE Crouch
+#ANIMATION crouchingKickRenzo
+#FRAMES 0 5
+#INPUT 
+K
+#INPUT_END
+#FOLLOWUP
+CrouchingPunch 0 5
+Rotary_Kick 0 5
+#FOLLOWUP_END
+#MOVEMENT
+> 3 15 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 3 3 10 1hit 0 WeakLow Low
+#HITBOX_END
+
+#MOVE ! CrouchingPunch
+#RANGE 0.0 65.0
+#DISPLAY_NAME Charging_the_Phone
+#STANCE Crouch
+#NEWSTANCE Ground
+#ANIMATION crouchingKickRenzo
+#FRAMES 6 20
+#INPUT 
+P
+#INPUT_END
+#CANCEL_INTO
+Rotary_Kick 11 20
+CrouchingKick 11 20
+#CANCEL_INTO_END
+#MOVEMENT
+> 10 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 9 10 12 1hit 0 StrongLow Low
+#HITBOX_END
+
+#MOVE ! Rotary_Kick
+#DISPLAY_NAME Maximum_Speed_Fan
+#ANIMATION flyingKick
+#FRAMES 0 22
+#RANGE 0.0 95.0
+#NO_DIRECTION_LOCK
+#STANCE Running
+#NEWSTANCE Ground
+#INVINCIBLE_AGAINST
+LowAtks 3 14
+#INVINCIBLE_AGAINST_END
+#ARMOR_FRAMES_AGAINST
+Bullets 0 14
+#ARMOR_FRAMES_AGAINST_END
+#INPUT 
+K
+#INPUT_END
+#CANCEL_INTO
+PhotonWave 16 22
+SlowPhotonWave 16 22
+#CANCEL_INTO_END
+#MOVEMENT
+> 7 60 0 30
+> 14 60 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 6 11 18 1Hit 0 Flight High
+#HITBOX_END
+
+#MOVE ! SupineReversal
+#ONLY_WHEN_OPPONENT_ATTACKS
+#REQUIRES_BULLET_COUNTERS 1
+#ARMOR_FRAMES_AGAINST
+Full 0 9
+#ARMOR_FRAMES_AGAINST_END
+#DISPLAY_NAME Maximum_Speed_Fan_(recovery)
+#ANIMATION flyingKick
+#FRAMES 0 22
+#RANGE 0.0 95.0
+#NO_DIRECTION_LOCK
+#STANCE Supine
+#NEWSTANCE Ground
+#INPUT 
+P + K
+#INPUT_END
+#MOVEMENT
+> 7 60 0 30
+> 14 60 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 6 11 30 1Hit 0 Flight High
+#HITBOX_END
+
+#MOVE ! Dynamite_Punch
+#DISPLAY_NAME Nuke_It_from_the_Orbit
+#NO_CANCELS_ON_WHIFF
+#ANIMATION abigailPunchTrip2
+#RANGE 50.0 100.0
+#FRAMES 0 49
+#ARMOR_FRAMES_AGAINST
+AtksAndBullets 0 13
+#ARMOR_FRAMES_AGAINST_END
+#STANCE Ground
+#INPUT 
+2 1 4 P
+#INPUT_END
+#SOUNDS
+0 swing
+11 swing
+22 trip
+#SOUNDS_END
+#CANCEL_INTO
+TwinVirtual 13 14
+SlowPhotonWave 13 14
+#CANCEL_INTO_END
+#MOVEMENT
+> 9 -5 0 0
+> 12 45 0 0
+> 16 0 0 0
+> 28 55 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 11 12 40 1hit 0 Flight Mid
+RightFoot  27 28 5 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Left_Jab
+#ANIMATION skeletonPunch
+#DISPLAY_NAME Customer_Rights
+#RANGE 0.0 50.0
+#FRAMES 0 5
+#STANCE Ground
+#FOLLOWUP
+Dual_Punch 0 5
+CrouchingKick 0 5
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 6 5 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 3 4 4 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Dual_Punch
+#FOLLOWUP_ONLY
+#ANIMATION dualPunch_2
+#RANGE 0.0 50.0
+#FRAMES 5 9
+#STANCE Ground
+#DELAY_AFTER_MOVE_MS 130
+#FOLLOWUP
+Cartwheel_kick 5 9
+Heavy_Kick 5 9
+CrouchingPunch 5 9
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 9 15 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 8 9 4 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! CrouchingKick
+#VS_GROUNDED
+#RANGE 0.0 50.0
+#DISPLAY_NAME Guarantee_Expiration
+#ANIMATION lowKick2
+#INVINCIBLE_AGAINST
+HightAtks 2 11
+#INVINCIBLE_AGAINST_END
+#FRAMES 0 9
+#STANCE Ground
+#NEWSTANCE Crouch
+#INPUT
+2 + K
+#INPUT_END
+#MOVEMENT
+> 3 7 0 0
+#MOVEMENT_END
+#FOLLOWUP
+CrouchingPunch 0 9
+LowPunch2 0 9
+#FOLLOWUP_END
+#HITBOX
+LeftFoot 3 4 10 1hit 0 WeakLow Low
+#HITBOX_END
+
+#MOVE ! LowPunch2
+#RANGE 0.0 65.0
+#DISPLAY_NAME Blue_Screen_of_Death
+#ANIMATION crouchingPunch2
+#FRAMES 0 10
+#STANCE Crouch
+#NEW_STANCE Ground
+#INPUT
+3 + P
+#INPUT_END
+#MOVEMENT
+> 3 10 0 0
+#MOVEMENT_END
+#FOLLOWUP
+Cartwheel_kick 0 10
+#FOLLOWUP_END
+#HITBOX
+RightPunch 2 3 10 1hit 0 StrongMid Mid
+#HITBOX_END
+
+
+#MOVE ! LowPunch2_FWP
+#FOLLOWUP_ONLY
+#RANGE 0.0 65.0
+#DISPLAY_NAME Blue_Screen_of_Death
+#ANIMATION crouchingPunch2
+#FRAMES 0 10
+#STANCE Crouch
+#NEW_STANCE Ground
+#INPUT
+P
+#INPUT_END
+#MOVEMENT
+> 3 10 0 0
+#MOVEMENT_END
+#FOLLOWUP
+Cartwheel_kick 0 10
+#FOLLOWUP_END
+#HITBOX
+RightPunch 2 3 10 1hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! TwinVirtual
+#RANGE 30.0 90.0
+#DISPLAY_NAME Virtual_Machine_Galore
+#ANIMATION twinVirtual
+#FRAMES 0 21
+#STANCE Ground
+#INPUT
+8 + P
+#INPUT_END
+#MOVEMENT
+> 3 10 0 0
+#MOVEMENT_END
+#CANCEL_INTO
+PhotonWave 10 21
+#CANCEL_INTO_END
+#SOUNDS
+0 swing
+6 swing
+#SOUNDS_END
+#HITBOX
+LeftPunch 2 4 9 1hit 0 WeakHigh High
+RightPunch 7 9 9 1hit 0 StrongHigh High
+#HITBOX_END
+
+#MOVE ! PaperShredder
+#RANGE 80.0 140.0
+#ANTI_AIR_ONLY
+#DISPLAY_NAME Zero_Day_Exploit
+#ANIMATION paperShredder2
+#FRAMES 0 20
+#STANCE Ground
+#INPUT
+9 + K
+#INPUT_END
+#MOVEMENT
+> 8 30 0 0
+#MOVEMENT_END
+#SOUNDS
+0 swing
+#SOUNDS_END
+#HITBOX
+Extra1 4 6 5 1hit 0 StrongHigh High
+RightFoot 4 5 25 1hit 0 StrongHigh High
+RightFoot 6 6 35 1hit 0 Flight High
+#HITBOX_END
+
+#MOVE ! PhotonBurst
+#ANIMATION monoJumpPalm
+#DISPLAY_NAME Photon_Wave_(56k)
+#ADDITIONAL_VELOCITY_AFTER_AIR_MOVE 70.0
+#DELAY_AFTER_MOVE_MS 200
+#RANGE 0.0 250.0
+#FRAMES 0 4
+#STANCE Air
+#INPUT 
+T
+#INPUT_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#MOVEMENT
+> 6 0 0 50
+#MOVEMENT_END
+#BULLET
+#mesh
+bullets\\photonW.x
+#range
+200.0
+#velocity
+80.0 0 -40
+#hitbox_radius
+12.0 12.0 12.0
+#hitbox
+RightPunch 2 2 12 1hit 1 StrongMid Mid
+#hitbox_end
+#BULLET_END
+#SOUNDS
+0 swing
+#SOUNDS_END
+
+#MOVE ! PhotonWave
+#RANGE 100.0 180.0
+#DISPLAY_NAME Photon_Wave_(Low_Ping)
+#ANIMATION photonWave
+#FRAMES 0 15
+#STANCE Ground
+#INPUT
+6 + T
+#INPUT_END
+#MOVEMENT
+> 3 10 0 0
+#MOVEMENT_END
+#SOUNDS
+0 swing
+#SOUNDS_END
+#BULLET
+#mesh
+bullets\\photonW.x
+#range
+140.0
+#velocity
+500.0 0 0
+#hitbox_radius
+12.0 12.0 12.0
+#hitbox
+RightPunch 4 4 13 1hit 0 StrongMid Mid
+#hitbox_end
+##particle_system bullets\\hit.png 10 40 20
+#BULLET_END
+
+#MOVE ! SlowPhotonWave
+#RANGE 100.0 210.0
+#DISPLAY_NAME Photon_Wave_(High_Ping)
+#ANIMATION photonWave
+#FRAMES 0 15
+#STANCE Ground
+#INPUT
+4 + T
+#INPUT_END
+#MOVEMENT
+> 3 10 0 0
+#MOVEMENT_END
+#SOUNDS
+0 swing
+#SOUNDS_END
+#BULLET
+#mesh
+bullets\\photonW.x
+#range
+500.0
+#velocity
+100.0 0 0
+#hitbox_radius
+12.0 12.0 12.0
+#hitbox
+RightPunch 4 4 12 1hit 1 StrongMid Mid
+#hitbox_end
+##particle_system bullets\\hit.png 10 40 20
+#BULLET_END
+#CANCEL_INTO
+Rollout_Front 10 15
+Rollout_Back 10 15
+RunSwitch 10 15
+#CANCEL_INTO_END
+
+#END

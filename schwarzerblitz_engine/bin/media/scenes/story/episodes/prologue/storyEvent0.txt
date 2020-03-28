@@ -1,0 +1,174 @@
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+Where? The city is Euterpe, Italy, southern part of the Concordate Macroregion. This is an undisputed truth.
+#TEXT_END
+#PAUSE 600
+#BGM
+atmosphere.ogg
+30.0
+0.8
+#END
+
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+When? The day is 14th April, 2064. It's 3 o' clock in the morning. All the sources seem to confirm this detail.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+How? A series of small explosions in the research labs near the auxiliary reactor of DP-4, the distortion powerplant which supplies Italy and Austria. Most reports agree on this as the primary cause.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+What?
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+Here's where the story becomes more complex. I can only partly respond to this, as even the experts disagree, to a certain extent. So, the simple answer is...
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#BACKGROUND cg\euterpe2.png
+#CENTER_WINDOW
+#TEXT_BEGIN
+... the total obliteration of one third of the city.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+One million bodies found. Countless injured, some still missing.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+I was there, that day. I was there for a routine job. I didn't expect I was going to face Hell incarnate.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+But wait, there's more. The first explosion carbonized only one district.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+As the labs were burning and the reactor was going to be taken care of by the firefighters, something... different happened.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#BACKGROUND cg\euterpe0.png
+#TEXT_BEGIN
+A storm of black lightnings.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+I immediately started to run away from the city center, squealing like a frightened pig. I walked for ten, fifteen minutes, stole a bike, run for ten minutes more. Then, I heard it. The Thunder.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+The people who came out to admire the unusual phenomenon... and everyone else who was asleep at that moment...
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#BACKGROUND cg\euterpe1.png
+#TEXT_BEGIN
+... were not as lucky as me.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+You may have noticed that I left out one question. Who? Who did this?
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Truth is, nobody knows. Some swear to have seen a man without face escaping the lab, minutes before the explosion. This claim was quickly dismissed, however: nobody was supposed to be in that lab, that night.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+So, the mystery remains. And I have someway to thank the guy who left his bike unlocked, if I'm alive to tell this story, one year later.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+It's 03:29 and 18 seconds. The day is 14th April, 2065.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#BACKGROUND cg\euterpe1.png
+#TEXT_BEGIN
+One year ago, in that precise moment... that was the instant when the Black Thunder roared.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+That was the instant when everything began.
+#TEXT_END
+#PAUSE 600
+#CLOSE_ALL_WINDOWS
+#END

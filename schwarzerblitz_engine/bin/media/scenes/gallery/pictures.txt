@@ -1,0 +1,70 @@
+#folder scenes\story\common\cg\
+
+#new_picture
+
+#reward
+  ##picture donnerDefeated
+#condition
+  ##number_of_arcade_beaten 1
+#condition_end
+#reward_end
+
+#frame donnerDefeatArcade1a.jpg
+#frame donnerDefeatArcade2a.jpg
+#frame donnerDefeatArcade3a.jpg
+
+#caption
+Arcade ending - Donner's demise
+
+#locked_caption
+[UNLOCK: Clear Arcade mode once]
+
+#new_picture_end
+
+===================================================
+
+#folder scenes\gallery\extra\
+
+------------------------------------------------
+
+#new_picture
+
+#reward
+ ##picture banner
+#condition
+  ##number_of_arcade_beaten 1
+#condition_end
+#reward_end
+
+#frame bannerLowRes.jpg
+
+#caption
+Game banner (2017 - lineart by TheFresco art)
+
+#locked_caption
+[UNLOCK: ???]
+
+#new_picture_end
+
+------------------------------------------------
+
+#new_picture
+
+#reward
+ ##picture lobsterRender
+#condition
+  ##character_unlocked chara_lobster
+#condition_end
+#reward_end
+
+#frame evilobster.jpg
+
+#caption
+Evilobster (2015)
+
+#locked_caption
+[UNLOCK: ???]
+
+#new_picture_end
+
+------------------------------------------------

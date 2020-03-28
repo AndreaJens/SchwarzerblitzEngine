@@ -1,0 +1,18 @@
+#NO_OF_ROUNDS 1
+#PLAYER_WIN_QUOTE
+... so, you are just a young moron.
+#OPPONENT_WIN_QUOTE
+Now, you'll tell mewhat I want to hear, amico.
+#PLAYER_INTRO_QUOTE
+Why have you used that name?
+#OPPONENT_INTRO_QUOTE
+So, your memory isn't so faulty, huh?
+#OPPONENT_LIFE_MULTIPLIER 1
+#PLAYER_LIFE_MULTIPLIER 1
+#OPPONENT chara_tutor2
+#PLAYER chara_tutor
+#AI_LEVEL 5
+#STAGE vrTestGround
+#PLAYER_OUTFIT_ID 0
+#OPPONENT_OUTFIT_ID 0
+#TIMER 100

@@ -1,0 +1,127 @@
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+A chaotic mass of egocentric animals yelling at each other.
+This is our world, today.
+#TEXT_END
+#CLOSE_WINDOW
+#PAUSE 600
+#BGM
+atmosphere.ogg
+60.0
+0.9
+#END
+
+#NO_BACKGROUND
+#TEXT_BEGIN
+A world where - as usual - I can walk without anyone caring about me.
+Everyone is just randomly moving like a fly, following lights and neons without a precise path.
+#TEXT_END
+#PAUSE 600
+#TRANSITION cg\black.jpg 300
+#BACKGROUND cg\cg2b.png
+#END
+
+#NO_BACKGROUND
+#TEXT_BEGIN
+Sometimes I wonder... how did we come up to this point?
+How comes people just mind their own business, without even taking a glance of what's happening around them?
+#TEXT_END
+#CLOSE_WINDOW
+#PAUSE 600
+#TRANSITION cg\cg2b.png 300
+#BACKGROUND cg\cg3b.png
+#END
+
+#NO_BACKGROUND
+#TRANSITION cg\cg3b.png 300
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+Maybe I'm just brooding too much. Please, be free to gainsay my belief me at any time.
+I just leave you a further question to help you formulate an answer.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#NO_BACKGROUND_PICTURE
+#CENTER_WINDOW
+#TEXT_BEGIN
+How is it possible that I'm free to walk on those always crowded streets...
+#TEXT_END
+#CLOSE_WINDOW
+#PAUSE 600
+#END
+
+#AUTO
+#PAUSE 500
+#BACKGROUND cg\cg1b.png
+#TRANSITION cg\black.jpg 300
+#NO_BACKGROUND
+#END
+
+#TEXT_BEGIN
+... without even having a face?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+That's right. Nobody can remember my face. Not even myself, while looking at the mirror. Everyone is seeing it as an indistinguishable mess of ever-changing fading... stuff.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+Like a photograph completely out of focus. Only the eyes are where they are supposed to be. Except they don't look like eyes. Just less blurred areas on a blurred portrait.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+It's like everyone - me included - is suffering from some sort of prosopagnosia, when looking at it. Feel free to browse some medical encyclopedia, I have enough spare time to wait for you to find what it is.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+But, in any case, this doesn't matter. Nowadays, people don't give a damn about you. Except the usual random weirdo that starts insulting you without a reason...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+...or following you like a shadow for the last half an hour.
+#TEXT_END
+#BACKGROUND cg\cg4.png
+#TRANSITION cg\cg1b.png 300
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+Maybe I'm just paranoid, but it's better than not connecting the dots.
+#TEXT_END
+#BACKGROUND cg\cg5.png
+#TRANSITION cg\cg4.png 300
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+Fortunately, there is a nice small ladder to reach the nearby riverside. It's actually used by the sanitation workers to store some wastes. Nobody in his right mind would go down there now.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+If he follows me even there, then I'll be 100% sure he's a stalker.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+In that case, he WILL pray to forget my face.
+#TEXT_END
+#PAUSE 600
+#END

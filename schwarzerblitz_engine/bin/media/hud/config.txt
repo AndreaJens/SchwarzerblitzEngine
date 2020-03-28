@@ -1,0 +1,95 @@
+------------ STANDARD HUD -----------------------
+
+#reference_screen_size		640 360
+
+---------------- lifebar ------------------------
+
+#high_life_color		255 255 25 25		
+#low_life_color			255 255 200 0
+#life_background_color		255 0 0 50
+#lifebar_position		27 9 213 9
+#lifebar_texture		lbar1_bw_light.png lbar2_bw_light.png
+
+----------------- lifebar case ---------------------
+
+#lifebar_case_position		0 0 320 48
+#lifebar_case_texture		bar1_portrait.png	
+#show_lifebar_case		1
+
+----------------- player names ---------------------
+
+#center_names_on_lifebar	0
+#player_name_offset		32 20
+#show_names			1
+
+----------------- combo damage ---------------------
+
+#show_combo_hit_number		1
+#show_combo_damage		1
+#show_combo_text_after_N_hits	1
+#combo_damage_text_position	13 275
+#damage_name			damage damage
+#hit_name			hit hits
+
+-------------- vanishing lifebar -------------------
+
+#show_vanishing_lifebar			1
+#vanishing_life_ratio_per_second	1
+#pause_vanishing_life_on_hitstun	1
+#high_lost_life_color		255 255 255 25
+#low_lost_life_color		255 255 255 25
+
+-------------- trigger regen bar -------------------
+
+#trigger_regen_bar_background_color	128 0 0 0
+#trigger_regen_bar_border_color		255 192 192 192
+#trigger_regen_bar_gradient_colors	255 0 196 196
+					255 0 120 180
+#trigger_bar_same_position_as_triggers	1
+#trigger_recovery_bar_position		0 0 0 0
+#trigger_recovery_bar_flash_max		0
+					0 0 0 0
+#show_sectorized_trigger_bar		0
+
+------------------- triggers -----------------------
+
+#show_trigger_gun_cylinder	1
+#trigger_counters_position	10 51 12 12
+#trigger_counters_texture	triggerCounter_icon2.png
+#draw_trigger_counters_from_border	0
+#show_trigger_counters			1
+#show_trigger_number			0
+
+-------------- trigger gun cylinder ----------------
+
+#trigger_counters_use_animation_texture		triggerAnimation.png
+#trigger_counters_gun_cylinder_texture		triggerGun2.png
+#trigger_counters_gun_cylinder_position		28 16 48 48
+
+------------------- portraits ---------------------
+
+#portrait_position		0 0 80 48
+#show_portraits			1
+
+---------------- round indicators -----------------
+
+#round_indicator_texture	roundDiamond.png roundDiamondFull.png
+#round_indicator_position	10 42 16 16
+#show_empty_round_indicators	1
+#show_life_lead_indicator	1
+
+-------------------- timer ------------------------
+
+#timer_vertical_position	7
+
+------------------ stage intro ---------------------
+
+#show_stage_name		1
+#show_stage_description		1
+#show_stage_bgm_name		1
+#show_stage_bgm_author		1
+
+----------------- training input --------------------
+
+#training_input_coordinates 	10 106 18.8 20.7
+#training_input_max_buffer_size 10

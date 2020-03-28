@@ -1,0 +1,42 @@
+#UNLOCKNAME Random_(keep_TRIGGER_pressed_while_selecting_"?")
+#NAME Random
+#SHORTNAME Random
+#BACKFACECULLINGOFF
+#HIT_SFX fire.bmp
+#HIT_SFX_TRIGGER triggerTexture.jpg
+#MOVESFILE moves.txt
+#BONESFILE bones.txt
+#HITBOXFILE hitboxes.txt
+#HURTBOXFILE hurtboxes.txt
+#LIFE 250.0
+#AI_TYPE luchador
+/* from here one, the basic poses for the character are defined (start frame - end frame) */
+#STANCE rotationStance 0 59
+#WALKING walkFast 0 14
+#RUNNING runninglow 0 9
+#SIDESTEP sidestepFast 0 10
+#STANDGUARD standGuard 0 4
+#CROUCHGUARD lowGuard 0 4
+#LOWSTANCE rotationLow 0 59
+#HITHIGHWEAKFRONT hitReactionWeakHM 0 6
+#HITMEDWEAKFRONT  hitReactionWeakHM 0 6
+#HITLOWWEAKFRONT  hitReactionWeakL 0 6
+#HITHIGHWEAKBACK  hitReactionWeakHM 0 6
+#HITMEDWEAKBACK   hitReactionWeakL 0 6
+#HITLOWWEAKBACK   hitReactionWeakL 0 6
+#HITMEDSTRONG    hitReactionStrongHM 0 13
+#HITMEDSTRONGBACK    hitReactionStrongL 0 13
+#HITLOWSTRONG    hitReactionStrongL 0 13
+#HITLOWSTRONGBACK    hitReactionStrongHM 0 13
+#HITHIGHSTRONG    hitReactionStrongHM 0 13
+#HITHIGHSTRONGBACK    hitReactionStrongL 0 13
+#HITFLIGHTSTRONG    reaction_heavyHitAirRevolt 0 8
+#WAKEUP wakeUpAnimation 0 8
+#GROUNDEDSUPINE  supine 0 6
+#GROUNDEDPRONE  proneRotation 0 0
+#GROUNDEDSUPINEROTATION proneRotation 0 9
+#GROUNDEDPRONEROTATION proneRotation 0 9
+#WINPOSE rotatingEmblem 0 59
+#INTRO rotatingEmblem 0 59
+#SUPINELANDING reaction_landing 0 5
+#JUMPING jump2 0 13

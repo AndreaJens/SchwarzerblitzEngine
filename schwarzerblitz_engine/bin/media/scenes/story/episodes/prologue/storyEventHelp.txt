@@ -1,0 +1,8 @@
+#BACKGROUND help.png
+
+#NO_BACKGROUND
+#TEXT_BEGIN
+Pressing the Start button will open the SCENE SKIP menu, with various options such as going back to the episode selection menu. To progress with the text, press the SELECTION button (C key/A button in the default configuration).
+#TEXT_END
+#PAUSE 600
+#END

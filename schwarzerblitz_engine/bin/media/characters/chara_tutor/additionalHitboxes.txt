@@ -1,0 +1,6 @@
+#newHitbox_begin
+Extra1
+LEG_R
+0 0.5 0
+0.1 0.1 0.1
+#newHitbox_end

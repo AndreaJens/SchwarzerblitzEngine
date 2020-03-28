@@ -1,0 +1,20 @@
+#newHitbox_begin
+Extra1
+SPINE
+0 0 0
+0.3 0.3 0.3
+#newHitbox_end
+
+#newHitbox_begin
+Extra4
+TORSO
+0 -0.5 0
+0.4 0.4 0.4
+#newHitbox_end
+
+#newHitbox_begin
+Extra5
+SPINE
+0 0 0
+0.1 0.4 0.4
+#newHitbox_end

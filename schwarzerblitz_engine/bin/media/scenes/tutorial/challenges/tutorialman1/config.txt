@@ -1,0 +1,10 @@
+#NAME
+Meet the Master
+#ID
+Tutorial Man
+#DESCRIPTION
+Tutorial Man, the master himself. With a compilation
+moveset and a few original tricks, he has a lot of
+versatility at his disposal, especially in the zoning
+department.
+#DESCRIPTION_END

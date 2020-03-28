@@ -1,0 +1,111 @@
+#BACKGROUND cg\nalgol3.png
+#CENTER_WINDOW
+#NO_BACKGROUND
+#TEXT_BEGIN
+Northern Algol, huh? It's already four years, since that "accident" happened.
+#TEXT_END
+#PAUSE 600
+#BGM
+atmosphere.ogg
+60.0
+0.9
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Maybe, "accident" is not the right word. I believe that "deliberate massacre" is a more convincing one.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+A serial killer, nicknamed Rosenmaester, exterminated the city population using blood-sucking flowers.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Pretty B-movie-ish, if you ask me, but who am I to judge? In any case, two million people died. And now, Northern Algol is something like a open-air graveyard. A bunch of lifeless ruins.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\nalgol3.png 300
+#BACKGROUND cg\nalgol2.png
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Some people used to travel there for making some cheap "found footage" movies. Heck, there was even a horror series a couple months ago. The truth is, Northern Algol is still dangerous. The damn flowers have never withered.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Touch them, and you are as dry as desert sand.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Nobody in his right mind would live there. I could have simply classified the kid's statement to "trash".
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Except that the news said something about an unknown military robot being spotted there. Another thing which shouldn't surely be walking the dead streets of a deader city.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Oh, and the sudden, unexpected peak in EM emission in the area. Yeah, you know, the kind of things which one would see in some cheap mystery TV show.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Too many strange coincidences. And I don't belive in coincidences. Not at all.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Now, the one million pounds question: how do I get there?
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Reaching Ireland means ferry or airplane. Ferry or airplane mean identity card. And, technically, I don't have one, since I do not exist.
+#TEXT_END
+#PAUSE 600
+#END
+
+#NO_BACKGROUND
+#CENTER_WINDOW
+#TEXT_BEGIN
+Maybe it's time to make good use of some of my underworld connections...
+#TEXT_END
+#PAUSE 600
+#CLOSE_WINDOWS
+#END

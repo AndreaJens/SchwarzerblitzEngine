@@ -1,0 +1,1079 @@
+/*This file contains all the moves of Tiger Sambiong*/
+#MOVE Run1
+#RANGE 60.0 300.0
+#NO_SOUNDS
+#ANIMATION running
+#DELAY_AFTER_MOVE_MS 200
+#FRAMES 0 0
+#STANCE Ground
+#NEWSTANCE Running
+#INPUT 
+> >
+#INPUT_END
+
+#MOVE BackStepOld
+#FOLLOWUP_ONLY
+#RANGE 0.0 65.0
+#NO_SOUNDS
+#NO_DELAY
+#ANIMATION walkFast
+#FRAMES 0 5
+#STANCE Ground
+#MOVEMENT
+> 3 -40 0 0
+#MOVEMENT_END
+#DELAY_AFTER_MOVE_MS 300
+#INVINCIBILITY_FRAMES 0 2
+#FOLLOWUP
+SideStepBackgroundCancel 1 5
+SideStepForegroundCancel 1 5
+#FOLLOWUP_END
+#INPUT 
+< <
+#INPUT_END
+
+#MOVE Ukemi
+#DISPLAY_NAME Ukemi
+#RANGE 90.0 200.0
+#NO_DELAY
+#ANIMATION rolloutRight
+#ANIMATION_RIGHTSIDE rollout
+#FRAMES 5 12
+#NO_DIRECTION_LOCK
+#STANCE Landing
+#NEWSTANCE Ground
+#INVINCIBILITY_FRAMES 5 8
+#MOVEMENT
+> 12 0 60 0
+#MOVEMENT_END
+#INPUT 
+T
+#INPUT_END
+
+#MOVE ! Rollout_Front
+#DISPLAY_NAME Side_Roll
+#ONLY_WHEN_OPPONENT_ATTACKS
+#RANGE 30.0 160.0
+#ANIMATION rolloutRight
+#ANIMATION_RIGHTSIDE rollout
+#DELAY_AFTER_MOVE_MS 100
+#INVINCIBILITY_FRAMES_AGAINST 
+UpperbodyAtks 0 5
+#INVINCIBILITY_FRAMES_AGAINST_END
+#FRAMES 0 12
+#NO_DIRECTION_LOCK
+#STANCE Ground
+#MOVEMENT
+> 12 0 75 0
+#MOVEMENT_END
+#FOLLOWUP
+RolloutScarletScrew 0 12
+Ducking_Comet 0 12
+#FOLLOWUP_END
+#INPUT 
+2 + T
+#INPUT_END
+
+#MOVE ! Rollout_Back
+#DISPLAY_NAME Side_Roll_(II)
+#ONLY_WHEN_OPPONENT_ATTACKS
+#RANGE 30.0 160.0
+#DELAY_AFTER_MOVE_MS 100
+#ANIMATION rollout
+#ANIMATION_RIGHTSIDE rolloutRight
+#INVINCIBILITY_FRAMES_AGAINST 
+UpperbodyAtks 0 5
+#INVINCIBILITY_FRAMES_AGAINST_END
+#FRAMES 0 12
+#NO_DIRECTION_LOCK
+#STANCE Ground
+#MOVEMENT
+> 12 0 -75 0
+#MOVEMENT_END
+#FOLLOWUP
+RolloutScarletScrew 0 12
+Ducking_Comet 0 12
+#FOLLOWUP_END
+#INPUT 
+8 + T
+#INPUT_END
+
+#MOVE ! Quick_Left_Punch
+#DISPLAY_NAME Quick_Jab
+#ANIMATION TigerQuickPunch
+#DELAY_AFTER_MOVE_MS 130
+#RANGE 0.0 55.0
+#FRAMES 0 5
+#STANCE Ground
+#FOLLOWUP
+Heavy_Kick_Eins 0 5
+Rising_Blade 0 5
+Double_Hammer 0 5
+Heavy_Kick_Vier 0 5
+Rollout_Front 0 5
+Rollout_Back 0 5
+Knee_CommandoFirstPunch_2 0 5
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 5 3 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 3 4 5 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Ducking_Comet
+#ANIMATION DuckingComet_2
+#RANGE 0.0 72.0
+#FRAMES 0 15
+#STANCE Ground
+#INPUT 
+1 + K
+#INPUT_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 3
+#INVINCIBILITY_FRAMES_AGAINST_END
+#CANCEL_INTO
+Rising_Comet_Follower 12 15
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_CommandoFirstPunch_2 0 12
+#FOLLOWUP_END
+#MOVEMENT
+> 10 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 7 8 20 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! Jump_Punch
+#ANIMATION defaultJumpPunch
+#DISPLAY_NAME Jumping_Jab
+#RANGE 0.0 65.0
+#FRAMES 0 5
+#STANCE Air
+#INPUT 
+P
+#INPUT_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#MOVEMENT
+> 4 15 0 -10
+#MOVEMENT_END
+#HITBOX
+LeftPunch 1 2 8 1Hit 0 StrongHigh High
+#HITBOX_END
+
+#MOVE ! Air_Comet
+#ANIMATION DuckingComet_2
+#DISPLAY_NAME Ducking_Comet_(II)
+#RANGE 0.0 72.0
+#FRAMES 0 12
+#STANCE Air
+#NEWSTANCE Ground
+#INPUT 
+K
+#INPUT_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 3
+#INVINCIBILITY_FRAMES_AGAINST_END
+#FOLLOWUP
+Knee_CommandoFirstPunch_2 0 5
+#FOLLOWUP_END
+#MOVEMENT
+> 10 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 7 8 20 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! Double_Hammer
+#ANIMATION DoubleHammer
+#RANGE 0.0 50.0
+#DELAY_AFTER_MOVE_MS 130
+#FRAMES 0 11
+#FOLLOWUP
+Knee_CommandoFirstPunch_Standalone 0 13
+Knee_Commando 0 13
+CrouchingScarletScrew 0 13
+Heavy_Kick_Vier 0 5
+#FOLLOWUP_END
+#STANCE Ground
+#INPUT 
+4 + P
+#INPUT_END
+#MOVEMENT
+> 6 25 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 4 6 16 1hit 0 StrongMid Mid
+#HITBOX_END
+
+#MOVE ! Dynamo_Punch
+#ANIMATION DynamoNova0
+#RANGE 0.0 55.0
+#DELAY_AFTER_MOVE_MS 130
+#FRAMES 0 8
+#CANCEL_INTO
+DynamoPunchEnding 3 6
+Heavy_Kick_VierFWP 3 6
+#CANCEL_INTO_END
+#STANCE Ground
+#INPUT 
+6 + P
+#INPUT_END
+#MOVEMENT
+> 3 12 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 1 2 8 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! DynamoPunchEnding
+#FOLLOWUP_ONLY
+#ANIMATION DynamoNova
+#DELAY_AFTER_MOVE_MS 130
+#RANGE 0.0 60.0
+#FRAMES 4 16
+#CANCEL_INTO
+Heavy_Kick_VierFWP 7 13
+Double_Hammer 9 13
+SobatEnder 7 13
+#CANCEL_INTO_END
+#STANCE Ground
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 6 12 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 5 6 13 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! SobatEnder
+#FOLLOWUP_ONLY
+#ANIMATION RollingSobat
+#DELAY_AFTER_MOVE_MS 130
+#RANGE 0.0 70.0
+#FRAMES 0 14
+#STANCE Ground
+#INPUT 
+6 + K
+#INPUT_END
+#MOVEMENT
+> 4 16 0 0
+> 8 15 0 0
+> 11 -5 0 0
+#MOVEMENT_END
+#MINIMUM_DAMAGE_RATIO_AFTER_SCALING 1.00
+#HITBOX
+RightFoot 3 4 16 1hit 0 Flight Mid
+#HITBOX_END
+
+#MOVE ! Right_Punch_Throw
+#DISPLAY_NAME Star_Platinum_Dance
+#ANIMATION throwStart_step
+#RANGE 0.0 55.0
+#FRAMES 0 8
+#STANCE Ground
+#FOLLOWUP
+TW_OraOraOra 0 8
+#FOLLOWUP_END
+#INPUT 
+T
+#INPUT_END
+#SOUNDS
+3 swing
+#SOUNDS_END
+#MOVEMENT
+> 3 0 0 0
+> 5 5 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 6 6 0 1hit 0 WeakHigh Throw
+#HITBOX_END
+
+#MOVE ! CrouchUppercut
+#DISPLAY_NAME Rising_Poke
+#ANIMATION uppercut
+#RANGE 0.0 40.0
+#FRAMES 2 10
+#STANCE Crouch
+#NEWSTANCE Ground
+#INPUT 
+3 + P
+#INPUT_END
+#MOVEMENT
+> 6 20 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 2 10 13 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! TW_OraOraOra
+#FOLLOWUP_ONLY
+#ANIMATION oraoraora
+#FRAMES 0 57
+#THROW 
+#animation
+oraoraoraReaction 0 59
+#starting_distance
+43
+#target_movement
+> 55 0 0 0
+> 58 -20 0 0
+#target_movement_end
+#THROW_END
+#STANCE Ground
+#MOVEMENT
+> 5 5 0 0
+#MOVEMENT_END
+#HITBOX
+! RightPunch 0 3 2 multiHit 4 None High
+! LeftPunch  4 7 2 multiHit 4 None High
+! RightPunch 8 11 2 multiHit 4 None High
+! LeftPunch  12 15 2 multiHit 4 None High
+! RightPunch 16 19 2 multiHit 4 None High
+! LeftPunch  20 23 2 multiHit 4 None High
+! RightPunch 24 25 4 multiHit 4 None High
+! LeftPunch  28 31 4 multiHit 4 None High
+! RightPunch 32 35 4 multiHit 4 None High
+! LeftPunch  36 39 4 multiHit 4 None High
+! RightPunch 40 43 4 multiHit 4 None High
+! LeftPunch  44 45 5 multiHit 4 None High
+! RightPunch 53 56 8 multiHit 4 Smackdown Mid
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Eins
+#DISPLAY_NAME Russian_Boot
+#ANIMATION tiger_heavyKickCombo
+#RANGE 0.0 75.0
+#FRAMES 0 11
+#STANCE Ground
+#FOLLOWUP
+Heavy_Kick_Zwei 0 11
+CrouchingScarletScrew 0 11
+Knee_Commando 0 11
+Quick_Left_Punch 0 11
+Rollout_Front 0 11
+Rollout_Back 0 11
+#FOLLOWUP_END
+#INPUT 
+4 + K
+#INPUT_END
+#MOVEMENT
+> 8 20 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 4 5 16 1Hit 0 StrongHigh Mid
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Zwei
+#FOLLOWUP_ONLY
+#ANIMATION tiger_heavyKickCombo
+#RANGE 0.0 85.0
+#FRAMES 11 17
+#DELAY_AFTER_MOVE_MS 150
+#STANCE Ground
+#FOLLOWUP
+Heavy_Kick_Drei 11 17
+Heavy_Kick_VierFWP 11 17
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 14 20 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 14 15 12 1Hit 0 WeakHigh Mid
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Drei
+#FOLLOWUP_ONLY
+#ANIMATION tiger_heavyKickCombo
+#RANGE 0.0 85.0
+#FRAMES 17 23
+#STANCE Ground
+#FOLLOWUP
+Heavy_Kick_Vier 17 23
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 19 15 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 19 20 8 1Hit 0 WeakMedium Mid
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Vier
+#FOLLOWUP_ONLY
+#VS_GROUNDED
+#ANIMATION tiger_heavyKickCombo
+#DELAY_AFTER_MOVE_MS 200
+#RANGE 0.0 85.0
+#FRAMES 23 30
+#STANCE Ground
+#NEWSTANCE Crouch
+#FOLLOWUP
+Heavy_Kick_Fuenf 23 30
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 26 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 27 29 12 1Hit 0 WeakLow Low
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_VierFWP
+#FOLLOWUP_ONLY
+#VS_GROUNDED
+#ANIMATION tiger_heavyKickCombo
+#RANGE 0.0 85.0
+#FRAMES 23 30
+#STANCE Ground
+#DELAY_AFTER_MOVE_MS 150
+#NEWSTANCE Crouch
+#FOLLOWUP
+Heavy_Kick_Fuenf 23 30
+#FOLLOWUP_END
+#INPUT 
+2 + K
+#INPUT_END
+#MOVEMENT
+> 26 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 27 29 12 1Hit 0 WeakLow Low
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Fuenf
+#DISPLAY_NAME Rising_Fang
+#ANIMATION tiger_heavyKickCombo
+#DELAY_AFTER_MOVE_MS 150
+#RANGE 0.0 65.0
+#FRAMES 30 36
+#STANCE Crouch
+#NEWSTANCE Crouch
+#FOLLOWUP
+Heavy_Kick_Sechs 30 36
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 33 15 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 33 34 10 1Hit 0 WeakLow Low
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Sechs
+#FOLLOWUP_ONLY
+#ANIMATION tiger_heavyKickCombo
+#RANGE 0.0 55.0
+#FRAMES 36 42
+#DELAY_AFTER_MOVE_MS 250
+#STANCE Crouch
+#NEWSTANCE Ground
+#INPUT 
+P
+#INPUT_END
+#FOLLOWUP
+SobatEnder 36 42
+#FOLLOWUP_END
+#MOVEMENT
+> 38 15 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 38 39 12 1Hit 0 StrongHigh High
+#HITBOX_END
+
+#MOVE ! Heavy_Kick_Sechs_2
+#FOLLOWUP_ONLY
+#ANIMATION tiger_heavyKickCombo
+#DELAY_AFTER_MOVE_MS 250
+#RANGE 0.0 55.0
+#FRAMES 36 42
+#STANCE Ground
+#INPUT 
+< + P
+#INPUT_END
+#MOVEMENT
+> 38 15 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 38 39 12 1Hit 0 StrongHigh High
+#HITBOX_END
+
+#MOVE ! Quick_Kick
+#DISPLAY_NAME Gut_Kick
+#ANIMATION quickKick
+#RANGE 0.0 55.0
+#FRAMES 0 6
+#STANCE Ground
+#FOLLOWUP
+Rising_Blade  0 6
+Knee_Commando 0 6
+Heavy_Kick_Vier 0 6
+Crouching_Kick 0 6
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 3 6 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 3 4 10 1Hit 0 WeakMid Mid
+#HITBOX_END
+
+#MOVE ! SupineReversal
+#ONLY_WHEN_OPPONENT_ATTACKS
+#REQUIRES_BULLET_COUNTERS 1
+#ARMOR_FRAMES_AGAINST
+Full 0 9
+#ARMOR_FRAMES_AGAINST_END
+#DISPLAY_NAME Scarlet_Screw_(recovery)
+#ANIMATION TigerScarletScrew_noKick_fix
+#FRAMES 0 14
+#RANGE 0.0 95.0
+#STANCE Supine
+#NEWSTANCE Ground
+#INPUT 
+P + K
+#INPUT_END
+#MOVEMENT
+> 7 80 0 0
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 30 1Hit 0 Flight Mid
+#HITBOX_END
+
+#MOVE ! TwinScarletScrew
+#FOLLOWUP_ONLY
+#DISPLAY_NAME Scarlet_Screw_(Twinned)
+#ANIMATION TigerScarletScrew_noKick_fix
+#FRAMES 0 14
+#RANGE 0.0 95.0
+#STANCE Ground
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#ARMOR_FRAMES_AGAINST
+Projectiles 0 4
+#ARMOR_FRAMES_AGAINST_END
+#CANCEL_INTO
+RunningScarletScrew_Kick 7 8
+Rollout_Front 12 14
+Rollout_Back 12 14
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_Commando 0 14
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 7 80 0 0
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 11 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! AirScarletScrew
+#DISPLAY_NAME Air_Screw
+#ANIMATION TigerScarletScrew_noKick_fix
+#FRAMES 0 14
+#RANGE 60.0 105.0
+#STANCE Air
+#NEWSTANCE Ground
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 5
+#INVINCIBILITY_FRAMES_AGAINST_END
+#ARMOR_FRAMES_AGAINST
+Projectiles 0 4
+#ARMOR_FRAMES_AGAINST_END
+#CANCEL_INTO
+RunningScarletScrew_Kick 7 8
+Rollout_Front 12 14
+Rollout_Back 12 14
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_Commando 0 14
+TwinScarletScrew 9 14
+#FOLLOWUP_END
+#INPUT 
+9 + P
+#INPUT_END
+#MOVEMENT
+> 7 80 0 -40
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 11 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! CrouchingScarletScrew
+#DISPLAY_NAME Scarlet_Screw_(II)
+#ANIMATION TigerScarletScrew_noKick_fix
+#FRAMES 0 14
+#RANGE 0.0 95.0
+#STANCE Crouch
+#NEWSTANCE Ground
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#ARMOR_FRAMES_AGAINST
+Projectiles 0 4
+#ARMOR_FRAMES_AGAINST_END
+#CANCEL_INTO
+RunningScarletScrew_Kick 7 8
+Rollout_Front 12 14
+Rollout_Back 12 14
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_Commando 0 14
+TwinScarletScrew 9 14
+#FOLLOWUP_END
+#INPUT 
+1 + P
+#INPUT_END
+#MOVEMENT
+> 7 80 0 0
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 11 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! GroundScarletScrew
+#ANIMATION TigerScarletScrew_noKick_fix
+#DISPLAY_NAME Scarlet_Screw
+#FRAMES 0 14
+#RANGE 0.0 95.0
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#ARMOR_FRAMES_AGAINST
+Projectiles 0 4
+#ARMOR_FRAMES_AGAINST_END
+#STANCE Ground
+#NEWSTANCE Ground
+#CANCEL_INTO
+RunningScarletScrew_Kick 7 8
+Rollout_Front 12 14
+Rollout_Back 12 14
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_Commando 0 14
+TwinScarletScrew 9 14
+#FOLLOWUP_END
+#INPUT 
+2 1 4 P
+#INPUT_END
+#MOVEMENT
+> 7 80 0 0
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 11 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! RolloutScarletScrew
+#ANIMATION TigerScarletScrew_noKick_fix
+#FOLLOWUP_ONLY
+#FRAMES 0 14
+#RANGE 0.0 95.0
+#STANCE Ground
+#NEWSTANCE Ground
+#ARMOR_FRAMES_AGAINST
+Projectiles 0 4
+#ARMOR_FRAMES_AGAINST_END
+#INVINCIBILITY_FRAMES_AGAINST
+LowAtks 0 4
+#INVINCIBILITY_FRAMES_AGAINST_END
+#CANCEL_INTO
+RunningScarletScrew_Kick 7 8
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_Commando 0 14
+TwinScarletScrew 9 14
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 7 80 0 0
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 11 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! RunningScarletScrew
+#DISPLAY_NAME Scarlet_Screw_(III)
+#ANIMATION TigerScarletScrew_noKick_fix
+#VS_GROUNDED
+#FRAMES 0 14
+#RANGE 0.0 95.0
+#ARMOR_FRAMES_AGAINST
+Projectiles 0 4
+#ARMOR_FRAMES_AGAINST_END
+#STANCE Running
+#NEWSTANCE Ground
+#CANCEL_INTO
+RunningScarletScrew_Kick 7 8
+#CANCEL_INTO_END
+#FOLLOWUP
+Knee_Commando 0 14
+TwinScarletScrew 9 14
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 7 95 0 0
+> 13 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 3 4 11 1Hit 0 StrongMedium Mid
+#HITBOX_END
+
+#MOVE ! RunningScarletScrew_Kick
+#FOLLOWUP_ONLY
+#MAXIMUM_TRACKING_ANGLE_STARTUP 30
+#ANIMATION TigerScarletScrew_fix
+#DELAY_AFTER_MOVE_MS 200
+#FRAMES 7 18
+#RANGE 0.0 95.0
+#STANCE Ground
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 12 60 0 0
+> 16 20 0 0
+#MOVEMENT_END
+#MINIMUM_DAMAGE_RATIO_AFTER_SCALING 1.00
+#HITBOX
+LeftFoot 11 13 15 1Hit 0 Flight High
+#HITBOX_END
+
+#MOVE ! RunningScarletScrew_LowKick
+#FOLLOWUP_ONLY
+#VS_GROUNDED
+#ANIMATION TigerScarletScrew_lowKick
+#FRAMES 10 13
+#RANGE 0.0 65.0
+#DELAY_AFTER_MOVE_MS 200
+#STANCE Ground
+#NEWSTANCE Landing
+#INPUT 
+2 + K
+#INPUT_END
+#MOVEMENT
+> 12 60 0 0
+> 16 20 0 0
+#MOVEMENT_END
+#HITBOX
+LeftFoot 11 12 12 1Hit 0 StrongLow Low
+RightFoot 11 12 10 1Hit 0 StrongLow Low
+#HITBOX_END
+
+#MOVE ! Knee_Blast
+#DISPLAY_NAME Knee_Commando_(II)
+#ANIMATION TigerCommandoComboEx
+#FRAMES 0 7
+#RANGE 0.0 95.0
+#STANCE Running
+#NEWSTANCE Ground
+#FOLLOWUP
+Knee_CommandoFirstPunch 0 6
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 4 60 0 0
+#MOVEMENT_END
+#HITBOX
+RightKnee 3 5 15 1Hit 0 WeakHigh Mid
+#HITBOX_END
+
+#MOVE ! Knee_Commando
+#DISPLAY_NAME Knee_Commando
+#ANIMATION TigerCommandoComboEx
+#DELAY_AFTER_MOVE_MS 250
+#FRAMES 0 7
+#RANGE 0.0 65.0
+#STANCE Ground
+#FOLLOWUP
+Knee_CommandoFirstPunch 0 6
+Knee_CommandoFinishingKick 1 6
+Crouching_Kick 0 6
+#FOLLOWUP_END
+#INPUT 
+6 + K
+#INPUT_END
+#MOVEMENT
+> 4 20 0 0
+#MOVEMENT_END
+#HITBOX
+RightKnee 3 5 15 1Hit 0 WeakHigh Mid
+#HITBOX_END
+
+#MOVE ! Knee_CommandoFirstPunch
+#FOLLOWUP_ONLY
+#DELAY_AFTER_MOVE_MS 200
+#ANIMATION TigerCommandoCombo1
+#FRAMES 7 10
+#RANGE 0.0 95.0
+#STANCE Ground
+#FOLLOWUP
+Knee_CommandoSecondPunch 0 10
+Crouching_Kick 0 6
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 8 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 7 8 10 1Hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Knee_CommandoFirstPunch_2
+#FOLLOWUP_ONLY
+#DELAY_AFTER_MOVE_MS 200
+#ANIMATION TigerKneeBashSlow
+#FRAMES 6 12
+#RANGE 0.0 75.0
+#STANCE Ground
+#FOLLOWUP
+Dynamo_Punch 6 10
+CrouchingScarletScrew 6 10
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 10 20 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 9 10 10 1Hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Knee_CommandoFirstPunch_Standalone
+#FOLLOWUP_ONLY
+#DELAY_AFTER_MOVE_MS 180
+#ANIMATION TigerKneeBashSlow
+#FRAMES 6 12
+#RANGE 0.0 65.0
+#STANCE Ground
+#FOLLOWUP
+Knee_CommandoSecondPunch 6 12
+CrouchingScarletScrew 6 12
+Crouching_Kick 6 12
+#FOLLOWUP_END
+#INPUT 
+6 + P
+#INPUT_END
+#MOVEMENT
+> 10 20 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 9 10 10 1Hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! Knee_CommandoSecondPunch
+#FOLLOWUP_ONLY
+#DELAY_AFTER_MOVE_MS 250
+#ANIMATION TigerCommandoCombo1
+#FRAMES 10 13
+#RANGE 0.0 95.0
+#STANCE Ground
+#FOLLOWUP
+Knee_CommandoFinishingKick 10 13
+Heavy_Kick_Eins 10 13
+Heavy_Kick_VierFWP 10 13
+Heavy_Kick_Sechs_2 10 13
+#FOLLOWUP_END
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 12 10 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 11 12 10 1Hit 0 WeakMedium High
+#HITBOX_END
+
+#MOVE ! Knee_CommandoSecondPunch_2
+#FOLLOWUP_ONLY
+#DELAY_AFTER_MOVE_MS 200
+#ANIMATION TigerKneeBashSlow
+#FRAMES 12 17
+#RANGE 0.0 85.0
+#STANCE Ground
+#FOLLOWUP
+Rising_Blade 12 17
+Heavy_Kick_VierFWP 12 17
+Heavy_Kick_Sechs_2 12 17
+#FOLLOWUP_END
+#INPUT 
+6 + P
+#INPUT_END
+#MOVEMENT
+> 16 10 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 16 17 10 1Hit 0 WeakMedium High
+#HITBOX_END
+
+#MOVE ! Knee_CommandoFinishingKick
+#FOLLOWUP_ONLY
+#ANIMATION TigerCommandoComboEx
+#FRAMES 13 22
+#DELAY_AFTER_MOVE_MS 200
+#RANGE 0.0 75.0
+#STANCE Ground
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 16 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 15 16 21 1Hit 0 Flight Mid
+#HITBOX_END
+
+#MOVE ! Rising_Blade
+#NO_CANCELS_ON_WHIFF
+#ANIMATION TigerCommandoComboEx
+#FRAMES 13 22
+#DELAY_AFTER_MOVE_MS 120
+#FOLLOWUP
+Rollout_Back 13 22
+Rollout_Front 13 22
+RolloutScarletScrew 13 22
+#FOLLOWUP_END
+#RANGE 0.0 75.0
+#STANCE Ground
+#INPUT 
+8 + K
+#INPUT_END
+#MOVEMENT
+> 16 30 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 16 16 19 1Hit 0 StrongHigh Mid
+#HITBOX_END
+
+#MOVE ! Crouching_Kick
+#DISPLAY_NAME Ambush
+#ANIMATION crouchingKick
+#DELAY_AFTER_MOVE_MS 130
+#VS_GROUNDED
+#RANGE 0.0 55.0
+#FRAMES 0 7
+#STANCE Ground
+#NEWSTANCE Crouch
+#FOLLOWUP
+CrouchUppercut 0 7
+Heavy_Kick_Fuenf 0 7
+Heavy_Kick_Sechs_2 0 7
+CrouchingScarletScrew 0 7
+#FOLLOWUP_END
+#INPUT 
+2 + K
+#INPUT_END
+#MOVEMENT
+> 6 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 2 4 10 1Hit 0 WeakLow Low
+#HITBOX_END
+
+#MOVE ! Low_Kick
+#DISPLAY_NAME Ambush_(II)
+#ANIMATION crouchingKick
+#VS_GROUNDED
+#RANGE 0.0 55.0
+#FRAMES 0 7
+#STANCE Crouch
+#NEWSTANCE Crouch
+#DELAY_AFTER_MOVE_MS 130
+#FOLLOWUP
+CrouchUppercut 0 7
+Heavy_Kick_Fuenf 0 7
+Heavy_Kick_Sechs_2 0 7
+CrouchingScarletScrew 0 7
+#FOLLOWUP_END
+#INPUT 
+K
+#INPUT_END
+#MOVEMENT
+> 6 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightFoot 2 4 10 1Hit 0 WeakLow Low
+#HITBOX_END
+
+#END
+
+
+---------- OLD ----------
+
+
+#MOVE ! Dynamo_Punch
+#ANIMATION TigerDynamoPunch_fix
+#RANGE 0.0 50.0
+#DELAY_AFTER_MOVE_MS 130
+#FRAMES 0 4
+#FOLLOWUP
+DynamoPunchEnding 0 4
+Heavy_Kick_VierFWP 0 4
+#FOLLOWUP_END
+#STANCE Ground
+#INPUT 
+> + P
+#INPUT_END
+#MOVEMENT
+> 4 10 0 0
+#MOVEMENT_END
+#HITBOX
+LeftPunch 3 4 8 1hit 0 WeakHigh High
+#HITBOX_END
+
+#MOVE ! DynamoPunchEnding
+#FOLLOWUP_ONLY
+#ANIMATION TigerDynamoPunch
+#RANGE 0.0 50.0
+#FRAMES 4 13
+#FOLLOWUP
+Heavy_Kick_VierFWP 4 13
+Double_Hammer 4 13
+#FOLLOWUP_END
+#STANCE Ground
+#INPUT 
+P
+#INPUT_END
+#MOVEMENT
+> 10 10 0 0
+#MOVEMENT_END
+#HITBOX
+RightPunch 8 9 13 1hit 0 WeakMedium Mid
+#HITBOX_END

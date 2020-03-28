@@ -1,0 +1,87 @@
+#NAME 
+the-loathing.exe
+#MESH
+virtualLoathingB.obj
+#SCALE 
+400.0 400.0 400.0
+#POSITION 
+0 -45 0
+#DESCRIPTION
+*MALWARE FOUND: MOVING TO QUARANTINE*
+#DESCRIPTION_END
+#AMBIENT_COLOR 
+255 125 205
+#BGM
+music/muse.ogg
+#BGM_VOLUME
+40.0
+#BGM_PITCH
+1.0
+#BGM_METADATA
+Muse
+I'm_Eating_People
+#RINGOUT_DEPTH
+-80.0
+#SKYBOX
+#MATERIAL_EFFECT
+alpha
+#WATER
+virtualLoathingB.obj
+0 -65 0
+0.1 300.0 0.04
+#ADDITIONAL_OBJECT
+#mesh
+addons\\tentac.x
+#position
+440 -105 -445
+#rotation
+0 -90 0
+#effect
+alpha
+#backface_culling
+#ADDITIONAL_OBJECT_END
+#ADDITIONAL_OBJECT
+#mesh
+addons\\tentac.x
+#position
+-420 -105 385
+#rotation
+0 -90 0
+#effect
+alpha
+#backface_culling
+#ADDITIONAL_OBJECT_END
+#ADDITIONAL_OBJECT
+#mesh
+addons\\tentac.x
+#position
+430 -105 355
+#rotation
+0 -90 0
+#effect
+alpha
+#backface_culling
+#ADDITIONAL_OBJECT_END
+#ADDITIONAL_OBJECT
+#mesh
+addons\\tentac.x
+#position
+-440 -103 -465
+#rotation
+0 -90 0
+#effect
+alpha
+#backface_culling
+#ADDITIONAL_OBJECT_END
+
+#WALLBOX
+-300 -120 -420
+300 120 240
+
+#DIORAMA_DESCRIPTION
+The Loathing is an expression of Donner's inner world, a collection of darkness, despair, and horror, lurking every single inch of this distorted reality.
+The laws of physics and the flow of time held no significance in this place, as there is no equivalent to the human concepts of "before" and "after". Everything happens at the same time, people can see and meet themselves or get in touch with alternate reality version of themselves.
+The chaotic nature of the Loathing is so extreme that its own structure could collapse at every single moment, destroying its occupants in the process.
+The Loathing is everywhere and anywhere, when Donner is around, and can also take the shape of completely familiar places, only to fool people to trust their senses and lower their guard.
+It is not known what is the real nature of the Loathing, aside being an eldritch aberration with no connections to human logic.
+#DIORAMA_DESCRIPTION_END

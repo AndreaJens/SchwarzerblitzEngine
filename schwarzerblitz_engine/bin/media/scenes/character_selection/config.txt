@@ -1,0 +1,72 @@
+#reference_screen_size 			640 360
+
+#bgm					menu(astral)_cut2.ogg
+					60
+					1.0
+
+#background_picture			metal003.png
+#background_color			255 0 255 0
+#background_drawing_mode		1
+#background_tile_velocity		-50 -50
+#show_background			1
+
+#overlay_texture			selectionScreenOverlay.png
+#show_overlay				1
+
+#selector_texture			selectionScreenCursorBig.png
+#selector_animation_mode		0
+#selector_animation_parameters	
+					1000.0
+					0.1
+					0.9
+					0.0
+					0.5
+#selector_colors			255 255 50 0
+					255 0 50 255
+
+#starting_indexes			0
+					0
+
+#allow_ringout_toggle			1
+#show_ringout_box			1
+
+#center_character_box			2
+#character_box_size			234 65 212 310
+
+
+#character_icons_min_size		16.0 16.0
+#character_icons_max_size		64.0 64.0
+#character_icons_min_offset		2.0  2.0
+#character_icons_max_offset		10.0 10.0
+
+#character_icons_row_columns_offset 	0.0 0.0
+
+#use_image_previews			0
+#image_previews_position		50.0 120.0 96.0 96.0
+					50.0 120.0 96.0 96.0
+
+#camera_position			0.0 0.0 320.0
+#mesh_idle_position			80.0 0.0 0.0
+					-80.0 0.0 0.0
+
+#mesh_selection_position		40.0 -10.0 150.0
+					-40.0 -10.0 150.0
+#mesh_rotation_angles			-20 10
+
+#use_screen_coordinates			1
+#mesh_idle_position			-210.0 0.0 0.0
+					210.0 0.0 0.0
+
+#mesh_selection_position		-210.0 60.0 150.0
+					210.0 60.0 150.0
+
+#draw_loading_screen			1
+#loading_screen_texture			..\title\introScreenOld.png
+#loading_screen_arcade_ladder_texture	..\title\introScreenOld.png
+
+#arcade_mode_completed_logo		completedArcadeIcon.png
+					0.6 0.0 0.45 0.45
+#show_arcade_mode_completed_logo	1
+
+#vertical_position_of_costume_dots	331
+#max_number_of_full_size_costume_dots	8

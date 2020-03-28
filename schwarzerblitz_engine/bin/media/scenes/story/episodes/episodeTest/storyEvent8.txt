@@ -1,0 +1,94 @@
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+We are near the Irish coast. In some ten minutes we will dock in a safe haven near the Dead Zone, Johnson. From there, you'll go wherever you need to. Just do not cross my road again, 'kay?
+#TEXT_END
+#BACKGROUND cg\cg9.png
+#PAUSE 600
+#BGM
+tension.ogg
+40.0
+0.8
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Crystal clear, Mr.~ Aural. But, alas, I will probably need your services one more time to leave the island.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+That's not a big issue, provided we don't meet in person.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+I just want to ask you something, before we part ways: how did you best the lobster? You can be an excellent fighter, but with his carapace I find it hard that you managed to hurt him.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Just figured out that if I twisted his antennas, he would have been pretty much done for good. Real lobsters use them as primary sensors, after all.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Afterwards, a couple kicks to the head and he just went down. Simple and clean.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+I see. You are quite the smart bastard.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+The only way I could survive until now.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Speaking of which, I hope you'll survive the Haemophages, Johnson. There are few of them left, but hungry as hell. Try not to be their snack.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+I don't have any intention to become one, thanks. Now, if you could do me one last favour...
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\Mesh51
+#TEXT_BEGIN
+Yes?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TOP_WINDOW
+#CHARA_MUGSHOT chara_johnson
+#TEXT_BEGIN
+Can I borrow one of your cars?
+#TEXT_END
+#PAUSE 600
+#END

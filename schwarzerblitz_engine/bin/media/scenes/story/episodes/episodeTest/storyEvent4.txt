@@ -1,0 +1,123 @@
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+This booze is not so good. Bartender! I asked for the best one!
+#TEXT_END
+#BACKGROUND ..\episodeCyphr\cg\cg_coq1.jpg
+#PAUSE 600
+#BGM
+..\..\..\..\stages\coqHeureux\music\SebonLastStraw.ogg
+100.0
+1.0
+#END
+
+#TEXT_BEGIN
+(bartender) We already went through it. THAT is the best one.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Pretty sad for a pub.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+(bartender) This is no pub, you blockhead! This is a night club with strippers and alcohol! Do you think that people come here to taste fine Irish whiskey?!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Good point. Okay, give me another beer.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION ..\episodeCyphr\cg\cg_coq1.jpg 300
+#BACKGROUND cg\cg_coq2.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+May I offer it, Mr.~ Colder?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Don't know who the heck this Colder is. Name's Gaetano Trasimeno.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Please, spare me your fake Italian accent! We've already gone through this at least twice!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Do we know each other, pal?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+We've already met something like six times, Mr.~ "Trasimeno". I am called Johnson. You usally call me "blurry face", when you recognize me. Not so flattering, huh?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Uh, maybe. I have really no good memory.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+*sigh*
+#TEXT_END
+#PAUSE 600
+#END
+
+#AUTO
+#TRANSITION cg\cg_coq2a.jpg 300
+#BACKGROUND cg\cg_coq2b.jpg
+#NO_BACKGROUND
+#TEXT_BEGIN
+#TEXT_END
+#PAUSE 500
+#CLOSE_WINDOW
+#SOUND 
+..\..\..\..\common\sound_effects\hitF02.wav
+80
+1
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I knew it would have ended up like this.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+W.. wait! That's my beer! Why did you take it?!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Now, I will make you remember, Mr.~ "Trasimeno". And it won't be pleasant. Not at all.
+#TEXT_END
+#PAUSE 600
+#END

@@ -1,0 +1,293 @@
+#CHARACTER chara_tutor 0
+#OPPONENT chara_tutor 1
+#STAGE vrTestGround
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Here we meet again, pupil! Glad you managed to unlock me!
+#MESSAGE_END
+#MESSAGE_BEGIN
+My style is a combination of Johnson's, Renzo's, Tiger's and Amy's, with some original twists. Some moves will definitely come out as very familiar to you.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Without further ado, let's begin!
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Right_Punch_Combo
+S Right_Left_Punch
+S Axe_Kick
+S Rotary_Kick
+#TYPE_END
+#MESSAGE_BEGIN
+Connect with all moves in the string to complete this challenge. Some have to be performed in Trigger mode to be considered complete!
+#MESSAGE_END
+#HINT
+Hard Drive Install (Impact)
+#INPUT
+6 + P 0 P 0 8 + K 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Right_Punch_Combo
+S Right_Left_Punch
+S Axe_Kick
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+Hard Drive Readout (Impact)
+#INPUT
+6 + P 0 P 0 8 + K 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Quick_Kick
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+Quick Scan (Impact)
+#INPUT
+K 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Quick_Kick
+S Axe_Kick
+S Heavy_Kick
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+New Release Storm (Impact)
+#INPUT
+K 0 8 + K 0 4 + K 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Heavy_Kick
+S RoundhouseLow_Followup
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+Memory Trip (Impact)
+#INPUT
+4 + K 0 4 + K 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Left_Jab
+S Dual_Punch
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+Customer Rights Gone Wrong (Impact)
+#INPUT
+P 0 P 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Gyaku_Zuki_Combo3
+S CrouchingKick_2
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+Aggressive Bug Fixing (Impact)
+#INPUT
+2 + P 0 K 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Left_Jab
+S CrouchingKick
+#TYPE_END
+#HINT
+Invisible Exploit (quick, safe)
+#INPUT
+P 0 2 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+N 1
+S PaperShredder
+#TYPE_END
+#HINT
+Zero Day Exploit (far anti-air)
+#INPUT
+9 + K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Geforce
+#TYPE_END
+#HINT
+G-Force (near anti-air)
+#INPUT
+7 + P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S TwinVirtual
+S TwinVirtual
+#TYPE_END
+#HINT
+Virtual Machine Galore (long range)
+#INPUT
+8 + P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S TwinVirtual
+S TwinVirtual
+S PhotonWave
+#TYPE_END
+#HINT
+Photon Machine (long range, projectile)
+#INPUT
+8 + P 0 6 + T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S PhotonWave
+#TYPE_END
+#HINT
+Photon Wave (low ping)
+#INPUT
+6 + T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S SlowPhotonWave
+#TYPE_END
+#HINT
+Photon Wave (high ping)
+#INPUT
+4 + T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S SlowPhotonWave
+S PhotonWave
+#TYPE_END
+#HINT
+Photon Tsunami
+#INPUT
+4 + T 0 8 + T 0 6 + T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S PhotonBurst
+#TYPE_END
+#HINT
+Photon Wave (while jumping)
+#INPUT
+9 + G 0 T
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Dynamite_Punch
+#TYPE_END
+#HINT
+Nuke It from the Orbit (no cancel on whiff, Impact)
+#INPUT
+2 1 4 P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S Dynamite_Punch
+S TwinVirtual
+S TwinVirtual
+#TYPE_END
+#HINT
+Nuke It Again! (cancel right after the punch hits)
+#INPUT
+2 1 4 P 0 8 + P
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE combo
+S WaveSweeper
+S Rotary_Kick
+#TYPE_END
+#HINT
+Empty Recycle Bin
+#INPUT
+1 + K 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE trigger
+S Right_Punch_Combo
+S Right_Left_Punch
+S Axe_Kick
+S Axe_Kick
+S Heavy_Kick
+S RoundhouseLow_Followup
+S CrouchingPunch
+S Rotary_Kick
+#TYPE_END
+#HINT
+Development Hell (use Trigger mode)
+#INPUT
+6 + P 0 P 0 8 + K 0 4 + K 0 4 + K 0 P 0 K
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+My moveset borrows a lot from Johnson's, but as you have seen I have some smart tricks on my own.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Mixing up projectiles and strings is the way to success. My moves have a lower damage output overall, but the amount of strings leading to an Impact is my strongest point.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Thanks for having come to listen my last lesson, pupil! Class is dismissed!
+#MESSAGE_END
+#PHASE_END
+
+#END

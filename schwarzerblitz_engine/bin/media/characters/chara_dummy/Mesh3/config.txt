@@ -1,0 +1,3 @@
+#MESH_FILENAME rotatingCubeRandom.x
+#OUTFIT_NAME Fluo_Red
+#AVAILABLE_FROM_START 1

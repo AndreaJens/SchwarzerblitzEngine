@@ -1,0 +1,36 @@
+#NEW_OBJECT
+#name_id
+megiddo
+#display_name
+megiddo_extinction_cannon
+#mesh
+addons\cannon.x
+#parent
+HIPS
+#scale
+0.12 0.12 0.12
+#offset
+0 0.7 0
+#rotation
+0 90 0
+#newBones_begin
+EXTRA_2 Minigun_RotatingGun
+#newBones_end
+##reset_between_rounds
+#newHitbox_begin
+Extra2
+EXTRA_2
+0 30 0
+0.4 0.4 0.4
+#newHitbox_end
+
+#newHitbox_begin
+Extra3
+EXTRA_2
+0 12 0
+0.4 2 0.4
+#newHitbox_end
+#apply_shadow
+#hidden
+#hide_when_hit
+#NEW_OBJECT_END

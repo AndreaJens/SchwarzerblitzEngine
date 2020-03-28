@@ -1,0 +1,130 @@
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Huh... maybe I got it. You are that no-face fella who always dresses in horrible colours. Like lemon yellow. Or neon green.
+#TEXT_END
+#BACKGROUND cg\cg_coq2.jpg
+#PAUSE 600
+#BGM
+..\..\..\..\stages\coqHeureux\music\SebonLastStraw.ogg
+100.0
+1.0
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Finally! Seriously, ever thought about taking something for your goldfish memory?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Yeah, because it's sooo easy to remember a man without face, ain't it?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Whaddayawant? I don't have any debts with ya, I guess.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_coq2.jpg 300
+#BACKGROUND cg\cg_coq2c.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+I need to reach Northern Algol, but I haven't got a valid travel document. I thought that maybe you could help me.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Ya f'ckin kiddin'? Why do ya wanna go there?!
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+None of your concerns. Can you help me, considered that I saved you from Delta Team at least two times?
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+...
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_coq2c.jpg 300
+#BACKGROUND cg\cg_coq2.jpg
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Listen, I quit that life. But I kno' for sure that those motheranglers from the Fishface are gonna smuggle some stuff to Ireland this night. If you manage to board their ship, you're pretty much safe.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_shark\
+#TEXT_BEGIN
+Go to the harbour, pier 14. Here ya'll find some fellas. Maybe you can convince'em to give ya a ride.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_coq2.jpg 300
+#BACKGROUND cg\cg_coq2c.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Sounds fair. Bartender? I pay what the sharkman drank until now. How much is it?
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+(bartender) I hope your wallet is full, Mister. Until now, it's about seventy-three pounds.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_coq2c.jpg 300
+#BACKGROUND cg\cg_coq2d.jpg
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+Seventy-three pounds. Of beer. In just two hours of opening time.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+(bartender) Yeah, Mister. Usually, he always ends up having to wash dishes the whole morning to pay for his drinks.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TRANSITION cg\cg_coq2d.jpg 300
+#STAGE_BACKGROUND coqHeureux\
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+*sigh* Here you are.
+#TEXT_END
+#PAUSE 600
+#END
+
+#TEXT_BEGIN
+(bartender) Thanks, Mister. By the way... I don't think I've ever seen your face around here.
+#TEXT_END
+#PAUSE 600
+#END
+
+#CHARA_MUGSHOT chara_johnson\
+#TEXT_BEGIN
+That's something many say. Now, I have some business to attend. Have a nice evening.
+#TEXT_END
+#PAUSE 600
+#END

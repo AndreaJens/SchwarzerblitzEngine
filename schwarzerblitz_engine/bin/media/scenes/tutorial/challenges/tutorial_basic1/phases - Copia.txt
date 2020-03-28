@@ -1,0 +1,192 @@
+#CHARACTER chara_tutor 0
+#OPPONENT chara_tutor 1
+#STAGE vrTestGround
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Welcome to this VR simulation! I'm Tutorial Man and I'm here to guide you through the game basics!
+#MESSAGE_END
+#MESSAGE_BEGIN
+I've been built by putting together datasets from several fighters, so my moveset is precisely crafted for the task of showing you all the features you ought to know to play.
+#MESSAGE_END
+#MESSAGE_BEGIN
+During this tutorial you'll have to move a lot through the stage.
+#MESSAGE_END
+#MESSAGE_BEGIN
+In case you lock yourself in some strange situation which prevents you from proceeding, press BACK (SELECT) on the joypad or BACKSPACE to reset the position of the characters.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE movementFWD 
+N 60.0
+#TYPE_END
+#MESSAGE_BEGIN
+Let's start with the basics, and - more specifically - with movement. You have to learn to manage space, if you want to win a match.
+#MESSAGE_END
+#MESSAGE_BEGIN
+You can freely move inside the arena by using UP, DOWN, LEFT, RIGHT or any diagonal combination. These controls are mapped by the direction arrows by default, both on a joypad or on the keyboard.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Use LEFT or RIGHT to control the distance between you and your opponent, UP or DOWN to sidestep and flank him. Now, it's your turn: follow the HINTS displayed at the bottom of the screen and move your character!
+#MESSAGE_END
+#HINT
+Move towards the opponent
+#INPUT
+H6
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE movementBKW 
+N 150.0
+#TYPE_END
+#HINT
+Move away from the opponent
+#INPUT
+H4
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE movementSide
+N -0.8
+N 0.02
+#TYPE_END
+#HINT
+Move around the stage, using UP or DOWN
+#INPUT
+H2 0 H8
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Perfect! Managing the space between you and your opponent is one of the keys to your victory!
+#MESSAGE_END
+#MESSAGE_BEGIN
+It looks like you are learning fast. It's time to move on to the remaining basic stances.
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE crouch
+N 1000
+#TYPE_END
+#MESSAGE_BEGIN
+As you can freely move in the arena, you can also crouch and jump. These action require you to input a direction while you keep the GUARD button pressed. The GUARD button default is the D key for the keyboard and the A button on a joypad.
+#MESSAGE_END
+#MESSAGE_BEGIN
+In order to crouch, you have to press the DOWN button while the GUARD button is pressed. You can stop pressing GUARD when you have crouched and you remain in the stance as long as you keep DOWN pressed.
+#MESSAGE_END
+#MESSAGE_BEGIN
+In order to jump, press either UP, UP + RIGHT, or UP + LEFT while you keep GUARD pressed. You can release the GUARD button when the jump starts.
+#MESSAGE_END
+#MESSAGE_BEGIN
+Now, follow the hints and try it out!
+#MESSAGE_END
+#HINT
+Crouch and remain crouched for one second
+#INPUT
+2 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE jump
+N 1
+S stand
+#TYPE_END
+#HINT
+Perform a standing jump
+#INPUT
+8 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE jump
+N 1
+S forward
+#TYPE_END
+#HINT
+Perform a forward jump
+#INPUT
+9 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE jump
+N 1
+S back
+#TYPE_END
+#HINT
+Perform a backward jump
+#INPUT
+7 + G
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Perfect! Let's move on to some other movement maneuvers!
+#MESSAGE_END
+#PHASE_END
+
+#PHASE
+#TYPE backstep
+S BackStep
+N 3
+#TYPE_END
+#MESSAGE_BEGIN
+Sometimes, instead of rushing against the enemy, you could need to quickly retreat. One way to do this is the so-called BACKDASH.
+#MESSAGE_END
+#MESSAGE_BEGIN
+The BACKDASH is a universal move which is available to all characters. You can perform it by quickly tapping LEFT two times (mirror as usual when on right side).
+#MESSAGE_END
+#MESSAGE_BEGIN
+During the starting frames of a backdash, you are invincible. This means that you can use it to avoid some really damaging attacks, if you time it right!
+#MESSAGE_END
+#HINT
+Backdash 3 times
+#INPUT
+4 4
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE run
+N 750
+#TYPE_END
+#MESSAGE_BEGIN
+Sometimes, instead, you need to rush fast. And when I mean fast, I mean REALLY fast. In that case, you just have to press RIGHT two times and keep RIGHT pressed (mirror the input if you are on the other side).
+#MESSAGE_END
+#MESSAGE_BEGIN
+Doing so, you will start running towards your opponent. Now, move far away from them and rush!
+#MESSAGE_END
+#HINT
+Run towards your opponent, starting from afar
+#INPUT
+6 H6
+#INPUT_END
+#PHASE_END
+
+#PHASE
+#TYPE text
+#TYPE_END
+#MESSAGE_BEGIN
+Okay, you start getting it! The first tutorial is now complete! Move to the next to learn how to attack!
+#MESSAGE_END
+#MESSAGE_BEGIN
+See you next time, pupil!
+#MESSAGE_END
+#PHASE_END
+
+#END

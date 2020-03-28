@@ -1,0 +1,19 @@
+#NO_OF_ROUNDS 1
+#PLAYER_WIN_QUOTE
+Okay, have you finally remembered, you moron? 
+#OPPONENT_WIN_QUOTE
+...owww. Why am I such a weirdo-magnet?!
+#PLAYER_INTRO_QUOTE
+I feel like your memory needs some help, Mister "Trasimeno".
+#OPPONENT_INTRO_QUOTE
+Drop the double quotes. I clearly heard you using them!
+#OPPONENT_LIFE_MULTIPLIER 1.2
+#PLAYER_LIFE_MULTIPLIER 1
+#OPPONENT chara_tutor2
+#PLAYER chara_tutor
+#AI_LEVEL 5
+#STAGE training
+#PLAYER_OUTFIT_ID 0
+#OPPONENT_OUTFIT_ID 0
+#NO_RINGOUT
+#TIMER 60
