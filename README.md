@@ -18,6 +18,14 @@ I took back in 2016, but I have never had the energies or time to refactor it, e
 enough for my purposes. There are some hundreds of warning lying around I never cared fixing, so I apologize in
 advance for this. However, this code works and runs a delivered game fine, which can be considered a success.
 
+### Known limitations
+- The engine **doesn't have** any online capabilities, as I never managed to find the time/will to add them. Please consider
+this aspect before using this engine for your game. 
+- Due to non-stellar optimizations, when this engine runs with 3D models with more than 5000 triangles, it might
+not reach stable 60fps on older systems. 
+- The only 3D model format that the engine can use for skeletal models (i.e. characters) is .x (directX skeletal mesh file) without normal maps. 
+- irrlicht is **not** multithread. Implementing multi-threading for resource loading has not been an option.
+
 ## Requirements
 
 The engine uses a custom version of the [irrlicht engine](http://irrlicht.sourceforge.net/) (nicknamed Schwarzerlicht)
