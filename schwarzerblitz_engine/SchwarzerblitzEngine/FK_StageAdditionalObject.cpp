@@ -6,6 +6,7 @@ namespace fk_engine{
 	FK_StageAdditionalObject::FK_StageAdditionalObject(){
 		position = core::vector3df();
 		rotation = core::vector3df();
+		scale = core::vector3df(1.f, 1.f, 1.f);
 		meshName = std::string();
 		particleTextureName = std::string();
 		materialEffect = video::E_MATERIAL_TYPE::EMT_LIGHTMAP_M4;
@@ -34,6 +35,10 @@ namespace fk_engine{
 	};
 	core::vector3df FK_StageAdditionalObject::getRotation(){ 
 		return rotation; 
+	}
+	core::vector3df FK_StageAdditionalObject::getScale()
+	{
+		return scale;
 	}
 	FK_StageAdditionalObject::FK_StageAdditionalObject_AnimatorType FK_StageAdditionalObject::getAnimatorType(){
 		return animatorType;
@@ -108,6 +113,10 @@ namespace fk_engine{
 	}
 	void FK_StageAdditionalObject::setRotation(core::vector3df new_rotation){
 		rotation = new_rotation;
+	}
+	void FK_StageAdditionalObject::setScale(core::vector3df newScale)
+	{
+		scale = newScale;
 	}
 	void FK_StageAdditionalObject::setMaterialEffect(video::E_MATERIAL_TYPE new_effect){
 		materialEffect = new_effect;

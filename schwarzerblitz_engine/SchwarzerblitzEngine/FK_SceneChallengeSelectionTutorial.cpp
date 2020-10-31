@@ -1,5 +1,6 @@
 #include "FK_SceneChallengeSelectionTutorial.h"
 #include "ExternalAddons.h"
+#include "FK_AchievementManager.h"
 
 using namespace irr;
 
@@ -432,7 +433,10 @@ namespace fk_engine{
 		s32 fixedOffsetY = (s32)std::ceil((f32)offsetY * scale_factorY);
 		s32 fixedSpacingY = (s32)std::ceil((f32)additionalY * scale_factorY + (f32)texSize.Height *
 			scale_factorY * bannerScaleFactor);
-		s32 thresholdValue = (s32)std::ceil(((f32)challenges.size()) * (fixedSpacingY + 1));
+		// the plus one serves to avoid a bug which caused the last episode not to be displayed correctly with certain screen resolutions
+		f32 additionaSpacing = std::max(1.1f, scale_factorY);
+		s32 thresholdValue = (s32)std::ceil(((f32)challenges.size()) * fixedSpacingY + additionaSpacing);
+		//s32 thresholdValue = (s32)std::ceil(((f32)challenges.size()) * (fixedSpacingY + 1));
 		// add offset
 		if (challengeIndex > 3 && challenges.size() > 6){
 			s32 bufferY = (s32)std::ceil((f32)additionalY * scale_factorY);

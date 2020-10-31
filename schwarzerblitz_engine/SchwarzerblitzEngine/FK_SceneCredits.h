@@ -14,6 +14,9 @@ namespace fk_engine{
 		const std::string SectionMarker = "--";
 		const std::string EmptyLineMarker = "__";
 		const std::string CreditsFileName = "credits.txt";
+		const std::string PicturesFileName = "pictures.txt";
+		const s32 defaultPictureDurationMs = 3000;
+		const s32 defaultFadeInTimeMsSlideshow = 500;
 		const video::SColor BackgroundColor = video::SColor(255, 0, 0, 0);
 		const video::SColor NormalTextColor = video::SColor(255, 255, 255, 255);
 		const video::SColor TitleColor = video::SColor(255, 200, 200, 50);
@@ -25,9 +28,15 @@ namespace fk_engine{
 			SectionText = 1,
 			TitleText = 2
 		};
+	private:
+		struct FK_CreditPicture {
+			std::string path;
+			s32 duration = 200;
+		};
 	public:
 		FK_SceneCredits();
-		FK_SceneCredits(IrrlichtDevice *newDevice, core::array<SJoystickInfo> joypadInfo, FK_Options* newOptions, bool fadeToBlack);
+		FK_SceneCredits(IrrlichtDevice *newDevice, core::array<SJoystickInfo> joypadInfo, FK_Options* newOptions, bool fadeToBlack,
+			bool showPictures = false, std::string newConfigFile = std::string());
 		void initialize();
 		void update();
 		void updateInput();
@@ -40,6 +49,7 @@ namespace fk_engine{
 		void drawLines();
 		void drawBackground();
 		void readLinesFromFile();
+		void readPicturesFromFile();
 		void drawLine(s32 x, s32 y, u32 index);
 		void processLines();
 		s32 processLine(s32 x, s32 y, std::string line);
@@ -83,6 +93,12 @@ namespace fk_engine{
 		s32 firstElementY;
 		s32 referenceScreenShift;
 		u32 firstElementIndex;
+		bool showPicturesSlideshow;
+		std::string configurationFileName;
+		std::vector<FK_CreditPicture> pictures;
+		s32 pictureDurationCounter;
+		s32 currentPictureDurationMs;
+		u32 pictureIndex;
 	};
 }
 

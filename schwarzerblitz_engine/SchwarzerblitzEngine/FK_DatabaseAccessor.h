@@ -21,6 +21,8 @@ namespace fk_engine {
 			bool playSoundEffectOnCounterAttack();
 			bool showRoundWinScreen();
 			bool showStageIntro();
+			bool extendedJugglesAllowed();
+			f32 getJuggleDamageMultiplier();
 			// triggers
 			s32 getTriggerRegenPerRoundWon();
 			s32 getTriggerRegenPerRoundLost();
@@ -63,6 +65,8 @@ namespace fk_engine {
 			// characters
 			// walkspeed
 			f32 getBasicCharacterWalkSpeed();
+			f32 getBasicCharacterSidestepSpeed();
+			f32 getBasicCharacterMixedStepSpeed();
 			f32 getBasicCharacterRunningSpeed();
 			// cooldown after move
 			u32 getCharacterMoveCooldownDurationMs();
@@ -136,6 +140,8 @@ namespace fk_engine {
 			f32 ringoutDistanceFromWall;
 			// character
 			f32 characterWalkingSpeed;
+			f32 characterSidestepSpeed;
+			f32 characterMixedStepSpeed;
 			f32 characterRunningSpeed;
 			u32 characterWeakHitstunDurationMs;
 			u32 characterWeakHitstunMovementDurationMs;
@@ -161,6 +167,10 @@ namespace fk_engine {
 			f32 pushbackVelocity;
 			// jump run cancel
 			bool allowJumpRunCancel;
+			// allow extended juggles
+			bool extendedJugglesAllowedFlag;
+			// juggle damage multiplier
+			f32 juggleDamageMultiplier;
 		};
 }
 

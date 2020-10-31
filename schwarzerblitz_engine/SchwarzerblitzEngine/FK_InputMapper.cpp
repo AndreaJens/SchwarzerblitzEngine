@@ -33,7 +33,7 @@ namespace fk_engine{
 		inputMap_single_player_keyboard[FK_Input_Buttons::Confirmation_Button] = (u32)EKEY_CODE::KEY_RETURN;
 		inputMap_single_player_keyboard[FK_Input_Buttons::ScrollLeft_Button] = (u32)EKEY_CODE::KEY_KEY_Q;
 		inputMap_single_player_keyboard[FK_Input_Buttons::ScrollRight_Button] = (u32)EKEY_CODE::KEY_KEY_E;
-		inputMap_single_player_keyboard[FK_Input_Buttons::Help_Button] = (u32)EKEY_CODE::KEY_OEM_102;
+		inputMap_single_player_keyboard[FK_Input_Buttons::Help_Button] = (u32)EKEY_CODE::KEY_BACK;
 		// Hotkeys
 		inputMap_single_player_keyboard[FK_Input_Buttons::Punch_plus_Kick_Button] = KEY_KEY_CODES_COUNT;
 		inputMap_single_player_keyboard[FK_Input_Buttons::Trigger_plus_Guard_Button] = KEY_KEY_CODES_COUNT;
@@ -63,7 +63,7 @@ namespace fk_engine{
 		inputMap_player1_keyboard[FK_Input_Buttons::Confirmation_Button] = inputMap_player1_keyboard[FK_Input_Buttons::Menu_Pause_Button];
 		inputMap_player1_keyboard[FK_Input_Buttons::ScrollLeft_Button] = (u32)EKEY_CODE::KEY_KEY_Q;
 		inputMap_player1_keyboard[FK_Input_Buttons::ScrollRight_Button] = (u32)EKEY_CODE::KEY_KEY_E;
-		inputMap_player1_keyboard[FK_Input_Buttons::Help_Button] = (u32)EKEY_CODE::KEY_OEM_102;
+		inputMap_player1_keyboard[FK_Input_Buttons::Help_Button] = (u32)EKEY_CODE::KEY_BACK;
 		// Hotkeys
 		inputMap_player1_keyboard[FK_Input_Buttons::Punch_plus_Kick_Button] = KEY_KEY_CODES_COUNT;
 		inputMap_player1_keyboard[FK_Input_Buttons::Trigger_plus_Guard_Button] = KEY_KEY_CODES_COUNT;
@@ -196,7 +196,7 @@ namespace fk_engine{
 		else if (playerId == 2){
 			return inputMap_player2_joypad;
 		}
-		return inputMap_emptyMap;
+		return inputMap;
 	}
 	void FK_InputMapper::setKeyboardInputMap(int playerId, std::map<FK_Input_Buttons, u32> newMap){
 		if (playerId == 0){

@@ -14,6 +14,7 @@ namespace fk_engine{
 		numberOfRounds = new_numberOfRounds;
 		numberOfRoundsWon = 0;
 		numberOfRoundsLost = 0;
+		lastTimeDeltaMs = 0;
 		currentTimer = 100 * 1000;
 		reshuffleMoveSinceInvalid = false;
 		AIarchetype = AIPlayer->getAIArchetype();
@@ -29,6 +30,7 @@ namespace fk_engine{
 	/* reset variables*/
 	void FK_AIManager::reset(){
 		AIInputBuffer.clear();
+		lastTimeDeltaMs = 0;
 		cooldownTimeCounter = 0;
 		timeCounter = 0;
 		canChainCombo = true;
@@ -40,10 +42,13 @@ namespace fk_engine{
 		scheduledMoveIndex = -1;
 		scheduledMoveFrame = 0;
 		lastInput = 0;
-		minimalButtonPressTimeMS = 200;
+		minimalButtonPressTimeMS = 200; //was 200
+		// JUST A TEST
+		//minimalButtonPressTimeMS = 0;
 		buttonTimeCounterMS = minimalButtonPressTimeMS + 1;
 		numberOfSufferedThrows = 0;
 		numberOfChainAttempts = 0;
+		lastAIFrameNumber = 0;
 	}
 
 	//! set AI level
@@ -68,7 +73,11 @@ namespace fk_engine{
 		/* increment the percentage by 7% for each level above 0*/
 		s32 incrementPerLevel = 7;
 		/* decrement likelihood by 10% for each failed attempt */
-		s32 failureDecrement = 5;
+		s32 failureDecrement = 12;
+		failureDecrement -= AILevel;
+		if (failureDecrement < 5) {
+			failureDecrement = 5;
+		}
 		s32 value = baseValue + AILevel*incrementPerLevel - numberOfChainAttempts * failureDecrement;
 		if (value < 0){
 			value = 0;
@@ -80,14 +89,17 @@ namespace fk_engine{
 		/* base value = 5% of likelihood to keep on guarding attacks at level 0*/
 		u32 baseValue = 5;
 		/* increment the percentage by 5% for each level above 0*/
-		u32 incrementPerLevel = 5;
+		u32 incrementPerLevel = 6;
 		if (AILevel > 4){
-			incrementPerLevel = 7;
+			incrementPerLevel = 9;
 		}
 		u32 total = baseValue + AILevel*incrementPerLevel;
+		if (AIPlayer->getLifePercentage() < 0.3) {
+			total *= 2;
+		}
 		/* do not increase odds above 40% */
-		if (total > 75){
-			return 75;
+		if (total > 90){
+			return 90;
 		}
 		return total;
 	}
@@ -163,17 +175,17 @@ namespace fk_engine{
 	}
 
 	//! get waiting time after move ends
-	u32 FK_AIManager::getAfterMoveCooldown(){
+	u32 FK_AIManager::getAfterMoveCooldown() {
 		/* base value = 600 ms of time delay between moves at level 0 */
-		u32 baseValue = 2000;
+		u32 baseValue = 2500;
 		/* decrement the percentage by 75ms for each level above 0*/
-		u32 decrementPerLevelUntil5 = 200;
-		u32 decrementPerLevelAbove5 = 70;
+		u32 decrementPerLevelUntil5 = 240;
+		u32 decrementPerLevelAbove5 = 60;
 		u32 decrement = 0;
-		if (AILevel > 5){
+		if (AILevel > 5) {
 			decrement = 5 * decrementPerLevelUntil5 + (AILevel - 5) * decrementPerLevelAbove5;
 		}
-		else{
+		else {
 			decrement = AILevel * decrementPerLevelUntil5;
 		}
 		u32 maxDelay = baseValue - decrement;
@@ -182,6 +194,7 @@ namespace fk_engine{
 		u32 delay = maxDelay / 2 + (u32)std::floor((f32)maxDelay * rand() / RAND_MAX / 2);
 		return delay;
 	}
+
 
 	bool FK_AIManager::tooNearToOpponent(){
 		core::vector3df distance = targetPlayer->getPosition() - AIPlayer->getPosition();
@@ -459,6 +472,7 @@ namespace fk_engine{
 
 	/* update AI input */
 	bool FK_AIManager::updateAIInput(u32 delta_t_ms, u32 timerValue){
+		lastTimeDeltaMs = delta_t_ms;
 		currentTimer = timerValue;
 		buttonTimeCounterMS += delta_t_ms;
 		timeCounter += delta_t_ms;
@@ -519,13 +533,16 @@ namespace fk_engine{
 				int followupSize = AIPlayer->getCurrentMove()->getFollowupMovesSet().size();
 				int movesNumber = followupSize;
 				movesNumber += AIPlayer->getCurrentMove()->getCancelIntoMovesSet().size();
-				if (movesNumber > 0 && AIPlayer->canAcceptInput()){
+				if (movesNumber > 0 && AIPlayer->canAcceptInput() && 
+					(reshuffleMoveSinceInvalid || lastAIFrameNumber != AIPlayer->getCurrentFrame())){
+					lastAIFrameNumber = AIPlayer->getCurrentFrame();
 					double random = ((double)rand() / (RAND_MAX)) * 100;
 					bool allowChain = reshuffleMoveSinceInvalid ||
 						AIPlayerCurrentMoveId != AIPlayer->getCurrentMove()->getMoveId() ||
-						(AIPlayer->getCurrentMove()->getEndStance() != AIPlayer->getStance() ||
-						!AIPlayer->getCurrentMove()->canBeTriggered() ||
-						AIPlayer->getCurrentMove()->getCancelIntoMovesSet().size() > 0);
+						( AIPlayer->getCurrentMove()->getEndStance() != AIPlayer->getStance() ||
+						 (AIPlayer->getCurrentMove()->getTotalBulletDamage() == 0 && !AIPlayer->getCurrentMove()->canBeTriggered()) ||
+						 AIPlayer->getCurrentMove()->getCancelIntoMovesSet().size() > 0 ||
+						 followupSize > 0);
 					AIPlayerCurrentMoveId = AIPlayer->getCurrentMove()->getMoveId();
 					if (allowChain){
 						if (random <= getChainLikelihood() || reshuffleMoveSinceInvalid){
@@ -578,7 +595,9 @@ namespace fk_engine{
 							}
 						}
 						else{
-							numberOfChainAttempts += 1;
+							if (AIPlayer->getCurrentMove() != NULL && AIPlayer->getCurrentMove()->canBeTriggered()) {
+								numberOfChainAttempts += 1;
+							}
 						}
 						reshuffleMoveSinceInvalid = false;
 					}
@@ -719,40 +738,27 @@ namespace fk_engine{
 		core::vector3df characterDistance = targetPlayer->getPosition() - AIPlayer->getPosition();
 		f32 distanceLength = characterDistance.getLength();
 		for each(FK_Bullet* bullet in targetPlayer->getBulletsCollection()){
+			if (bullet->getHitbox().hasHit()) {
+				continue;
+			}
 			f32 potentialDamage = bullet->getHitbox().getDamage();
 			bool armorCondition = AIPlayer->hasArmor(FK_Attack_Type::BulletAttack) &&
 				potentialDamage < 1.1 * AIPlayer->getLife();
 			bool invincibilityCondition = AIPlayer->isInvincible(FK_Attack_Type::BulletAttack);
 			if (!armorCondition && !invincibilityCondition && 
-				!bullet->isDisposeable() && bullet->getNode()->isVisible()){
+				!bullet->isDisposeable() && bullet->getNode()->isVisible() &&
+				bullet->getHitbox().getDamage() > 0){
+				//cooldownTimeCounter = 0;
 				core::vector3df bulletPosition = bullet->getPosition();
 				f32 distance = bulletPosition.getDistanceFrom(AIPlayer->getPosition());
 				// this check was distance <= 70.f before, for simplicity reasons
 				f32 maxRadius = std::max(bullet->getHitboxRadius().X, std::max(bullet->getHitboxRadius().Y, bullet->getHitboxRadius().Z));
-				f32 delta_t_frame = 2 / 60.f;
+				f32 delta_t_frame = 2 / 60.f;// static_cast<f32>(lastTimeDeltaMs) / 1000.f;
 				f32 bulletDistanceTravelledInOneFrame = bullet->getVelocity().X * delta_t_frame;
 				f32 playerDistanceTravelledInOneFrame = AIPlayer->getVelocityPerSecond().X  * delta_t_frame;
 				f32 characterHitboxOffset = 50.0f;
 				f32 distanceToCheck = 2 * maxRadius + 2 * abs(bulletDistanceTravelledInOneFrame) + abs(playerDistanceTravelledInOneFrame) + characterHitboxOffset;
-				//std::cout << distanceToCheck << std::endl;
-				// f32 distanceToCheck = 70.f;
-				/*if (bullet->getHitbox().getDamage() > 0 && distance > distanceToCheck) {
-					if (distanceLength > 150.f && !targetPlayer->hasActiveMove()) {
-						isAvoidingBullet = true;
-						buttonsPressed = FK_Input_Buttons::Up_Direction;
-						if (!AIPlayer->isRunning()) {
-							if (AIPlayer->isOnLeftSide()) {
-								buttonsPressed |= (u32)FK_Input_Buttons::Right_Direction;
-							}
-							else {
-								buttonsPressed |= (u32)FK_Input_Buttons::Left_Direction;
-							}
-						}
-						lastInput = buttonsPressed;
-						buttonTimeCounterMS = 0;
-						return buttonsPressed;
-					}
-				}*/
+				//
 				f32 bulletThresholdDistance = 320.f;
 				f32 bulletJumpingDistance = 120.f;
 				if (bullet->canBeJumpedOver() && 
@@ -760,7 +766,6 @@ namespace fk_engine{
 					distanceLength >= bulletJumpingDistance) {
 					u32 button = fk_constants::FK_GuardButton;
 					buttonsPressed |= button;
-					buttonTimeCounterMS = 0;
 					buttonsPressed |= FK_Input_Buttons::Up_Direction;
 					if (AIPlayer->isOnLeftSide()) {
 						buttonsPressed |= (u32)FK_Input_Buttons::Right_Direction;
@@ -769,17 +774,19 @@ namespace fk_engine{
 						buttonsPressed |= (u32)FK_Input_Buttons::Left_Direction;
 					}
 					lastInput = buttonsPressed;
-					buttonTimeCounterMS = 0;
+					if (lastInput != buttonsPressed) {
+						buttonTimeCounterMS = 0;
+					}
 					return buttonsPressed;
 				}
 				else if (distance <= distanceToCheck){
+					//std::cout << "guarding bullet" << std::endl;
 					u32 button = fk_constants::FK_GuardButton;
 					if (/*distanceLength < bulletThresholdDistance &&*/ (
 						bullet->getHitbox().canBeStandGuarded() ||
 						bullet->getHitbox().canBeCrouchGuarded()
 						)) {
 						buttonsPressed |= button;
-						buttonTimeCounterMS = 0;
 					}
 					if (!(bullet->getHitbox().canBeStandGuarded())/* || 
 						distanceLength >= bulletThresholdDistance*/
@@ -788,9 +795,17 @@ namespace fk_engine{
 							characterDistance.getLength() < bulletThresholdDistance*/){
 							u32 button = fk_constants::FK_GuardButton;
 							buttonsPressed |= button;
-							buttonTimeCounterMS = 0;
 							double random = ((double)rand() / (RAND_MAX)) * 100;
-							if (random > 30){
+							bool hasFollowups = false;
+							if (targetPlayer->getCurrentMove() != NULL) {
+								if (!(targetPlayer->getCurrentMove()->getCancelIntoMovesSet().empty() &&
+									targetPlayer->getCurrentMove()->getFollowupMovesSet().empty()) ||
+									bullet->getOriginalMoveId() != targetPlayer->getCurrentMove()->getMoveId()) {
+									hasFollowups = true;
+								}
+							}
+							
+							if (random > 30 || hasFollowups){
 								buttonsPressed |= FK_Input_Buttons::Down_Direction;
 							}
 							else{
@@ -817,7 +832,9 @@ namespace fk_engine{
 						}
 					}
 					lastInput = buttonsPressed;
-					buttonTimeCounterMS = 0;
+					if (lastInput != buttonsPressed) {
+						buttonTimeCounterMS = 0;
+					}
 					return buttonsPressed;
 				}
 			}
@@ -835,6 +852,7 @@ namespace fk_engine{
 			}
 		}
 		if (buttonTimeCounterMS > minimalButtonPressTimeMS){
+			//std::cout << AIPlayer->getDisplayName() << " act now" << std::endl;
 			core::vector3df distance = targetPlayer->getPosition() - AIPlayer->getPosition();
 			f32 distanceValue = distance.getLength();
 			float temp_ang = targetPlayer->getRotation().Y;
@@ -845,6 +863,7 @@ namespace fk_engine{
 			//std::cout << "pressing buttons... " << AIPlayer->getStance() << std::endl;
 			// guard against bullets OR move on the side
 			if (AIPlayer->getCurrentMove() == NULL){
+				bool triggerGuardChance = false;
 				if (AIPlayer->isTriggerGuardActive()){
 					buttonsPressed |= fk_constants::FK_GuardButton;
 				}
@@ -864,6 +883,9 @@ namespace fk_engine{
 							){
 							u32 button = fk_constants::FK_TriggerButton;
 							buttonsPressed |= button;
+							if (AIPlayer->getCurrentMove() != NULL) {
+								triggerGuardChance = true;
+							}
 						}
 					//}
 					if (AIPlayer->isGrounded()){
@@ -906,17 +928,18 @@ namespace fk_engine{
 						armorCondition = false;
 						invincibilityCondition = false;
 					}
-					if (targetPlayer->hasActiveMove(false) &&
+					if (triggerGuardChance ||
+						(targetPlayer->hasActiveMove(false) &&
 						!targetPlayer->getCurrentMove()->hasThrowAttacks() && 
 						/*targetPlayer->getCurrentMove()->canBeTriggered() && */
 						distanceValue <= 1.2*targetPlayer->getCurrentMove()->getMaxRange() &&
 						!armorCondition &&
-						!invincibilityCondition){
+						!invincibilityCondition)){
 						if (!AIPlayer->isGuarding()){
 							/* give chance to guard only once per attack */
 							double random = ((double)rand() / (RAND_MAX)) * 100;
-							if (random <= getGuardLikelihood() &&
-								targetPlayerCurrentMoveId != targetPlayer->getCurrentMove()->getMoveId()){
+							if (triggerGuardChance || (random <= getGuardLikelihood() &&
+								targetPlayerCurrentMoveId != targetPlayer->getCurrentMove()->getMoveId())){
 								u32 button = fk_constants::FK_GuardButton;
 								buttonsPressed |= button;
 								if (targetPlayer->getCurrentMove()->hasLowAttacks() &&
@@ -1035,8 +1058,10 @@ namespace fk_engine{
 					buttonsPressed |= button;
 				}
 			}
+			if (lastInput != buttonsPressed) {
+				buttonTimeCounterMS = 0;
+			}
 			lastInput = buttonsPressed;
-			buttonTimeCounterMS = 0;
 		}else{
 			buttonsPressed = lastInput;
 		}

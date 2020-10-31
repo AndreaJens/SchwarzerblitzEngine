@@ -372,6 +372,8 @@ namespace fk_engine{
 		isMultiChainable = false;
 		/* store all attack types per frame for the AI */
 		attackTypeAtFrame.clear();
+		/* flag for throws that cannot hit airborne opponents */
+		noThrowOnAirborneFlag = false;
 	};
 	/* private functions */
 	int FK_Move::getMovementFrameId(int frameNumber){
@@ -1068,6 +1070,16 @@ namespace fk_engine{
 	void FK_Move::setAsMultichainable()
 	{
 		isMultiChainable = true;
+	}
+
+	bool FK_Move::canThrowAirborneOpponents()
+	{
+		return !noThrowOnAirborneFlag;
+	}
+
+	void FK_Move::setNoAirborneThrowFlag()
+	{
+		noThrowOnAirborneFlag = true;
 	}
 
 	// add counter attack

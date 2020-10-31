@@ -68,6 +68,8 @@ namespace fk_engine{
 		missingPreview = driver->getTexture((resourcePath + sceneResources.lockedCharacterIconTexture).c_str());
 		// locked costume sign
 		lockedCostumeSign = driver->getTexture((resourcePath + sceneResources.lockedCostumeMarkTexture).c_str());
+		// no arcade ending sign
+		noArcadeEndingSign = driver->getTexture((resourcePath + sceneResources.noArcadeEndingMarkTexture).c_str());
 		// arcade complete logo
 		completedArcadeModeLogoTexture = driver->getTexture((resourcePath + sceneResources.arcadeModeCompletedLogo).c_str());
 		// costume dots
@@ -79,8 +81,12 @@ namespace fk_engine{
 		int size = characterPaths.size();
 		if (characterIcons.size() == 0){
 			for (int i = 0; i < size; i++){
-				video::ITexture* characterIcon = driver->getTexture((charactersDirectory +
-					characterPaths[i] + "selectionPreview0.png").c_str());
+				std::string fullPath = charactersDirectory +
+					characterPaths[i];
+				if (!isValidCharacterPath(fullPath) && isValidCharacterPath(characterPaths[i])) {
+					fullPath = characterPaths[i];
+				}
+				video::ITexture* characterIcon = driver->getTexture((fullPath + "selectionPreview0.png").c_str());
 				if (!characterIcon){
 					continue;
 				}
@@ -292,6 +298,24 @@ namespace fk_engine{
 			y + dest_height);
 	}
 
+	bool FK_SceneCharacterSelect_Base::isValidCharacterPath(std::string path)
+	{
+		std::ifstream testFile(path + "character.txt");
+		if (!testFile) {
+			return false;
+		}
+		return true;
+	}
+
+	bool FK_SceneCharacterSelect_Base::isValidStagePath(std::string path)
+	{
+		std::ifstream testFile(path + "config.txt");
+		if (!testFile) {
+			return false;
+		}
+		return true;
+	}
+
 	// draw screen
 	void FK_SceneCharacterSelect_Base::drawCharacterScreen(){
 		int size = characterIcons.size();
@@ -501,7 +525,12 @@ namespace fk_engine{
 		characterFile.close();
 		if (characterInfos.count(characterPath) == 0) {
 			FK_Character* tempCharacter = new FK_Character;
-			tempCharacter->loadVariablesForSelectionScreen(databaseAccessor, "character.txt", characterPath, commonResourcesPath, smgr);
+			if (unlockExtraCostumesForeverFlag ||  (getCurrentActiveCheatCodes() & FK_Cheat::CheatUnlockExtraCostumes)) {
+				tempCharacter->loadVariablesForSelectionScreenExtra(databaseAccessor, "character.txt", characterPath, commonResourcesPath, smgr);
+			}
+			else {
+				tempCharacter->loadVariablesForSelectionScreen(databaseAccessor, "character.txt", characterPath, commonResourcesPath, smgr);
+			}
 			characterInfos[characterPath] = tempCharacter;
 			tempCharacter = NULL;
 		}
@@ -841,6 +870,7 @@ namespace fk_engine{
 		sceneResources.characterSelectorTexture = fk_constants::characterSelectionCursorFileName;
 		sceneResources.lockedCharacterIconTexture = fk_constants::characterSelectionGenericPreviewFilename;
 		sceneResources.lockedCostumeMarkTexture = fk_constants::characterSelectionLockedCharacterSignFileName;
+		sceneResources.noArcadeEndingMarkTexture = fk_constants::characterSelectionNoArcadeSignFileName;
 		sceneResources.currentCostumeIconTexture = fk_constants::characterSelectionFullCostumeDotFileName;
 		sceneResources.availableCostumeIconTexture = fk_constants::characterSelectionEmptyCostumeDotFileName;
 		sceneResources.maximumNumberOfFullSizeOutfitDots = 8;

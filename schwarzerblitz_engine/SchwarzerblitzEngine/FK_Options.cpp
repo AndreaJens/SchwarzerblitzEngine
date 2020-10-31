@@ -34,6 +34,10 @@ namespace fk_engine{
 		monitorSize = core::dimension2d<u32>(0, 0);
 		samplingFactor = 1.0f;
 		useDynamicResolutionScaling = true;
+		inputDelayPlayer1Frames = 0;
+		inputDelayPlayer2Frames = 0;
+	    masterVolume = 0.3f;
+		tourneyModeFlag = false;
 
 		optionLabels = std::map<FK_OptionType, std::string>();
 		optionLabels[FK_OptionType::FullscreenMode] = "Fullscreen";
@@ -55,6 +59,10 @@ namespace fk_engine{
 		optionLabels[FK_OptionType::ShadowQuality] = "Shadows_Quality";
 		optionLabels[FK_OptionType::AILevel] = "AI_Level";
 		optionLabels[FK_OptionType::BorderlessWindowSamplingFactor] = "ScreenSamplingFactor";
+		optionLabels[FK_OptionType::InputDelayPlayer1] = "InputDelay_Player1_Frames";
+		optionLabels[FK_OptionType::InputDelayPlayer2] = "InputDelay_Player2_Frames";
+		optionLabels[FK_OptionType::MasterVolume] = "Master_Volume";
+		optionLabels[FK_OptionType::TourneyMode] = "Tourney_Mode";
 	}
 
 	FK_Options::FK_Options(core::dimension2d<u32> newMonitorSize) : FK_Options(){
@@ -145,6 +153,18 @@ namespace fk_engine{
 				else if (temp == optionLabels[FK_OptionType::DynamicResolution]) {
 					setDynamicResolutionScalingFlag((bool)tempVal);
 				}
+				else if (temp == optionLabels[FK_OptionType::InputDelayPlayer1]) {
+					setInputDelayPlayer1(tempVal);
+				}
+				else if (temp == optionLabels[FK_OptionType::InputDelayPlayer2]) {
+					setInputDelayPlayer2(tempVal);
+				}
+				else if (temp == optionLabels[FK_OptionType::MasterVolume]) {
+					setMasterVolume(((f32)tempVal) / 100.0f);
+				}
+				else if (temp == optionLabels[FK_OptionType::TourneyMode]) {
+					setTourneyMode((bool)tempVal);
+				}
 				else{
 					continue;
 				}
@@ -175,6 +195,10 @@ namespace fk_engine{
 		optionValues[FK_OptionType::ShadowQuality] = (u32)shadowsQuality;
 		optionValues[FK_OptionType::AILevel] = (u32)AIlevel;
 		optionValues[FK_OptionType::BorderlessWindowSamplingFactor] = (u32)(100 * samplingFactor);
+		optionValues[FK_OptionType::InputDelayPlayer1] = (u32)inputDelayPlayer1Frames;
+		optionValues[FK_OptionType::InputDelayPlayer2] = (u32)inputDelayPlayer2Frames;
+		optionValues[FK_OptionType::MasterVolume] = (u32)(masterVolume * 100);
+		optionValues[FK_OptionType::TourneyMode] = (u32)(tourneyModeFlag);
 
 		FK_OptionType* keys = new FK_OptionType[numberOfOptions] {
 			FullscreenMode,
@@ -196,6 +220,10 @@ namespace fk_engine{
 			ShadowQuality,
 			AILevel,
 			BorderlessWindowSamplingFactor,
+			InputDelayPlayer1,
+			InputDelayPlayer2,
+			MasterVolume,
+			TourneyMode
 		};
 
 		std::ofstream outputFile(filename.c_str());
@@ -239,6 +267,14 @@ namespace fk_engine{
 
 	void FK_Options::setMusicMute(bool muteMusic){
 		bgmMuteFlag = muteMusic;
+	};
+
+	void FK_Options::setTourneyMode(bool tourneyFlag) {
+		tourneyModeFlag = tourneyFlag;
+	};
+
+	void FK_Options::setMasterVolume(f32 new_volume) {
+		masterVolume = new_volume;
 	};
 
 	void FK_Options::setAILevel(FK_AILevel newAILevel){
@@ -328,7 +364,7 @@ namespace fk_engine{
 			return 0.0f;
 		}
 		else{
-			return soundEffectsMasterVolume;
+			return soundEffectsMasterVolume * masterVolume;
 		}
 	};
 	bool FK_Options::getSFXMute(){
@@ -340,7 +376,7 @@ namespace fk_engine{
 			return 0.0f;
 		}
 		else{
-			return voicesEffectsMasterVolume;
+			return voicesEffectsMasterVolume * masterVolume;
 		}
 	};
 	bool FK_Options::getVoicesMute(){
@@ -351,7 +387,7 @@ namespace fk_engine{
 			return 0.0f;
 		}
 		else{
-			return bgmMasterVolume;
+			return bgmMasterVolume * masterVolume;
 		}
 	};
 	f32 FK_Options::getNominalMusicVolume(){
@@ -368,7 +404,17 @@ namespace fk_engine{
 	}
 	bool FK_Options::getMusicMute(){
 		return bgmMuteFlag;
-	};
+	}
+
+	bool FK_Options::getTourneyMode() {
+		return tourneyModeFlag;
+	}
+
+	f32 FK_Options::getMasterVolume()
+	{
+		return masterVolume;
+	}
+	
 	u32 FK_Options::getAILevel(){
 		return (u32)AIlevel;
 	};
@@ -392,7 +438,17 @@ namespace fk_engine{
 	};
 	u32 FK_Options::getShadowQuality(){
 		return (u32)shadowsQuality;
-	};
+	}
+	u32 FK_Options::getInputDelayPlayer1()
+	{
+		return inputDelayPlayer1Frames;
+	}
+
+	u32 FK_Options::getInputDelayPlayer2()
+	{
+		return inputDelayPlayer2Frames;
+	}
+
 	FK_Options::FK_PostProcessingEffect FK_Options::getPostProcessingShadersFlag(){
 		return allowPostProcessingEffects;
 	}
@@ -499,5 +555,13 @@ namespace fk_engine{
 	void FK_Options::setDynamicResolutionScalingFlag(bool dynamicResolutionFlag)
 	{
 		useDynamicResolutionScaling = dynamicResolutionFlag;
+	}
+	void FK_Options::setInputDelayPlayer1(u32 newPlayer1DelayFrames)
+	{
+		inputDelayPlayer1Frames = newPlayer1DelayFrames;
+	}
+	void FK_Options::setInputDelayPlayer2(u32 newPlayer2DelayFrames)
+	{
+		inputDelayPlayer2Frames = newPlayer2DelayFrames;
 	}
 }

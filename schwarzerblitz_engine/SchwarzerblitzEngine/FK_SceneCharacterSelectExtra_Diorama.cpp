@@ -35,6 +35,7 @@ namespace fk_engine {
 				availabilityIdentifier == CharacterUnlockKeys::Character_UnlockableAndShown ||
 				availabilityIdentifier == CharacterUnlockKeys::Character_Unlockable_NoArcadeOpponent) {
 				characterPaths.push_back(charaPath);
+				characterHasAvailableEndingMap[characterId] = true;
 				if (unlockAllFlag || std::find(
 					availableCharacterArray.begin(),
 					availableCharacterArray.end(), key) !=
@@ -52,11 +53,13 @@ namespace fk_engine {
 					availableCharacterArray.end()) {
 					availableCharacters.push_back(characterId);
 					characterPaths.push_back(charaPath);
+					characterHasAvailableEndingMap[characterId] = true;
 					characterId += 1;
 				}
 			}
 		};
 		characterFile.close();
+		characterHasAvailableEndingMap[characterId] = true;
 		availableCharacters.push_back(characterId);
 		finalizeCharacterList();
 		/*f32 totalProgress = (f32)characterPaths.size() + 1;

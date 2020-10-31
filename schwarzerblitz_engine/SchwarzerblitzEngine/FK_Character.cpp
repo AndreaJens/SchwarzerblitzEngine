@@ -93,7 +93,7 @@ namespace fk_engine{
 		specialStanceDictionary[FK_Stance_Type::SpecialStance4] = "Special Stance 4";
 		specialStanceDictionary[FK_Stance_Type::SpecialStance5] = "Special Stance 5";
 		// throw reactions
-		targetThrowToApply = NULL;
+		targetThrowToApply.clear();
 		// AI archetype
 		AIarchetype = FK_AIArchetypes::Aggressor;
 		// impact point for ringout
@@ -135,6 +135,8 @@ namespace fk_engine{
 		pushbackVelocity = core::vector3df(-350.f, 0.f, 0.f);
 		// trigger guard condition
 		triggerButtonPressedBeforeHitstun = false;
+		isSidestepping = false;
+		sidestepCounter = 0;
 	};
 	// initializer with values 
 	FK_Character::FK_Character(FK_DatabaseAccessor newDatabaseAccessor, std::string newFileName, std::string newDirectory, std::string newCommonDirectory,
@@ -222,7 +224,7 @@ namespace fk_engine{
 			/* parse the move file list after having determined the filename*/
 			parseMoves();
 			/* add common moves to the set */
-			loadCommomMoves();
+			loadCommonMoves();
 			/* sort moves so that the longest is the first */
 			std::sort(movesCollection.begin(), movesCollection.end());
 			std::reverse(movesCollection.begin(), movesCollection.end());
@@ -276,7 +278,7 @@ namespace fk_engine{
 			/* parse the move file list after having determined the filename*/
 			parseMoves();
 			/* add common moves to the set */
-			loadCommomMoves();
+			loadCommonMoves();
 			/* sort moves so that the longest is the first */
 			std::sort(movesCollection.begin(), movesCollection.end());
 			std::reverse(movesCollection.begin(), movesCollection.end());
@@ -300,6 +302,26 @@ namespace fk_engine{
 		/* load all available costumes */
 		availableCharacterOutfits.clear();
 		parseMeshFiles();
+		outfitId = 0;
+		smgr_reference = smgr;
+	}
+
+	// load basic variables for selectio screen's sake
+	void FK_Character::loadVariablesForSelectionScreenExtra(FK_DatabaseAccessor newDatabaseAccessor, std::string newFileName, std::string newDirectory, std::string newCommonDirectory,
+		scene::ISceneManager* smgr) {
+		databaseAccessor = newDatabaseAccessor;
+		setDatabaseDrivenVariables();
+		characterFileName = newFileName;
+		characterDirectory = newDirectory;
+		setDatabaseDrivenVariables();
+		parseCharacterFileForSelectionScreen(characterDirectory + characterFileName);
+		/* set animation directory */
+		commonDirectory = newCommonDirectory;
+		animationDirectory = characterDirectory + "animations\\";
+		sharedAnimationDirectory = commonDirectory + "animations\\";
+		/* load all available costumes */
+		availableCharacterOutfits.clear();
+		parseMeshFilesExtra();
 		outfitId = 0;
 		smgr_reference = smgr;
 	}
@@ -575,6 +597,11 @@ namespace fk_engine{
 		return availableCharacterOutfits.size();
 	}
 
+	std::string FK_Character::getAnimationDirectory()
+	{
+		return animationDirectory;
+	}
+
 	// get current outfit path
 	std::string FK_Character::getOutfitPath(){
 		return characterOutfits[outfitId].outfitDirectory;
@@ -663,9 +690,39 @@ namespace fk_engine{
 			std::string subfolder = fk_constants::AdditionalCharacterMeshSubfolderRoot + std::to_string(i) + "\\";
 			parseSingleCostume(outfitKeysMap, subfolder);
 		}
-		// DLC and addons
+		// addons
 		for (u32 i = 1; i < maximumNumberOfMeshes; ++i) {
 			std::string subfolder = fk_constants::DLCCharacterMeshSubfolderRoot + std::to_string(i) + "\\";
+			parseSingleCostume(outfitKeysMap, subfolder);
+		}
+		// if the additional folder is not empty, parse also that one
+		if (!additionalFolder.empty()) {
+			parseSingleCostume(outfitKeysMap, additionalFolder);
+		}
+	}
+
+	void FK_Character::parseAllMeshFilesDirectorySearchExtra(const std::string& additionalFolder) {
+		u32 maximumNumberOfMeshes = 100;
+		std::map<FK_OutfitFileKeys, std::string> outfitKeysMap;
+		outfitKeysMap[FK_OutfitFileKeys::OutfitFilename] = "#MESH_FILENAME";
+		outfitKeysMap[FK_OutfitFileKeys::OutfitName] = "#OUTFIT_NAME";
+		outfitKeysMap[FK_OutfitFileKeys::OutfitAvailable] = "#AVAILABLE_FROM_START";
+		outfitKeysMap[FK_OutfitFileKeys::OutfitAlternativeCharacterName] = "#CHARACTER_NAME";
+		outfitKeysMap[FK_OutfitFileKeys::OutfitAlternativeDisplayName] = "#CHARACTER_SHORTNAME";
+		outfitKeysMap[FK_OutfitFileKeys::OutfitMeshScale] = "#OUTFIT_MESH_SCALE";
+		outfitKeysMap[FK_OutfitFileKeys::OutfitBackfaceCulling] = "#NO_BACKFACE";
+		for (u32 i = 1; i < maximumNumberOfMeshes; ++i) {
+			std::string subfolder = fk_constants::AdditionalCharacterMeshSubfolderRoot + std::to_string(i) + "\\";
+			parseSingleCostume(outfitKeysMap, subfolder);
+		}
+		// addons
+		for (u32 i = 1; i < maximumNumberOfMeshes; ++i) {
+			std::string subfolder = fk_constants::DLCCharacterMeshSubfolderRoot + std::to_string(i) + "\\";
+			parseSingleCostume(outfitKeysMap, subfolder);
+		}
+		// EXTRA
+		for (u32 i = 1; i < maximumNumberOfMeshes; ++i) {
+			std::string subfolder = fk_constants::ExtraCharacterMeshSubfolderRoot + std::to_string(i) + "\\";
 			parseSingleCostume(outfitKeysMap, subfolder);
 		}
 		// if the additional folder is not empty, parse also that one
@@ -707,6 +764,44 @@ namespace fk_engine{
 			outfitKeysMap[FK_OutfitFileKeys::OutfitMeshScale] = "#OUTFIT_MESH_SCALE";
 			outfitKeysMap[FK_OutfitFileKeys::OutfitBackfaceCulling] = "#NO_BACKFACE";
 			for each(std::string subfolder in folders) {
+				parseSingleCostume(outfitKeysMap, subfolder);
+			}
+		}
+	};
+
+	// load additional mesh names
+	void FK_Character::parseMeshFilesExtra(const std::string& additionalFolder) {
+		// TO BE IMPLEMENTED
+		// browse through all the subfolders with a certain root, up to 100
+		// first check if there is any file which contains available meshs
+		std::string masterFileMeshConfig = "costumes.txt";
+		std::ifstream masterFile((characterDirectory + masterFileMeshConfig).c_str());
+		std::vector<std::string> folders;
+		bool standardSearch = true;
+		if (masterFile) {
+			std::string temp;
+			while (masterFile >> temp) {
+				folders.push_back(temp + "\\");
+			}
+			if (!additionalFolder.empty()) {
+				folders.push_back(additionalFolder);
+			}
+			standardSearch = folders.empty();
+		}
+		if (standardSearch) {
+			parseAllMeshFilesDirectorySearchExtra(additionalFolder);
+			return;
+		}
+		else {
+			std::map<FK_OutfitFileKeys, std::string> outfitKeysMap;
+			outfitKeysMap[FK_OutfitFileKeys::OutfitFilename] = "#MESH_FILENAME";
+			outfitKeysMap[FK_OutfitFileKeys::OutfitName] = "#OUTFIT_NAME";
+			outfitKeysMap[FK_OutfitFileKeys::OutfitAvailable] = "#AVAILABLE_FROM_START";
+			outfitKeysMap[FK_OutfitFileKeys::OutfitAlternativeCharacterName] = "#CHARACTER_NAME";
+			outfitKeysMap[FK_OutfitFileKeys::OutfitAlternativeDisplayName] = "#CHARACTER_SHORTNAME";
+			outfitKeysMap[FK_OutfitFileKeys::OutfitMeshScale] = "#OUTFIT_MESH_SCALE";
+			outfitKeysMap[FK_OutfitFileKeys::OutfitBackfaceCulling] = "#NO_BACKFACE";
+			for each (std::string subfolder in folders) {
 				parseSingleCostume(outfitKeysMap, subfolder);
 			}
 		}
@@ -1239,18 +1334,25 @@ namespace fk_engine{
 		baseForm.isBasicForm = true;
 	}
 
+	FK_CharacterStats FK_Character::getCharacterStats()
+	{
+		return stats;
+	}
+
 	// set database connected variables
 	void FK_Character::setDatabaseDrivenVariables()
 	{
 		triggerCounters = databaseAccessor.getStartingTriggers();
 		animationFrameRate = databaseAccessor.getAnimationFramerateFPS();
 		walkingSpeed = databaseAccessor.getBasicCharacterWalkSpeed();
+		sidestepSpeed = databaseAccessor.getBasicCharacterSidestepSpeed();
+		mixedstepSpeed = databaseAccessor.getBasicCharacterMixedStepSpeed();
 		runningSpeed = databaseAccessor.getBasicCharacterRunningSpeed();
 	}
 
-	void FK_Character::loadCommomMoves()
+	void FK_Character::loadCommonMoves()
 	{
-		std::string commonMovesFilePath = characterDirectory + "..\\common\\moves.txt";
+		std::string commonMovesFilePath = commonDirectory + "..\\characters\\common\\moves.txt";
 		std::ifstream ifile(commonMovesFilePath.c_str());
 		if (!ifile) {
 			return;
@@ -1314,6 +1416,9 @@ namespace fk_engine{
 		delete boneParser;
 		*/
 		core::vector3df hitboxDefaultScale = core::vector3df(0.06f, 0.06f, 0.06f);
+		if (databaseAccessor.extendedJugglesAllowed()) {
+			core::vector3df hitboxDefaultScale = core::vector3df(0.08f, 0.08f, 0.06f);
+		}
 		/* create torso variables */
 		core::vector3df hitboxDefaultTorsoScale(0.2f, 0.2f, 0.3f);
 		core::vector3df hitboxDefaultTorsoOffset(0, 0.1f, 0);
@@ -1367,6 +1472,10 @@ namespace fk_engine{
 		/*create torso*/
 		core::vector3df size(0.2f, 0.1f, 0.25f);
 		core::vector3df offset(0, 0.1f, 0);
+		if (databaseAccessor.extendedJugglesAllowed()) {
+			size = core::vector3df(0.2f, 0.1f, 0.2f);
+			offset = core::vector3df(0, 0.1f, 0.f);
+		}
 		FK_Bones_Type bone = FK_Bones_Type::TorsoArmature;
 		FK_Hurtbox_Type type = FK_Hurtbox_Type::TorsoHurtbox;
 		hurtboxCollection[type] = createHurtbox(bone, size, offset);
@@ -1379,12 +1488,20 @@ namespace fk_engine{
 		/*create spine*/
 		size = core::vector3df(0.2f, 0.1f, 0.2f);
 		offset = core::vector3df(0, -0.1f, 0);
+		if (databaseAccessor.extendedJugglesAllowed()) {
+			size = core::vector3df(0.12f, 0.1f, 0.12f);
+			offset = core::vector3df(0.f, -0.1f, 0);
+		}
 		bone = FK_Bones_Type::SpineArmature;
 		type = FK_Hurtbox_Type::SpineHurtbox;
 		hurtboxCollection[type] = createHurtbox(bone, size, offset);
 		/*create hips*/
 		size = core::vector3df(0.2f, 0.05f, 0.2f);
 		offset = core::vector3df(0, -0.15f, 0);
+		if (databaseAccessor.extendedJugglesAllowed()) {
+			size = core::vector3df(0.12f, 0.05f, 0.12f);
+			offset = core::vector3df(0, -0.15f, 0);
+		}
 		bone = FK_Bones_Type::HipsArmature;
 		type = FK_Hurtbox_Type::HipsHurtbox;
 		hurtboxCollection[type] = createHurtbox(bone, size, offset);
@@ -1545,7 +1662,7 @@ namespace fk_engine{
 		guardSFX->setScale(core::vector3df(2, 2, 2));
 		guardSFX->setMaterialFlag(video::EMF_LIGHTING, false);
 		guardSFX->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
-		std::string path = characterDirectory + fk_constants::FK_GuardSFXFileName;
+		std::string path = commonDirectory + fk_constants::FK_GuardSFXFileName;
 		//m_threadMutex.lock();
 		guardSFX->setMaterialTexture(0, smgr_reference->getVideoDriver()->getTexture(path.c_str()));
 		//m_threadMutex.unlock();
@@ -1888,6 +2005,7 @@ namespace fk_engine{
 		if ((u32)getTriggerCounters() >= numberOfTriggerCountersUsed){
 			triggerModeFlag = true;
 			useTriggerCounters(numberOfTriggerCountersUsed);
+			stats.numberOfTriggerCombos += 1;
 		}
 	}
 
@@ -1912,6 +2030,7 @@ namespace fk_engine{
 	/* use trigger counters */
 	void FK_Character::useTriggerCounters(int value){
 		triggerCounters -= value;
+		stats.numberOfUsedBullets += value;
 		// clamp value to zero
 		if (triggerCounters < 0){
 			triggerCounters = 0;
@@ -2001,6 +2120,7 @@ namespace fk_engine{
 		hasUsedImpactCancelInCurrentCombo = true;
 		delayAfterMoveTimeMs = 100;
 		delayMovementAfterMoveTimeMs = 0;
+		stats.numberOfTriggerCancels += 1;
 	}
 
 	/* check perform Impact Cancel*/
@@ -2014,11 +2134,19 @@ namespace fk_engine{
 		hasUsedImpactCancelInCurrentCombo = true;
 		delayAfterMoveTimeMs = 0;
 		delayMovementAfterMoveTimeMs = 0;
+		stats.numberOfTriggerCancels += 1;
 	}
 	/* manage combo counter*/
 	void FK_Character::increaseComboCounter(f32 damage, s32 moveId, s32 hitboxId){
 		comboCounter += 1;
 		comboDamage += damage;
+		stats.totalDamage += damage;
+		if (comboDamage > stats.maxComboDamage) {
+			stats.maxComboDamage = comboDamage;
+		}
+		if (comboCounter > stats.maxComboLength) {
+			stats.maxComboLength = comboCounter;
+		}
 		if (moveId >= 0 && hitboxId >= 0) {
 			FKComboUnit unit(moveId, hitboxId);
 			// create if not there
@@ -2060,6 +2188,8 @@ namespace fk_engine{
 	};
 	/* reset current move */
 	void FK_Character::resetMove(bool resetTrigger){
+		isSidestepping = false;
+		sidestepCounter = 0;
 		resetMoveDelayCounter();
 		disableArmorSpecialEffect();
 		isTransforming = false;
@@ -2097,6 +2227,8 @@ namespace fk_engine{
 		if (newMove->getTriggerModeActivationFlag() && databaseAccessor.triggerCombosAllowed()) {
 			triggerModeFlag = true;
 		}
+		runningBufferTimerMs = -1;
+		runningBufferTimerMsTarget = -1;
 		lastMoveNoHitboxFlag = false;
 		plannedMove.reset();
 		disableArmorSpecialEffect();
@@ -2373,6 +2505,9 @@ namespace fk_engine{
 	/* this function manages the delay counter to introduce some time delay between various unchained moves */
 	void FK_Character::updateMoveDelayCounter(f32 delta_t_s){
 		delayAfterMoveTimeCounterMs += (u32)(delta_t_s * 1000.0f);
+		//if (delayAfterMoveTimeMs > 0) {
+		//	std::cout << delayAfterMoveTimeCounterMs << "/" << delayAfterMoveTimeMs << " (" << delayMovementAfterMoveTimeMs << ")" << std::endl;
+		//}
 		if (delayAfterMoveTimeCounterMs >= delayAfterMoveTimeMs) {
 			delayAfterMoveTimeCounterMs = 0;
 			delayMovementAfterMoveTimeMs = 0;
@@ -2382,11 +2517,14 @@ namespace fk_engine{
 	/* reset move delay counter after a move is completed */
 	void FK_Character::resetMoveDelayCounter(){
 		//std::cout << "move end - delay start" << std::endl;
+		delayAfterMoveTimeMs = 0;
+		delayMovementAfterMoveTimeMs = 0;
+		delayAfterMoveTimeCounterMs = 0;
 		delayAfterMoveTimeMs = databaseAccessor.getCharacterMoveCooldownDurationMs();
-		if (currentMove != NULL && currentMove->isThrow()){
-			delayAfterMoveTimeMs += 50;
-		}
-		else if (isTriggerModeActive()){
+		//if (currentMove != NULL && currentMove->isThrow()){
+		//	delayAfterMoveTimeMs += 50;
+		//}
+		if (isTriggerModeActive()){
 			delayAfterMoveTimeMs = (u32)floor((f32)delayAfterMoveTimeMs * 1.5f);
 		}
 		if (currentMove != NULL){
@@ -2405,7 +2543,10 @@ namespace fk_engine{
 			}
 		}
 		delayMovementAfterMoveTimeMs = delayAfterMoveTimeMs;
-		if (currentMove != NULL && !currentMove->canBeTriggered() && currentMove->getBulletCollection().empty()){
+		if (currentMove != NULL && (!currentMove->canBeTriggered() && !currentMove->isThrow()) && currentMove->getBulletCollection().empty()){
+			if (currentMove->getEndStance() != FK_Stance_Type::RunningStance) {
+				delayAfterMoveTimeMs = 0;
+			}
 			delayMovementAfterMoveTimeMs = 0;
 		}
 		delayAfterMoveTimeCounterMs = 0;
@@ -2495,6 +2636,9 @@ namespace fk_engine{
 		throwProcessingFlag = false;
 		isTransforming = false;
 		transformationToApply = FK_Move::FK_TransformationMove();
+		if (resetObjects) {
+			stats.clear();
+		}
 		if (resetObjects || currentForm.resetEveryRound){
 			if (!isInBaseForm) {
 				currentForm.durationMs = 16;
@@ -2520,6 +2664,13 @@ namespace fk_engine{
 		}
 		if (isGrounded() || !isHitStun()) {
 			setVelocityPerSecond(core::vector3df(0, 0, 0));
+		}
+		if (databaseAccessor.extendedJugglesAllowed()) {
+			ISceneNodeAnimator* pAnim = *(getAnimatedMesh()->getAnimators().begin());
+			if (pAnim != NULL && pAnim->getType() == ESNAT_COLLISION_RESPONSE) {
+				auto gravity = ((scene::ISceneNodeAnimatorCollisionResponse*)pAnim)->getGravity();
+				((scene::ISceneNodeAnimatorCollisionResponse*)pAnim)->setGravity(gravity);
+			}
 		}
 		if (guardBreakTrigger && !isKO()){
 			if (reactionType == FK_Reaction_Type::StrongFlight || reactionType == FK_Reaction_Type::ReverseStrongFlight ||
@@ -2562,13 +2713,20 @@ namespace fk_engine{
 			setBasicAnimation(FK_BasicPose_Type::GuardingAnimation, true);
 		}
 		if (!isKO()){
-			if (isGrounded()){
-				reactionType = FK_Reaction_Type::StrongLow;
+			if (getStance() == FK_Stance_Type::LandingStance) {
+				if (reactionType != FK_Reaction_Type::StrongFlight &&
+					reactionType != FK_Reaction_Type::ReverseStrongFlight &&
+					reactionType != FK_Reaction_Type::StandingFlight) {
+					reactionType = FK_Reaction_Type::WeakFlight;
+				}
+			}
+			else if (isGrounded()){
+				reactionType = FK_Reaction_Type::WeakFlight;
 			}
 			if (wasWakingUp){
 				if (reactionType == FK_Reaction_Type::StrongFlight ||
 					reactionType == FK_Reaction_Type::ReverseStrongFlight){
-					reactionType = FK_Reaction_Type::StrongLow;
+					reactionType = FK_Reaction_Type::StandingFlight;
 				}
 				velocityPerSecond = core::vector3df(0.f, 0.f, 0.f);
 			}
@@ -3019,7 +3177,8 @@ namespace fk_engine{
 		}
 		bool positionFlag = positionWhenHitByImpactAttack.getDistanceFrom(getPosition()) <= 
 			databaseAccessor.getRingoutDistanceFromWall();
-		return positionFlag && canBeSentOutOfRing && velocityPerSecond.X != 0;
+		return positionFlag && canBeSentOutOfRing && 
+			(velocityPerSecond.X < 0 || currentMove == NULL && velocityPerSecond.X > 0);
 	}
 	/* reset can be sent ring out flag */
 	void FK_Character::resetCanSufferRingoutFlag(){
@@ -3086,9 +3245,9 @@ namespace fk_engine{
 		if (isBeingThrown()){
 			float currentFrame = animatedMesh->getFrameNr();
 			if (lastFrame != currentFrame){
-				if (targetThrowToApply != NULL){
+				if (targetThrowToApply.getMoveId() > 0){
 					if (lastFrame == -1) lastFrame = currentFrame;
-					nextMovement = targetThrowToApply->getThrowTargetMovementAtFrame(
+					nextMovement = targetThrowToApply.getThrowTargetMovementAtFrame(
 						(int)floor(currentFrame))*(currentFrame - lastFrame);
 				}
 				lastFrame = currentFrame;
@@ -3154,6 +3313,7 @@ namespace fk_engine{
 							setBasicAnimation(FK_BasicPose_Type::CrouchingGuardAnimation);
 						}
 						setTrackingFlag(true);
+						stats.numberOfTriggerGuards += 1;
 						triggerGuardDurationS = 0;
 						// add hitstun to TG
 						hitStunFlag = true;
@@ -3208,14 +3368,30 @@ namespace fk_engine{
 								(getNextMove() != NULL || plannedMove.isValid()) ) {
 								abortTrigger = false;
 							}
-							for (int i = 0; i < size; i++){
-								if (currentMove->getHitboxCollection()[i].hasHit()){
-									abortTrigger = false;
-									if ((currentMove->getHitboxCollection()[i].getAttackType() & FK_Attack_Type::ThrowAtk) != 0){
-										cancelTrigger = false;
+							bool validHitbox = true;
+							if (plannedMove.isValid() && currentFrame >=
+								plannedMove.activationFrame) {
+								validHitbox = false;
+								for (int i = 0; i < size; i++) {
+									if (currentMove->getHitboxCollection()[i].getStartingFrame() < currentFrame) {
+										validHitbox = true;
 									}
-									break;
 								}
+							}
+							if (validHitbox) {
+								for (int i = 0; i < size; i++) {
+									if (currentMove->getHitboxCollection()[i].hasHit()) {
+										abortTrigger = false;
+										if ((currentMove->getHitboxCollection()[i].getAttackType() & FK_Attack_Type::ThrowAtk) != 0) {
+											cancelTrigger = false;
+										}
+										break;
+									}
+								}
+							}
+							else {
+								abortTrigger = false;
+								cancelTrigger = false;
 							}
 						}
 						if (abortTrigger){
@@ -3338,6 +3514,8 @@ namespace fk_engine{
 		}
 	}
 	void FK_Character::performJump(FK_JumpDirection jumpDirection, f32 additionalAxialvelocity){
+		isSidestepping = false;
+		sidestepCounter = 0;
 		guardFlag = false;
 		//velocityPerSecond.Z = jumpSpeed;
 		velocityPerSecond.Z = 400.0f;
@@ -3450,8 +3628,8 @@ namespace fk_engine{
 	bool FK_Character::canPerformGuard(){
 		bool stanceFlag = (currentStance & FK_Stance_Type::AnyStandardStance) > 0;
 		stanceFlag &= (!isJumping());
-		stanceFlag |= currentStance == FK_Stance_Type::WakeUpStance;
-		return (isGuarding() || !isHitStun()) && stanceFlag;
+		//stanceFlag |= currentStance == FK_Stance_Type::WakeUpStance;
+		return canMove() && (isGuarding() || !isHitStun()) && stanceFlag;
 	}
 
 	// check if character can evade bullets
@@ -3525,7 +3703,19 @@ namespace fk_engine{
 	// update basic pose
 	void FK_Character::basicPoseUpdate(u32 lastButtonPressed, f32 delta_t_s){
 		// check if character is landing
-		if (getStance() == FK_Stance_Type::LandingStance){
+		if (getStance() == FK_Stance_Type::LandingStance && !isHitStun()){
+			if (lastButtonPressed & fk_constants::FK_GuardButton) {
+				u32 directionButtonPressed = lastButtonPressed & FK_Input_Buttons::Any_Direction_Plus_Held;
+				// back dash wake up
+				if ((directionButtonPressed & FK_Input_Buttons::Left_Direction) != 0) {
+					velocityPerSecond.X = -140;
+				}
+				// front dash wake up
+				else if ((directionButtonPressed & FK_Input_Buttons::Right_Direction) != 0) {
+					velocityPerSecond.X = 100;
+				}
+				recoverFromGrounding();
+			}
 			return;
 		}
 		//if (getStance() == FK_Stance_Type::AirStance){
@@ -3608,8 +3798,8 @@ namespace fk_engine{
 		u32 tempButton = directionButtonPressed;
 		float walkingStep = walkingSpeed * delta_t_s;
 		float runningStep = runningSpeed * delta_t_s;
-		float sidestepStep = walkingSpeed * 1.5 * delta_t_s;
-		float mixedstepStep = walkingSpeed * 1.2 * delta_t_s;
+		float sidestepStep = sidestepSpeed * delta_t_s;
+		float mixedstepStep = mixedstepSpeed * delta_t_s;
 		if (impactCancelRun_flag){
 			runningStep *= databaseAccessor.getRunCancelSpeedMultiplier();
 		}
@@ -3632,29 +3822,56 @@ namespace fk_engine{
 		*/
 		if (isJumping()){
 			setBasicAnimation(storedJumpingAnimation, false, false, false);
-		}else if (isGuarding()){
-			if ((directionButtonPressed & FK_Input_Buttons::Down_Direction) != 0){
-				//setBasicAnimation(FK_BasicPose_Type::CrouchingIdleAnimation);
-				setBasicAnimation(FK_BasicPose_Type::CrouchingGuardAnimation);
-				setStance(FK_Stance_Type::CrouchedStance);
-			} else 
-			if ((directionButtonPressed & FK_Input_Buttons::Up_Direction) != 0){
-				if (canJump()){
-					//setBasicAnimation(FK_BasicPose_Type::CrouchingIdleAnimation);
-					FK_JumpDirection jumpDirection = FK_JumpDirection::JumpUp;
-					if ((directionButtonPressed & FK_Input_Buttons::Right_Direction) != 0){
-						jumpDirection = FK_JumpDirection::JumpForward;
+		}
+		else if (isGuarding()){
+			if (getStance() != FK_Stance_Type::WakeUpStance) {
+				bool directionalInputWithGuard = (directionButtonPressed & FK_Input_Buttons::Left_Direction) != 0 ||
+					(directionButtonPressed & FK_Input_Buttons::Right_Direction) != 0;
+				if (isSidestepping && !(lastButtonPressed & FK_Input_Buttons::Trigger_Button)) {
+					if (sidestepCounter < 100  || directionalInputWithGuard) {
+						isSidestepping = false;
+						sidestepCounter = 0;
 					}
-					else if ((directionButtonPressed & FK_Input_Buttons::Left_Direction) != 0){
-						jumpDirection = FK_JumpDirection::JumpBackward;
+					else {
+						if ((directionButtonPressed & FK_Input_Buttons::Down_Direction) == 0 &&
+							(directionButtonPressed & FK_Input_Buttons::Up_Direction) == 0) {
+							isSidestepping = false;
+							sidestepCounter = 0;
+						}
 					}
-					performJump(jumpDirection);
+				}
+				else {
+					if ((directionButtonPressed & FK_Input_Buttons::Down_Direction) != 0) {
+						//setBasicAnimation(FK_BasicPose_Type::CrouchingIdleAnimation);
+						isSidestepping = false;
+						sidestepCounter = 0;
+						setBasicAnimation(FK_BasicPose_Type::CrouchingGuardAnimation);
+						setStance(FK_Stance_Type::CrouchedStance);
+					}
+					else
+						if ((directionButtonPressed & FK_Input_Buttons::Up_Direction) != 0) {
+							if (canJump()) {
+								isSidestepping = false;
+								sidestepCounter = 0;
+								//setBasicAnimation(FK_BasicPose_Type::CrouchingIdleAnimation);
+								FK_JumpDirection jumpDirection = FK_JumpDirection::JumpUp;
+								if ((directionButtonPressed & FK_Input_Buttons::Right_Direction) != 0) {
+									jumpDirection = FK_JumpDirection::JumpForward;
+								}
+								else if ((directionButtonPressed & FK_Input_Buttons::Left_Direction) != 0) {
+									jumpDirection = FK_JumpDirection::JumpBackward;
+								}
+								performJump(jumpDirection);
+							}
+						}
 				}
 			}
 		}
 		else{
 			if (getStance() == FK_Stance_Type::CrouchedStance){
-				if ((directionButtonPressed & FK_Input_Buttons::Down_Direction) == 0){
+				isSidestepping = false;
+				sidestepCounter = 0;
+				if (canMove() && (directionButtonPressed & FK_Input_Buttons::Down_Direction) == 0){
 					setBasicAnimation(FK_BasicPose_Type::IdleAnimation);
 					setStance(FK_Stance_Type::GroundStance);
 				}
@@ -3665,6 +3882,8 @@ namespace fk_engine{
 			}
 			// update running;
 			else if (isRunning()){
+				isSidestepping = false;
+				sidestepCounter = 0;
 				if ((directionButtonPressed & FK_Input_Buttons::Right_Direction) == FK_Input_Buttons::Right_Direction){
 						setBasicAnimation(FK_BasicPose_Type::RunningAnimation);
 						setStance(FK_Stance_Type::RunningStance);
@@ -3684,6 +3903,8 @@ namespace fk_engine{
 				}
 			}
 			else if ((currentStance & FK_Stance_Type::AnySpecialStance) != 0){
+				isSidestepping = false;
+				sidestepCounter = 0;
 				switch(currentStance){
 				case FK_Stance_Type::SpecialStance1:
 					setBasicAnimation(FK_BasicPose_Type::SpecialStance1Animation);
@@ -3708,12 +3929,16 @@ namespace fk_engine{
 			// update idle stance, sidestep and walking
 			else if (getStance() == FK_Stance_Type::GroundStance){
 				if (directionButtonPressed == 0 || !canMove()){
+					isSidestepping = false;
+					sidestepCounter = 0;
 					setBasicAnimation(FK_BasicPose_Type::IdleAnimation);
 					setStance(FK_Stance_Type::GroundStance);
 				}
 				// look for movement, starting from diagonal motion
 				else if ((directionButtonPressed & FK_Input_Buttons::UpLeft_Direction) == FK_Input_Buttons::UpLeft_Direction){
 					if (canMove()){
+						isSidestepping = true;
+						sidestepCounter += std::floor(1000 * delta_t_s);
 						setBasicAnimation(FK_BasicPose_Type::BackWalkingAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = -walkingStep;
@@ -3722,6 +3947,8 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::UpRight_Direction) == FK_Input_Buttons::UpRight_Direction){
 					if (canMove()){
+						isSidestepping = true;
+						sidestepCounter += std::floor(1000 * delta_t_s);
 						setBasicAnimation(FK_BasicPose_Type::WalkingAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = walkingStep;
@@ -3730,6 +3957,8 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::DownRight_Direction) == FK_Input_Buttons::DownRight_Direction){
 					if (canMove()){
+						isSidestepping = true;
+						sidestepCounter += std::floor(1000 * delta_t_s);
 						setBasicAnimation(FK_BasicPose_Type::WalkingAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = walkingStep;
@@ -3738,6 +3967,8 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::DownLeft_Direction) == FK_Input_Buttons::DownLeft_Direction){
 					if (canMove()){
+						isSidestepping = true;
+						sidestepCounter += std::floor(1000 * delta_t_s);
 						setBasicAnimation(FK_BasicPose_Type::BackWalkingAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = -walkingStep;
@@ -3746,6 +3977,8 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::Right_Direction) == FK_Input_Buttons::Right_Direction){
 					if (canMove()){
+						isSidestepping = false;
+						sidestepCounter = 0;
 						setBasicAnimation(FK_BasicPose_Type::WalkingAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = walkingStep;
@@ -3754,6 +3987,8 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::Left_Direction) == FK_Input_Buttons::Left_Direction){
 					if (canMove()){
+						isSidestepping = false;
+						sidestepCounter = 0;
 						setBasicAnimation(FK_BasicPose_Type::BackWalkingAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = -walkingStep;
@@ -3762,6 +3997,8 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::Up_Direction) == FK_Input_Buttons::Up_Direction){
 					if (canMove()){
+						isSidestepping = true;
+						sidestepCounter += std::floor(1000 * delta_t_s);
 						setBasicAnimation(FK_BasicPose_Type::SidestepAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = 0;
@@ -3770,14 +4007,22 @@ namespace fk_engine{
 				}
 				else if ((directionButtonPressed & FK_Input_Buttons::Down_Direction) == FK_Input_Buttons::Down_Direction){
 					if (canMove()){
+						isSidestepping = true;
+						sidestepCounter += std::floor(1000 * delta_t_s);
 						setBasicAnimation(FK_BasicPose_Type::SidestepAnimation);
 						setStance(FK_Stance_Type::GroundStance);
 						nextMovement.X = 0;
 						nextMovement.Y = sidestepStep;
 					}
 				}
+				else {
+					isSidestepping = false;
+					sidestepCounter = 0;
+				}
 			}
 			else if (isGrounded()){
+				isSidestepping = false;
+				sidestepCounter = 0;
 				if (canMove()){
 					if (directionButtonPressed == 0 ||
 						(directionButtonPressed & FK_Input_Buttons::Left_Direction) == FK_Input_Buttons::Left_Direction ||
@@ -3912,14 +4157,17 @@ namespace fk_engine{
 	}
 
 	// set opponent's throw animations
-	void FK_Character::setOpponentThrowAnimation(std::deque<FK_Move>& opponentMoveList){
+	void FK_Character::setOpponentThrowAnimation(std::deque<FK_Move>& opponentMoveList, std::string opponentAnimationDirectory){
 		for (u32 i = 0; i < opponentMoveList.size(); ++i){
 			if (!opponentMoveList[i].getThrowReactionAnimationPose().getAnimationName().empty()){
 				//m_threadMutex.lock();
 				std::string animation_name = opponentMoveList[i].getThrowReactionAnimationPose().getAnimationName().c_str();
 				bool loadedFromCharacterDirectory = addAnimationFromDirectXFile(animation_name.c_str(), animationDirectory + animation_name + ".x");
 				if (!loadedFromCharacterDirectory){
-					addAnimationFromDirectXFile(animation_name.c_str(), sharedAnimationDirectory + animation_name + ".x");
+					loadedFromCharacterDirectory = addAnimationFromDirectXFile(animation_name.c_str(), sharedAnimationDirectory + animation_name + ".x");
+				}
+				if (!loadedFromCharacterDirectory) {
+					addAnimationFromDirectXFile(animation_name.c_str(), opponentAnimationDirectory + animation_name + ".x");
 				}
 				//m_threadMutex.unlock();
 			}
@@ -4015,7 +4263,14 @@ namespace fk_engine{
 
 	// set throw move
 	void FK_Character::setThrowMove(FK_Move* throwToApply){
-		targetThrowToApply = throwToApply;
+		targetThrowToApply = FK_Move(*throwToApply);
+	}
+
+	// set throw move
+	void FK_Character::setThrowMoveReaction(FK_Reaction_Type newReaction) {
+		if (targetThrowToApply.getMoveId() > 0) {
+			targetThrowToApply.setThrowReactionForTarget(newReaction);
+		}
 	}
 
 	// set throwing flag
@@ -4025,7 +4280,7 @@ namespace fk_engine{
 
 	// clear throw move
 	void FK_Character::clearThrow(){
-		targetThrowToApply = NULL;
+		targetThrowToApply.clear();
 		if (isBeingThrown()){
 			setThrowFlag(false);
 		}else if(isThrowingOpponent()){
@@ -4036,8 +4291,8 @@ namespace fk_engine{
 	// get reaction to perform after throw
 	FK_Reaction_Type FK_Character::getThrowReaction(){
 		if (isBeingThrown()){
-			if (targetThrowToApply != NULL){
-				return targetThrowToApply->getThrowReactionForTarget();
+			if (targetThrowToApply.getMoveId() > 0){
+				return targetThrowToApply.getThrowReactionForTarget();
 			}
 			else{
 				return FK_Reaction_Type::NoReaction;
@@ -4055,8 +4310,8 @@ namespace fk_engine{
 
 	// get reaction to perform after throw
 	FK_Stance_Type FK_Character::getThrowStance(){
-		if (isBeingThrown() && targetThrowToApply != NULL){
-			return targetThrowToApply->getThrowStanceForTarget();
+		if (isBeingThrown() && targetThrowToApply.getMoveId() > 0){
+			return targetThrowToApply.getThrowStanceForTarget();
 		}
 		return FK_Stance_Type::NoStance;
 	}
@@ -4559,7 +4814,10 @@ namespace fk_engine{
 
 	/* get invincibility */
 	bool FK_Character::isInvincible(FK_Attack_Type type){
-		//bool wakeUpFlag = getStance() == FK_Stance_Type::WakeUpStance;
+		bool wakeUpFlag = getStance() == FK_Stance_Type::WakeUpStance;
+		if (wakeUpFlag) {
+			return true;
+		}
 		//// temporary!
 		//wakeUpFlag = false;
 		if (isBeingThrown()) {
@@ -4997,7 +5255,7 @@ namespace fk_engine{
 					setStance(FK_Stance_Type::CrouchedStance);
 					setBasicAnimation(FK_BasicPose_Type::CrouchingGuardAnimation, true);
 				}
-				else if ((directionButtonPressed & FK_Input_Buttons::Up_Direction) != 0) {
+				/*else if ((directionButtonPressed & FK_Input_Buttons::Up_Direction) != 0) {
 					u32 directionToCheck = FK_Input_Buttons::Right_Direction;
 					if (isOnLeftSide()) {
 						directionToCheck = FK_Input_Buttons::Left_Direction;
@@ -5006,7 +5264,7 @@ namespace fk_engine{
 						cancelHitstun();
 						performJump(FK_JumpDirection::JumpBackward);
 					}
-				}
+				}*/
 			}
 			else if (getStance() == FK_Stance_Type::CrouchedStance) {
 				u32 directionButtonPressed = lastButtonPressed & FK_Input_Buttons::Any_Direction_Plus_Held;

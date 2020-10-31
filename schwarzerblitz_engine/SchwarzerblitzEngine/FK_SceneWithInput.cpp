@@ -54,14 +54,7 @@ namespace fk_engine{
 		newJoypadFound = std::deque<std::pair<std::string, u32> >();
 		joystickInfo = new_joypadInfo;
 		/* get the executable path to load resources */
-		HMODULE hModule = GetModuleHandleW(NULL);
-		TCHAR path[MAX_PATH];
-		int pathLength = GetModuleFileName(hModule, path, MAX_PATH);
-		TCHAR * out = PathFindFileName(path);
-		std::string exeName(out);
-		std::cout << exeName << std::endl;
-		applicationPath = std::string(path).substr(0, pathLength - exeName.length());
-		std::cout << applicationPath << std::endl;
+		applicationPath = ".\\";
 		mediaPath = applicationPath + fk_constants::FK_MediaFileFolder;
 		commonResourcesPath = mediaPath + fk_constants::FK_CommonResourcesFileFolder;
 		fontPath = commonResourcesPath + fk_constants::FK_FontsFileFolder;
@@ -74,11 +67,21 @@ namespace fk_engine{
 		unlockAllFlag = false;
 		unlockAllCharactersFlag = false;
 		unlockAllStagesFlag = false;
+		unlockExtraCostumesForeverFlag = false;
 		timeSinceLastInputMS = 0;
 		lastMenuInputDirectionPressed = 0;
 		// setup the database accessor
-		databaseAccessor.setupFromFile(configurationFilesPath + fk_constants::FK_EngineConfigFileName);
-		setCurrentActiveCheatCodes(newOptions->getActiveCheatCodes());
+		std::string filename = configurationFilesPath + fk_constants::FK_EngineConfigFileName;
+		if (gameOptions->getTourneyMode()) {
+			filename = configurationFilesPath + "tourney_" + fk_constants::FK_EngineConfigFileName;
+		}
+		databaseAccessor.setupFromFile(filename);
+		if (newOptions->getTourneyMode()) {
+			setCurrentActiveCheatCodes(0);
+		}
+		else {
+			setCurrentActiveCheatCodes(newOptions->getActiveCheatCodes());
+		}
 	};
 
 	void FK_SceneWithInput::dispose(bool disposeGraphics) {
@@ -99,7 +102,9 @@ namespace fk_engine{
 			delete inputReceiver;
 		}
 		inputReceiver = NULL;
-		device->setEventReceiver(NULL);
+		if (device != NULL) {
+			device->setEventReceiver(NULL);
+		}
 		if (newJoypadWindow != NULL) {
 			delete newJoypadWindow;
 		}
@@ -173,6 +178,11 @@ namespace fk_engine{
 	IrrlichtDevice * FK_SceneWithInput::getIrrlichtDevice() const
 	{
 		return device;
+	}
+
+	FK_InputReceiver* FK_SceneWithInput::getInputReceiver()
+	{
+		return inputReceiver;
 	}
 
 	/* set previously unlocked content for comparison*/
@@ -951,6 +961,9 @@ namespace fk_engine{
 		if (inputToCheck == 0) {
 			return false;
 		}
+		if (gameOptions->getTourneyMode()) {
+			return false;
+		}
 		return true;
 	}
 
@@ -978,7 +991,7 @@ namespace fk_engine{
 //#ifdef UNLOCK_ALL_REWARDS
 //				rewardUnlocked = true;
 //#endif
-				if (unlockAllFlag){
+				if (unlockAllFlag || gameOptions->getTourneyMode()){
 					rewardUnlocked = true;
 				}
 				
@@ -1112,6 +1125,9 @@ namespace fk_engine{
 		if (unlockAllStagesFlag) {
 			saveFile << fk_saveFileAddons::UnlockAllStagesTag << std::endl;
 		}
+		if (unlockExtraCostumesForeverFlag) {
+			saveFile << fk_saveFileAddons::UnlockExtraCostumesTag << std::endl;
+		}
 		// save story episodes cleared
 		saveFile << fk_saveFileAddons::StoryEpisodesClearedForSaveFileTag << std::endl;
 		for each(std::string episode in storyEpisodesCleared){
@@ -1183,6 +1199,9 @@ namespace fk_engine{
 				}
 				else if (tempTag == fk_saveFileAddons::UnlockAllStagesTag) {
 					unlockAllStagesFlag = true;
+				}
+				else if (tempTag == fk_saveFileAddons::UnlockExtraCostumesTag) {
+					unlockExtraCostumesForeverFlag = true;
 				}
 				else if (tempTag == fk_saveFileAddons::TutorialForSaveFileTag){
 					u32 tutorialShownFlag, unlockablesChoicePresentedFlag;
@@ -1304,6 +1323,25 @@ namespace fk_engine{
 		readRewardFile();
 		// check reward pictures
 		checkGalleryPictures();
+		// load workshop items 
+		loadWorkshopContent();
+		// load DLC items
+		loadDLCContent();
+	}
+
+	void FK_SceneWithInput::loadWorkshopContent()
+	{
+		FK_WorkshopContentManager workshopManager;
+		std::string filename = configurationFilesPath + fk_constants::FK_WorkshopContentFileName;
+		workshopManager.loadFromFile(filename);
+		enabledWorkshopItems = workshopManager.getEnabledItems();
+	}
+	void FK_SceneWithInput::loadDLCContent()
+	{
+		FK_WorkshopContentManager dlcManager;
+		std::string filename = configurationFilesPath + fk_constants::FK_DLCContentFileName;
+		dlcManager.loadFromFile(filename);
+		enabledDLCItems = dlcManager.getEnabledItems();
 	}
 	void FK_SceneWithInput::updateSaveFileData(){
 

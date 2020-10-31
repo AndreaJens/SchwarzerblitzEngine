@@ -40,17 +40,17 @@ namespace fk_engine{
 		};
 		enum FK_RecoveryOptionsDummy : u32{
 			NoRecovery = 0,
-			Ukemi = 6,
-			BackgroundUkemi = 7,
+			//Ukemi = 6,
+			//BackgroundUkemi = 7,
 			BackgroundRotation = 1,
 			ForegroundRotation = 2,
 			AdvanceRecovery = 3,
 			BackwardsRecovery = 4,
-			RandomRecovery = 12,
-			CrouchingRecovery = 8,
+			RandomRecovery = 8,
+			CrouchingRecovery = 9,
 			Reversal = 5,
-			FrontRollRecovery = 10,
-			BackRollRecovery = 11,
+			FrontRollRecovery = 6,
+			BackRollRecovery = 7,
 			TutorialRecovery = 99,
 		};
 		enum FK_UkemiOptionsDummy : u32 {
@@ -59,7 +59,8 @@ namespace fk_engine{
 			BGUkemi = 2,
 			FrontRollUkemi = 3,
 			BackRollUkemi = 4,
-			RandomUkemi = 5
+			StandUpRecovery = 5,
+			RandomUkemi = 6
 		};
 		enum FK_AfterGuardOptionsDummy : u32 {
 			NoAfterGuardAction = 0,
@@ -134,6 +135,8 @@ namespace fk_engine{
 			std::string new_arenaPath,
 			FK_SceneGame::FK_AdditionalSceneGameOptions newAdditionalOptions);
 	protected:
+		// methods to be overloaded from subclasses
+		virtual void processEndOfRoundStatistics() override;
 		virtual void setupInputForPlayers();
 		virtual void applyDamageToPlayer(FK_Character* player, f32 damage, bool affectsObjects = true);
 		virtual void updateAdditionalSceneLogic(u32 delta_t_ms);
@@ -166,6 +169,8 @@ namespace fk_engine{
 		virtual bool calculateFrameAdvantage(s32& frameAdvantage, s32& cancelAdvantage,
 			FK_Hitbox * hitbox, f32 histunMultiplier, FK_Character* attacker, FK_Character* defender,
 			bool guardBreak, bool counterAttack, bool defenderHasArmor) override;
+		// process character stats
+		virtual void processCharacterStats() override;
 	protected:
 		FK_RecoveryOptionsDummy dummyRecoveryOptions;
 		s32 blackScreenResetCounter = 0;

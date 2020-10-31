@@ -473,6 +473,7 @@ namespace fk_engine{
 				getCurrentPhase().phase == FK_TutorialPhase::Trigger ||
 				getCurrentPhase().phase == FK_TutorialPhase::TriggerGuard ||
 				getCurrentPhase().phase == FK_TutorialPhase::TriggerRunCancel);
+			hudManager->drawHUDAdditionalResetInput();
 		}
 		// Restore projection, world, and view matrices
 		driver->setTransform(irr::video::ETS_PROJECTION, oldProjMat);
@@ -955,14 +956,14 @@ namespace fk_engine{
 		// remove triggers if not needed
 		FK_TutorialTrainingSet tutorialPhase = getCurrentPhase();
 		if (tutorialPhase.phase != FK_TutorialPhase::TriggerGuard && 
-			tutorialPhase.phase != FK_TutorialPhase::FlowCombo){
+			tutorialPhase.phase != FK_TutorialPhase::FlowCombo &&
+			tutorialPhase.phase != FK_TutorialPhase::Trigger){
 			player2->useTriggerCounters(databaseAccessor.getMaxTriggers());
 			player1->useTriggerCounters(databaseAccessor.getMaxTriggers());
 			player1NumberOfBulletCounters = player1->getTriggerCounters();
 			player2NumberOfBulletCounters = player2->getTriggerCounters();
 		}
-		if (tutorialPhase.phase == FK_TutorialPhase::Trigger ||
-			tutorialPhase.phase == FK_TutorialPhase::TriggerRunCancel ||
+		if (tutorialPhase.phase == FK_TutorialPhase::TriggerRunCancel ||
 			tutorialPhase.phase == FK_TutorialPhase::TriggerReversal ||
 			tutorialPhase.phase == FK_TutorialPhase::TriggerSpecialMove){
 			if (player1->getTriggerCounters() == 0 && (!player1->isTriggerModeActive() || player1->getCurrentMove() == NULL)){
@@ -970,6 +971,29 @@ namespace fk_engine{
 				player1NumberOfBulletCounters = player1->getTriggerCounters();
 				player2NumberOfBulletCounters = player2->getTriggerCounters();
 			}
+		}
+		else if (tutorialPhase.phase == FK_TutorialPhase::Trigger) {
+			player2->useTriggerCounters(databaseAccessor.getMaxTriggers());
+			if (tutorialPhase.numberOfNumericParameters >
+				tutorialPhase.numberOfStringParameters) {
+				int numberOfTriggers = tutorialPhase.additionalNumericParameters[
+					tutorialPhase.numberOfStringParameters];
+				if (player1->getTriggerCounters() > numberOfTriggers) {
+					player1->setTriggerCounters(numberOfTriggers);
+				}
+				else if (player1->getTriggerCounters() < numberOfTriggers && (!player1->isTriggerModeActive() &&
+					player1->getCurrentMove() == NULL)) {
+					player1->setTriggerCounters(numberOfTriggers);
+				}
+			}
+			else {
+				player1->useTriggerCounters(databaseAccessor.getMaxTriggers());
+				if (player1->getTriggerCounters() == 0 && (!player1->isTriggerModeActive() || player1->getCurrentMove() == NULL)) {
+					player1->setTriggerCounters(1);
+				}
+			}
+			player1NumberOfBulletCounters = player1->getTriggerCounters();
+			player2NumberOfBulletCounters = player2->getTriggerCounters();	
 		}
 		else if (tutorialPhase.phase == FK_TutorialPhase::FlowCombo) {
 			player2->useTriggerCounters(databaseAccessor.getMaxTriggers());

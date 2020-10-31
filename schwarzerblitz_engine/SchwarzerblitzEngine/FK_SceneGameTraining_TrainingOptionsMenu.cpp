@@ -199,6 +199,10 @@ namespace fk_engine{
 		);
 		menuItemsParameters[FK_TrainingOption::DummyUkemi].push_back(
 			std::pair<u32, std::wstring>(
+				FK_UkemiOptionsDummy::StandUpRecovery, L"quick rise")
+		);
+		menuItemsParameters[FK_TrainingOption::DummyUkemi].push_back(
+			std::pair<u32, std::wstring>(
 				FK_UkemiOptionsDummy::BGUkemi, L"background ukemi")
 		);
 		menuItemsParameters[FK_TrainingOption::DummyUkemi].push_back(

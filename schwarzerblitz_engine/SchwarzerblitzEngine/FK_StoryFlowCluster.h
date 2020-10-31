@@ -16,6 +16,7 @@ namespace fk_engine{
 			NoType,
 			Cutscene,
 			Match,
+			Credits,
 		};
 	public:
 		FK_StoryItem();
@@ -38,6 +39,7 @@ namespace fk_engine{
 			Survive,
 			Percentage,
 			WinBeforeTimer,
+			Poison,
 			Ringout,
 		};
 	protected:
@@ -62,6 +64,8 @@ namespace fk_engine{
 		const std::string PlayerLifeMultiplierFileKey = "#PLAYER_LIFE_MULTIPLIER";
 		const std::string OpponentTriggerRegenFileKey = "#OPPONENT_TRIGGER_REGEN_TIME";
 		const std::string PlayerTriggerRegenFileKey = "#PLAYER_TRIGGER_REGEN_MULTIPLIER";
+		const std::string OpponentLifePosionKey = "#OPPONENT_LIFE_POISON";
+		const std::string PlayerLifePoisonKey = "#PLAYER_LIFE_POISON";
 		const std::string DialogueInBattleTag = "#DIALOGUE_IN_BATTLE";
 		const std::string TimerFileKey = "#TIMER";
 		const std::string RingoutFileKey = "#NO_RINGOUT";
@@ -96,6 +100,12 @@ namespace fk_engine{
 		bool fadeWhenEnding = true;
 	};
 
+	class FK_StoryCredits : public FK_StoryItem {
+	public:
+		FK_StoryCredits();
+		virtual void setup(std::string creditsConfigFileName, std::string episodeDirectory, std::string episodeRelativePath);
+	};
+
 	// in-match dialogue
 	struct FK_InMatchDialogue{
 	public:
@@ -122,6 +132,7 @@ namespace fk_engine{
 		const std::string EpisodeDescriptionEndTag = "#DESCRIPTION_END";
 		const std::string MatchEventTag = "#MATCH";
 		const std::string DialogueEventTag = "#EVENT";
+		const std::string CreditsTag = "#CREDITS";
 	public:
 		FK_StoryFlowCluster();
 		FK_StoryFlowCluster(const FK_StoryFlowCluster&);
@@ -137,6 +148,7 @@ namespace fk_engine{
 		FK_StoryItem* getNextEvent();
 		std::string getEpisodeName();
 		std::string getEpisodeRelativePath();
+		std::string getEpisodeFullPath();
 		std::vector<std::string>& getEpisodeDescription();
 		bool isLastEvent();
 	private:

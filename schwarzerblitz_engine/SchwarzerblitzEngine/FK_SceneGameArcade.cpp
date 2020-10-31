@@ -447,6 +447,7 @@ namespace fk_engine{
 	/* setup "continue" if needed */
 	void FK_SceneGameArcade::processMatchEnd(){
 		//arcadeProgress.totalPlayTimeMs += totalMatchTimeMs;
+		processCharacterStats();
 		arcadeProgress.playerEnergyAtEndOfMatch = player1isAI ? player2->getLifeRatio() : player1->getLifeRatio();
 		if ((winnerId == 1 && player2isAI) ||
 			(winnerId == -1 && player1isAI)
@@ -483,9 +484,14 @@ namespace fk_engine{
 				std::string relativePath;
 				std::string arcadeEndingConfigFileName;
 				if (additionalOptions.playArcadeEnding) {
+					std::string characterFullPath = charactersPath + player_configPath;
+					bool isWorkshopCharacter = false;
+					if (!isValidCharacterPath(characterFullPath) && isValidCharacterPath(player_configPath)) {
+						characterFullPath = player_configPath;
+					}
 					if (extraEndingInput != 0) {
 						endingFilePath =
-							charactersPath + player_configPath + playerOutfit.outfitDirectory +
+							characterFullPath + playerOutfit.outfitDirectory +
 							fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeAlternateEndingFileName;
 						std::ifstream inputFile(endingFilePath.c_str());
 						relativePath = player_configPath + playerOutfit.outfitDirectory;
@@ -493,7 +499,7 @@ namespace fk_engine{
 							inputFile.clear();
 							inputFile.close();
 							endingFilePath =
-								charactersPath + player_configPath +
+								characterFullPath +
 								fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeAlternateEndingFileName;
 							relativePath = player_configPath;
 							inputFile = std::ifstream(endingFilePath.c_str());
@@ -505,7 +511,7 @@ namespace fk_engine{
 					}
 					if (!validEndingFile) {
 						endingFilePath =
-							charactersPath + player_configPath + playerOutfit.outfitDirectory +
+							characterFullPath + playerOutfit.outfitDirectory +
 							fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeEndingFileName;
 						std::ifstream inputFile(endingFilePath.c_str());
 						relativePath = player_configPath + playerOutfit.outfitDirectory;
@@ -513,7 +519,7 @@ namespace fk_engine{
 							inputFile.clear();
 							inputFile.close();
 							endingFilePath =
-								charactersPath + player_configPath +
+								characterFullPath +
 								fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeEndingFileName;
 							relativePath = player_configPath;
 							inputFile = std::ifstream(endingFilePath.c_str());
@@ -582,6 +588,8 @@ namespace fk_engine{
 					specialTagsAcquired.push_back(tag);
 				}
 			}
+			// update arcade mode achievements
+			processArcadeAchievements(arcadeType);
 			// update save file data (that is, add 1 at the number of beaten arcade modes, in this case)
 			if (arcadeType == FK_SceneArcadeType::ArcadeSurvival) {
 				if (survivalRecordPerDifficultyLevel.count(gameOptions->getAILevel()) == 0) {

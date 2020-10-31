@@ -1126,6 +1126,9 @@ namespace fk_engine{
 	};
 	/* draw combo counter */
 	void FK_HUDManager_font::drawComboCounters(u32 player1ComboCounter, u32 player2ComboCounter, f32 frameDeltaTimeS){
+		if (!showHUD) {
+			return;
+		}
 		// set maximum duration for combo text
 		comboTextMaxDurationS = 2.0f;
 		comboTextDurationSPlayer1 += frameDeltaTimeS;
@@ -1671,18 +1674,30 @@ namespace fk_engine{
 			}
 			if ((object.isActive() || object.hudLifeBar.showWhenInactive) && object.showEnduranceBar) {
 				f32 endurance = object.endurance;
+				if (object.maxNumberOfUsages > 0) {
+					endurance = object.numberOfUsages;
+				}
 				if (!object.isActive()) {
 					if (object.hudLifeBar.reverseDirection) {
 						endurance = object.maxEndurance;
+						if (object.maxNumberOfUsages > 0) {
+							endurance = object.maxNumberOfUsages;
+						}
 					}
 					else {
 						endurance = 0;
 					}
 					if (object.isBroken() && object.hudLifeBar.reverseWhenBroken) {
 						endurance = abs(endurance - object.maxEndurance);
+						if (object.maxNumberOfUsages > 0) {
+							endurance = object.maxNumberOfUsages - object.numberOfUsages;
+						}
 					}
 				}
 				f32 ratio = (object.maxEndurance - endurance) / object.maxEndurance;
+				if (object.maxNumberOfUsages > 0) {
+					ratio = (f32)(object.maxNumberOfUsages - object.numberOfUsages) / object.maxNumberOfUsages;
+				}
 				drawObjectHUDbarPlayer1(object, object.hudLifeBar, ratio);
 			}
 			if ((object.isActive() && object.hudIcon.showWhenActive) || 
@@ -1741,18 +1756,30 @@ namespace fk_engine{
 			}
 			if ((object.isActive() || object.hudLifeBar.showWhenInactive) && object.showEnduranceBar) {
 				f32 endurance = object.endurance;
+				if (object.maxNumberOfUsages > 0) {
+					endurance = object.numberOfUsages;
+				}
 				if (!object.isActive()) {
 					if (object.hudLifeBar.reverseDirection) {
 						endurance = object.maxEndurance;
+						if (object.maxNumberOfUsages > 0) {
+							endurance = object.maxNumberOfUsages;
+						}
 					}
 					else {
 						endurance = 0;
 					}
 					if (object.isBroken() && object.hudLifeBar.reverseWhenBroken) {
 						endurance = abs(endurance - object.maxEndurance);
+						if (object.maxNumberOfUsages > 0) {
+							endurance = object.maxNumberOfUsages - object.numberOfUsages;
+						}
 					}
 				}
 				f32 ratio = (object.maxEndurance - endurance) / object.maxEndurance;
+				if (object.maxNumberOfUsages > 0) {
+					ratio = (f32)(object.maxNumberOfUsages - object.numberOfUsages) / object.maxNumberOfUsages;
+				}
 				drawObjectHUDbarPlayer2(object, object.hudLifeBar, ratio);
 			}
 			if ((object.isActive() && object.hudIcon.showWhenActive) ||
@@ -2526,6 +2553,9 @@ namespace fk_engine{
 
 	// draw input buffer
 	void FK_HUDManager_font::drawInputBuffer(FK_InputBuffer* buffer){
+		if (!showHUD) {
+			return;
+		}
 		s32 y0 = (s32)floor(scale_factorY * trainingInputCoordinates.UpperLeftCorner.Y); //screenSize.Height / 5;
 		s32 x0 = (s32)floor(scale_factorX * trainingInputCoordinates.UpperLeftCorner.X);
 		s32 iconSize = (s32)floor(scale_factorX * trainingInputCoordinates.LowerRightCorner.X);
@@ -2620,6 +2650,9 @@ namespace fk_engine{
 	}
 
 	void FK_HUDManager_font::drawMoveName(FK_Character* character){
+		if (!showHUD) {
+			return;
+		}
 		if (character->getCurrentMove() != NULL){
 			if ((currentMoveClearBuffer ||
 				character->getCurrentMove()->getDisplayName() != currentMoveName) &&
@@ -3173,6 +3206,9 @@ namespace fk_engine{
 	// draw additional input for position reset
 	void FK_HUDManager_font::drawHUDAdditionalResetInput()
 	{
+		if (!showHUD) {
+			return;
+		}
 		video::SColor borderColor(200, 64, 64, 64);
 		video::SColor fontColor(255, 255, 255, 255);
 		video::SColor keyboardLetterColor = video::SColor(255, 196, 196, 196);
@@ -3912,6 +3948,9 @@ namespace fk_engine{
 
 	//draw all stored hit move data from the oldest to the newest
 	void FK_HUDManager_font::drawMoveHitFlags(){
+		if (!showHUD) {
+			return;
+		}
 		for each(auto hitboxData in hitflags){
 			drawMoveHitType(hitboxData);
 		}

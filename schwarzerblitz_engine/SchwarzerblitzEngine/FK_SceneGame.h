@@ -10,6 +10,7 @@
 #include<mutex>
 #include<condition_variable>
 #include<atomic>
+#include<chrono>
 
 #include <Windows.h>
 #include <Winuser.h>
@@ -32,6 +33,8 @@
 #include "FK_MoveListPanel.h"
 #include "FK_FreeMatchStatistics.h"
 #include "FK_Tutorial.h"
+
+#include "FK_AchievementManager.h"
 
 #include <SFML\Audio.hpp>
 
@@ -106,6 +109,11 @@ namespace fk_engine{
 			core::vector3d<f32> scale = core::vector3d<f32>(1.f, 1.f, 1.f);
 			bool canBePickedByPlayer1 = true;
 			bool canBePickedByPlayer2 = false;
+		};
+		// FK_InputSnapshot
+		struct FK_InputSnapshot {
+			u32 timeOfInput = 0;
+			std::vector<bool> keys;
 		};
 	protected:
 		const f32 additionalYunitsPerScaleUnit = 40.f;
@@ -193,6 +201,9 @@ namespace fk_engine{
 		virtual bool calculateFrameAdvantage(s32& frameAdvantage, s32& cancelAdvantage,
 			FK_Hitbox * hitbox, f32 hitstunMultiplier, FK_Character* attacker, FK_Character* defender,
 			bool guardBreak, bool counterAttack, bool defenderHasArmor);
+		// process character stats
+		virtual void processCharacterStats();
+		virtual void processArcadeAchievements(FK_SceneArcadeType arcadeType);
 	public:
 		FK_SceneGame();
 		virtual ~FK_SceneGame() {};
@@ -228,6 +239,8 @@ namespace fk_engine{
 		s32 getRenderTargetQuality();
 		void draw(f32 frameDeltaTimeS);
 		// common methods
+		bool isValidCharacterPath(std::string path);
+		bool isValidStagePath(std::string path);
 		void setupIrrlichtDevice();
 		void setupArena();
 		void setupCharacters(f32 &progress);
@@ -313,6 +326,10 @@ namespace fk_engine{
 		void updateCounterattackEffects(u32 frameDelta);
 		void activateCounterattackEffects();
 		void cancelCounterattackEffects();
+		/* hitstop */
+		void updateHitStopEffect(u32 frameDelta);
+		void activateHitStopEffect();
+		void cancelHitStopEffect();
 		/* additional conditions */
 		void updatePlayersPoisonEffect(f32 frameDelta_s);
 		void updatePlayersTriggerRegen(u32 frameDelta);
@@ -446,6 +463,8 @@ namespace fk_engine{
 		u32 now;
 		u32 nowReal;
 		u32 thenReal;
+		std::chrono::time_point<std::chrono::steady_clock> nowClock;
+		std::chrono::time_point<std::chrono::steady_clock> thenClock;
 	private:
 		/* voice clips path */
 		std::string voiceClipsPath;
@@ -572,6 +591,8 @@ namespace fk_engine{
 		u32 counterAttackEffectCounterMs;
 		u32 counterAttackEffectCooldownCounterMs;
 		bool updateCounterAttackEffectFlag;
+		u32 histopEffectCounterMs;
+		bool updateHistopAttackEffectFlag;
 		// render target textures for performance improvement
 		std::vector<video::ITexture*> renderTargetTextures;
 		std::vector<core::vector2df> renderTargetTexturesScaleFactors;
@@ -580,6 +601,13 @@ namespace fk_engine{
 		s32 renderQualityGoodFramesCounter = 0;
 		core::dimension2du oldRenderTargetResolution;
 		core::dimension2du currentRenderTargetResolution;
+		// stats and achievements
+		FK_StatManager statManager;
+		// input buffers for delayed online play
+		u32 inputDelayMsPlayer1;
+		u32 inputDelayMsPlayer2;
+		std::deque<FK_InputSnapshot> delayedInputBufferPlayer1;
+		std::deque<FK_InputSnapshot> delayedInputBufferPlayer2;
 	};
 }
 #endif

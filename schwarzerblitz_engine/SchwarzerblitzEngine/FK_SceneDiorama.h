@@ -99,6 +99,8 @@ namespace fk_engine {
 		void activateProfileView();
 		void activateStageView();
 		void deactivateTextWindow();
+		bool isValidCharacterPath(std::string path);
+		bool isValidStagePath(std::string path);
 	private:
 		// stage
 		FK_Stage* stage;

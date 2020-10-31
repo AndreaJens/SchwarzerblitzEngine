@@ -21,34 +21,6 @@ namespace fk_engine {
 		auto playerOutfit = FK_SceneCharacterSelectArcade::getPlayerOutfit();
 		std::string charactersPath = FK_SceneCharacterSelectArcade::charactersDirectory;
 		std::string playerPath = FK_SceneCharacterSelectArcade::getPlayerPath();
-		/*std::string endingFilePath =
-			charactersPath + playerPath + playerOutfit.outfitDirectory +
-			fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeEndingFileName;
-		std::ifstream inputFile(endingFilePath.c_str());
-		std::string relativePath = playerPath + playerOutfit.outfitDirectory;
-		if (!inputFile) {
-			inputFile.clear();
-			inputFile.close();
-			endingFilePath =
-				charactersPath + playerPath +
-				fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeEndingFileName;
-			relativePath = playerPath;
-			inputFile = std::ifstream(endingFilePath.c_str());
-		}
-		if (!inputFile) {
-			return cutscene;
-		}
-		else {
-			inputFile.close();
-			inputFile.clear();
-			cutscene.setup(fk_constants::FK_CharacterArcadeEndingFileName,
-				charactersPath + relativePath + fk_constants::FK_CharacterArcadeFolder, relativePath);
-			cutscene.playCredits = false;
-			cutscene.allowMenu = true;
-			cutscene.saveStoryCompletion = false;
-			cutscene.saveWhenSkipped = false;
-			cutscene.fadeWhenEnding = true;
-		}*/
 		u32 extraEndingInput = player1input->getPressedButtons();
 		if (!player1IsActive) {
 			extraEndingInput = player2input->getPressedButtons();
@@ -114,12 +86,40 @@ namespace fk_engine {
 		return cutscene;
 	}
 
-	/* check if ending is available to play */
-	bool FK_SceneCharacterSelectExtra_ArcadeEnding::checkIfEndingIsAvailable(std::string& characterPath) {
+	// draw screen
+	void FK_SceneCharacterSelectExtra_ArcadeEnding::drawCharacterScreen()
+	{
+		int size = characterIcons.size();
+		// all character icons must have the same width and height
+		core::dimension2d<u32> texSize = characterIcons[0]->getSize();
+		s32 width = texSize.Width;
+		s32 height = texSize.Height;
+		for (int i = 0; i < size; i++) {
+			core::rect<s32> destinationRect = getCharacterIconPosition(i);
+			core::rect<s32> sourceRect = core::rect<s32>(0, 0, width, height);
+			bool availabilityFlag = isCharacterAvailable(i);
+			if (characterHasAvailableEndingMap[i]) {
+				driver->draw2DImage(availabilityFlag ? characterIcons[i] : missingPreview, destinationRect, sourceRect);
+			}
+			else {
+				const irr::video::SColor colors[4] = {
+					irr::video::SColor(255, 128, 128, 128),
+					irr::video::SColor(255, 128, 128, 128),
+					irr::video::SColor(255, 128, 128, 128),
+					irr::video::SColor(255, 128, 128, 128),
+				};
+				driver->draw2DImage(missingPreview, destinationRect, sourceRect, 0, colors);
+			}
+		}
+		//drawNoEndingDisclaimer();
+	}
+
+	/* check if extra ending is available to play */
+	bool FK_SceneCharacterSelectExtra_ArcadeEnding::checkIfExtraEndingIsAvailable(std::string& characterPath) {
 		std::string charactersPath = FK_SceneCharacterSelectArcade::charactersDirectory;
 		std::string endingFilePath =
 			charactersPath + characterPath +
-			fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeEndingFileName;
+			fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeAlternateEndingFileName;
 		std::ifstream inputFile(endingFilePath.c_str());
 		if (!inputFile) {
 			inputFile.clear();
@@ -132,16 +132,29 @@ namespace fk_engine {
 	/* load single character outfit list */
 	void FK_SceneCharacterSelectExtra_ArcadeEnding::loadSingleCharacterOutfitList(
 		u32 characterId, FK_Character* character) {
-		u32 selectionId = availableEndingsIndexMap[characterId];
+		bool isRandomSelection = false;
+		u32 selectionId = 0;
+		if (availableEndingsIndexMap.find(characterId) == availableEndingsIndexMap.end()) {
+			isRandomSelection = true;
+			selectionId = characterPaths.size();
+		}
+		selectionId = availableEndingsIndexMap[characterId];
 		u32 maxNumberOfOutfits = character->getNumberOfOutfits();
 		for (u32 i = 0; i < maxNumberOfOutfits; ++i) {
 			FK_Character::FK_CharacterOutfit outfit = character->getOutfit(i);
-			std::string charaPath = characterPaths[selectionId];
+			std::string charaPath;
+			if (isRandomSelection) {
+				charaPath = dummyCharacterDirectory;
+			}
+			else {
+				charaPath = characterPaths[selectionId];
+			} 
 			std::string key = charaPath + outfit.outfitDirectory;
 			if (i == 0) {
 				bool unlockedEnding = std::find(storyEpisodesCleared.begin(), storyEpisodesCleared.end(), charaPath) !=
 					storyEpisodesCleared.end();
 				unlockedEnding |= unlockAllFlag;
+				unlockedEnding |= isRandomSelection;
 				characterAvailableCostumes[characterId].push_back(std::pair<u32, bool>(i, unlockedEnding));
 			} else if (checkIfEndingIsAvailable(key)) {
 				bool unlockedEnding = std::find(storyEpisodesCleared.begin(), storyEpisodesCleared.end(), key) !=
@@ -155,6 +168,7 @@ namespace fk_engine {
 	/* load character files */
 	void FK_SceneCharacterSelectExtra_ArcadeEnding::loadCharacterList() {
 		availableEndingsIndexMap.clear();
+		characterHasAvailableEndingMap.clear();
 		u32 availabilityIndex = 0;
 		drawLoadingScreen(0);
 		dummyCharacterDirectory = "chara_dummy";
@@ -189,27 +203,29 @@ namespace fk_engine {
 			if (availabilityIdentifier == CharacterUnlockKeys::Character_AvailableFromStart ||
 				availabilityIdentifier == CharacterUnlockKeys::Character_UnlockableAndShown ||
 				availabilityIdentifier == CharacterUnlockKeys::Character_Unlockable_NoArcadeOpponent) {
-				if (!checkIfEndingIsAvailable(charaPath)) {
-					continue;
-				}
+				characterHasAvailableEndingMap[availabilityIndex] = checkIfEndingIsAvailable(charaPath);
+				//if (!checkIfEndingIsAvailable(charaPath)) {
+				//	continue;
+				//}
 				characterPaths.push_back(charaPath);
 				availableEndingsIndexMap[characterId] = availabilityIndex;
-				availabilityIndex += 1;
-				if (unlockAllFlag || std::find(
+				if ((unlockAllFlag && characterHasAvailableEndingMap[availabilityIndex]) || std::find(
 					availableCharacterArray.begin(),
 					availableCharacterArray.end(), key) !=
 					availableCharacterArray.end()) {
 					availableCharacters.push_back(characterId);
 				}
+				availabilityIndex += 1;
 				characterId += 1;
 
 			}
 			else if (availabilityIdentifier == CharacterUnlockKeys::Character_Hidden ||
 				availabilityIdentifier == CharacterUnlockKeys::Character_Unlockable_Hidden_NoArcadeOpponent) {
-				if (!checkIfEndingIsAvailable(charaPath)) {
-					continue;
-				}
-				if (unlockAllFlag || std::find(
+				characterHasAvailableEndingMap[availabilityIndex] = checkIfEndingIsAvailable(charaPath);
+				//if (!checkIfEndingIsAvailable(charaPath)) {
+				//	continue;
+				//}
+				if ((unlockAllFlag && characterHasAvailableEndingMap[availabilityIndex]) || std::find(
 					availableCharacterArray.begin(),
 					availableCharacterArray.end(), key) !=
 					availableCharacterArray.end()) {
@@ -223,6 +239,7 @@ namespace fk_engine {
 		};
 		characterFile.close();
 		availableCharacters.push_back(characterId);
+		characterHasAvailableEndingMap[availabilityIndex] = true;
 		/*f32 totalProgress = (f32)characterPaths.size() + 1;
 		f32 currentProgress = 0;
 		for each(std::string chara_path in characterPaths) {

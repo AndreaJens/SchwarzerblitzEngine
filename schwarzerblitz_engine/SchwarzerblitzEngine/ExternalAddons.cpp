@@ -579,11 +579,11 @@ namespace fk_addons{
 			color,
 			color
 		};
-		// start from -1 to take into account the offset (i.e. an image more has to be drawn to cover for the 
+		// start from -1 to size + 1 take into account the offset (i.e. two images more has to be drawn to cover for the 
 		// black part
-		for (s32 i = -1; i < (s32)numberOfTexturesHorizontal; ++i){
+		for (s32 i = -1; i <= (s32)numberOfTexturesHorizontal; ++i){
 			
-			for (s32 j = -1; j < (s32)numberOfTexturesVertical; ++j){
+			for (s32 j = -1; j <= (s32)numberOfTexturesVertical; ++j){
 				s32 x0 = i * adjustedSize.Width + offsetPosition.X;
 				s32 y0 = j * adjustedSize.Height + offsetPosition.Y;
 				core::rect<irr::s32> destinationRect = core::rect<irr::s32>(

@@ -1,5 +1,7 @@
 #include "FK_SceneEpisodeSelectionStoryMode.h"
 #include "ExternalAddons.h"
+#include "FK_AchievementManager.h"
+#include <filesystem>
 
 using namespace irr;
 
@@ -95,7 +97,8 @@ namespace fk_engine{
 		background = driver->getTexture((commonResourcesPath + "common_menu_items\\menuBackground_base.png").c_str());
 		lockedEpisodeIcon = driver->getTexture((storyCommonMediaPath + "lockedEpisode.png").c_str());
 		for each(auto episode in episodes){
-			std::string path = episodeDirectory + episode.getEpisodeRelativePath() + "\\banner.png";
+			//std::string path = episodeDirectory + episode.getEpisodeRelativePath() + "\\banner.png";
+			std::string path = episode.getEpisodeFullPath() + "\\banner.png";
 			episodeIcons.push_back(
 				driver->getTexture(path.c_str())
 				);
@@ -210,12 +213,18 @@ namespace fk_engine{
 						episodes[episodeIndex].getCompletionPercentage() < 100.0f) {
 						episodeSelected = true;
 					}else{
+						//if (fk_addons::fileExists(
+						//	(episodeDirectory + episodes[episodeIndex].getEpisodeRelativePath() + "\\" +
+						//		FK_SceneEpisodeSelectionStoryMode::EpisodeEditedFlowFileName).c_str())) {
+						//	deactivateChapterMenu();
+						//	activateSafeContentMenu();
 						if (fk_addons::fileExists(
-							(episodeDirectory + episodes[episodeIndex].getEpisodeRelativePath() + "\\" +
+							(episodes[episodeIndex].getEpisodeFullPath() + "\\" +
 								FK_SceneEpisodeSelectionStoryMode::EpisodeEditedFlowFileName).c_str())) {
 							deactivateChapterMenu();
 							activateSafeContentMenu();
 						}else{
+							episodes[episodeIndex].resetProgress();
 							episodeSelected = true;
 						}
 					}
@@ -225,7 +234,7 @@ namespace fk_engine{
 						episodes[episodeIndex].getCompletionPercentage() < 100.0f) {
 						soundManager->playSound("confirm", 100.0 * gameOptions->getSFXVolume());
 						if (fk_addons::fileExists(
-							(episodeDirectory + episodes[episodeIndex].getEpisodeRelativePath() + "\\" +
+							(episodes[episodeIndex].getEpisodeFullPath() + "\\" +
 								FK_SceneEpisodeSelectionStoryMode::EpisodeEditedFlowFileName).c_str())) {
 							deactivateChapterMenu();
 							activateSafeContentMenu();
@@ -336,7 +345,7 @@ namespace fk_engine{
 				s32 safeContentSelectionIndex = safeContentMenu->getIndex();
 				safeContentMenu->resetSelection();
 				std::string censorFileName = 
-					(episodeDirectory + episodes[episodeIndex].getEpisodeRelativePath() + "\\" +
+					(episodes[episodeIndex].getEpisodeFullPath() + "\\" +
 				FK_SceneEpisodeSelectionStoryMode::EpisodeEditedMarkdownFileName);
 				std::ofstream censorFile(censorFileName.c_str());
 				censorFile << "";
@@ -348,7 +357,7 @@ namespace fk_engine{
 					// remove censor marker
 					remove(censorFileName.c_str());
 					episodes[episodeIndex].setup(
-						episodeDirectory, episodes[episodeIndex].getEpisodeRelativePath(), episodeConfigFilename);
+						episodes[episodeIndex].getEpisodeFullPath() + "\\..\\", episodes[episodeIndex].getEpisodeRelativePath(), episodeConfigFilename);
 					// check if there exist a censored version of the episode (if so, a certain file will be present)
 					soundManager->playSound("confirm", 100.0 * gameOptions->getSFXVolume());
 					episodes[episodeIndex].resetProgress();
@@ -356,7 +365,7 @@ namespace fk_engine{
 					break;
 				case 1:
 					episodes[episodeIndex].setup(
-						episodeDirectory, episodes[episodeIndex].getEpisodeRelativePath(), episodeCensorConfigFilename);
+						episodes[episodeIndex].getEpisodeFullPath() + "\\..\\", episodes[episodeIndex].getEpisodeRelativePath(), episodeCensorConfigFilename);
 					soundManager->playSound("confirm", 100.0 * gameOptions->getSFXVolume());
 					episodes[episodeIndex].resetProgress();
 					episodeSelected = true;
@@ -578,6 +587,77 @@ namespace fk_engine{
 			index += 1;
 		}
 		ifile.close();
+
+		//add workshop and dlc stages
+		for (auto item : enabledWorkshopItems) {
+			if (item.type == FK_WorkshopContentManager::WorkshopItemType::StoryEpisode &&
+				item.enabled) {
+				std::string episodeName;
+				std::string episodePath;
+				episodePath = episodeDirectory;
+				episodeName = "..\\..\\..\\" + fk_constants::FK_WorkshopFolder + fk_constants::FK_WorkshopStoryEpisodesFolder + item.path;
+				availableEpisodes.push_back(index);
+				if (std::find(storyEpisodesCleared.begin(), storyEpisodesCleared.end(), episodeName) !=
+					storyEpisodesCleared.end()) {
+					completedEpisodes.push_back(true);
+				}
+				else {
+					completedEpisodes.push_back(false);
+				}
+				FK_StoryFlowCluster newEpisode;
+				episodes.push_back(newEpisode);
+				std::string episodeConfigFilename = FK_SceneEpisodeSelectionStoryMode::EpisodeFlowFileName;
+				if (fk_addons::fileExists(
+					(episodePath + episodeName + "\\" +
+						FK_SceneEpisodeSelectionStoryMode::EpisodeEditedMarkdownFileName).c_str())) {
+					episodeConfigFilename = FK_SceneEpisodeSelectionStoryMode::EpisodeEditedFlowFileName;
+					editedEpisodes.push_back(true);
+				}
+				else {
+					editedEpisodes.push_back(false);
+				}
+				// check if there exist a censored version of the episode (if so, a certain file will be present)
+				episodes[episodes.size() - 1].setup(
+					episodePath, episodeName, episodeConfigFilename);
+				episodes[episodes.size() - 1].loadProgress();
+				episodeNames.push_back(episodes[episodes.size() - 1].getEpisodeName());
+				index += 1;
+			}
+		};
+		//add workshop and dlc stages
+		for (auto item : enabledDLCItems) {
+			if (item.type == FK_WorkshopContentManager::WorkshopItemType::StoryEpisode &&
+				item.enabled) {
+				std::string episodeName;
+				episodeName = "..\\..\\..\\" + fk_constants::FK_DLCFolder + fk_constants::FK_WorkshopStoryEpisodesFolder + item.path;
+				availableEpisodes.push_back(index);
+				if (std::find(storyEpisodesCleared.begin(), storyEpisodesCleared.end(), episodeName) !=
+					storyEpisodesCleared.end()) {
+					completedEpisodes.push_back(true);
+				}
+				else {
+					completedEpisodes.push_back(false);
+				}
+				FK_StoryFlowCluster newEpisode;
+				episodes.push_back(newEpisode);
+				std::string episodeConfigFilename = FK_SceneEpisodeSelectionStoryMode::EpisodeFlowFileName;
+				if (fk_addons::fileExists(
+					(episodeDirectory + episodeName + "\\" +
+						FK_SceneEpisodeSelectionStoryMode::EpisodeEditedMarkdownFileName).c_str())) {
+					episodeConfigFilename = FK_SceneEpisodeSelectionStoryMode::EpisodeEditedFlowFileName;
+					editedEpisodes.push_back(true);
+				}
+				else {
+					editedEpisodes.push_back(false);
+				}
+				// check if there exist a censored version of the episode (if so, a certain file will be present)
+				episodes[episodes.size() - 1].setup(
+					episodeDirectory, episodeName, episodeConfigFilename);
+				episodes[episodes.size() - 1].loadProgress();
+				episodeNames.push_back(episodes[episodes.size() - 1].getEpisodeName());
+				index += 1;
+			}
+		};
 	}
 	// draw background
 	void FK_SceneEpisodeSelectionStoryMode::drawBackground(){
@@ -636,7 +716,8 @@ namespace fk_engine{
 		s32 fixedSpacingY = (s32)std::ceil((f32)additionalY * scale_factorY + (f32)texSize.Height *
 			scale_factorY * bannerScaleFactor);
 		// the plus one serves to avoid a bug which caused the last episode not to be displayed correctly with certain screen resolutions
-		s32 thresholdValue = (s32)std::ceil(((f32)episodes.size()) * fixedSpacingY + 1);
+		f32 additionaSpacing = std::max(1.1f, scale_factorY);
+		s32 thresholdValue = (s32)std::ceil(((f32)episodes.size()) * fixedSpacingY + additionaSpacing);
 		// add offset
 		if (episodeIndex > 3 && episodes.size() > 6){
 			s32 bufferY = (s32)std::ceil((f32)additionalY * scale_factorY);
@@ -731,7 +812,8 @@ namespace fk_engine{
 		s32 frameSizeY = 180;
 		video::ITexture* tex;
 		if (isEpisodeAvailable(episodeIndex)){
-			std::string path = episodeDirectory + episodes[episodeIndex].getEpisodeRelativePath() + "\\preview.jpg";
+			//std::string path = episodeDirectory + episodes[episodeIndex].getEpisodeRelativePath() + "\\preview.jpg";
+			std::string path = episodes[episodeIndex].getEpisodeFullPath() + "\\preview.jpg";
 			tex = driver->getTexture(path.c_str());
 		}
 		else{

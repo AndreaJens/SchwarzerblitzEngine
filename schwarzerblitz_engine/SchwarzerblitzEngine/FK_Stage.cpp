@@ -167,6 +167,7 @@ namespace fk_engine{
 		fileKeys[FK_StageFileKeys::StageAdditionalObject] = "#ADDITIONAL_OBJECT";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_Position] = "#position";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_Rotation] = "#rotation";
+		fileKeys[FK_StageFileKeys::StageAdditionalObject_Scale] = "#scale";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_BackfaceCulling] = "#backface_culling";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_MaterialEffect] = "#effect";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_Animator] = "#animator";
@@ -620,6 +621,11 @@ namespace fk_engine{
 						inputFile >> x >> y >> z;
 						tempObject.setRotation(core::vector3df(x, y, z));
 					}
+					else if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject_Scale]) {
+						f32 x, y, z;
+						inputFile >> x >> y >> z;
+						tempObject.setScale(core::vector3df(x, y, z));
+					}
 					else if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject_MaterialEffect]){
 						inputFile >> temp;
 						if (materialMap.count(temp) > 0){
@@ -886,7 +892,8 @@ namespace fk_engine{
 				temp_node = smgr->addAnimatedMeshSceneNode(temp_mesh);
 				temp_node->setPosition(additionalObjectsArray[i].getPosition() - position);
 				temp_node->setRotation(additionalObjectsArray[i].getRotation());
-				temp_node->setScale(scale);
+				auto objectScaling = scale * additionalObjectsArray[i].getScale();
+				temp_node->setScale(objectScaling);
 				for (int j = 0; j < temp_node->getMaterialCount(); ++j){
 					temp_node->getMaterial(j).setFlag(video::EMF_ZWRITE_ENABLE, true);
 					temp_node->getMaterial(j).BackfaceCulling = additionalObjectsArray[i].getBackfaceCulling();

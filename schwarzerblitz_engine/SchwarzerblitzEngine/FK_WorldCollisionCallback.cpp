@@ -42,6 +42,15 @@ namespace fk_engine{
 						}
 						player->setVelocityPerSecond(core::vector3df(0, 0, 0));
 						player->cancelHitstun();
+						ISceneNodeAnimator* pAnim1 = *(player->getAnimatedMesh()->getAnimators().begin());
+						if (pAnim1->getType() == ESNAT_COLLISION_RESPONSE)
+						{
+							auto radius = ((scene::ISceneNodeAnimatorCollisionResponse*)pAnim1)->getEllipsoidRadius();
+							auto currentTempPosition = player->getAnimatedMesh()->getPosition();
+							if (currentTempPosition.Y < radius.Y)
+								currentTempPosition.Y += 2;
+							player->getAnimatedMesh()->setPosition(currentTempPosition);
+						}
 					}
 					return false;
 				}

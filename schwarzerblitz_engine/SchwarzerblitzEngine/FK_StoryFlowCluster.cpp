@@ -79,6 +79,7 @@ namespace fk_engine{
 		winConditionMap[MatchWinCondition::Survive] = "Survive";
 		winConditionMap[MatchWinCondition::Percentage] = "Percentage";
 		winConditionMap[MatchWinCondition::WinBeforeTimer] = "Before_Time_Out";
+		winConditionMap[MatchWinCondition::Poison] = "Poison";
 		winConditionMap[MatchWinCondition::Ringout] = "Ring_Out";
 		while (inputFile >> temp){
 			if (temp == NumberOfRoundsFileKey){
@@ -108,6 +109,12 @@ namespace fk_engine{
 			else if (temp == OpponentLifeMultiplierFileKey){
 				inputFile >> additionalOptions.lifeMultiplierPlayer2;
 			}
+			else if (temp == PlayerLifePoisonKey) {
+				inputFile >> additionalOptions.continuousDamagePlayer1perSecond;
+			}
+			else if (temp == OpponentLifePosionKey) {
+				inputFile >> additionalOptions.continuousDamagePlayer2perSecond;
+			}
 			else if (temp == OpponentPhysDamageMultiplierTag){
 				inputFile >> additionalOptions.receivedPhysicalDamageMultiplierPlayer2;
 			}
@@ -132,6 +139,10 @@ namespace fk_engine{
 				}
 				else if (temp == winConditionMap[MatchWinCondition::WinBeforeTimer]) {
 					winCondition.first = MatchWinCondition::WinBeforeTimer;
+					winCondition.second = 0.f;
+				}
+				else if (temp == winConditionMap[MatchWinCondition::Poison]) {
+					winCondition.first = MatchWinCondition::Poison;
 					winCondition.second = 0.f;
 				}
 				else if (temp == winConditionMap[MatchWinCondition::Ringout]) {
@@ -297,11 +308,22 @@ namespace fk_engine{
 				storyEvents.push_back(dial_event);
 				dial_event = NULL;
 			}
+			else if (temp == FK_StoryFlowCluster::CreditsTag) {
+				inputFile >> temp;
+				temp += ".txt";
+				FK_StoryCredits* credits_event = new FK_StoryCredits();
+				credits_event->setup(temp, episodeDirectory + new_episodeRelativePath, new_episodeRelativePath);
+				storyEvents.push_back(credits_event);
+				credits_event = NULL;
+			}
 		}
 		inputFile.close();
 		if (storyEvents.size() >= (u32)1){
 			storyEvents[storyEvents.size() - 1]->returnToStoryMenu = true;
 			storyEvents[storyEvents.size() - 1]->saveStoryCompletion = true;
+			if (storyEvents.size() > 1 && storyEvents[storyEvents.size() - 1]->getType() == FK_StoryEvent::ItemType::Credits) {
+				storyEvents[storyEvents.size() - 2]->saveStoryCompletion = true;
+			}
 		}
 	}
 	void FK_StoryFlowCluster::reset(){
@@ -340,6 +362,11 @@ namespace fk_engine{
 	std::string FK_StoryFlowCluster::getEpisodeRelativePath(){
 		return episodeRelativePath;
 	}
+
+	std::string FK_StoryFlowCluster::getEpisodeFullPath() {
+		return episodeDirectory + episodeRelativePath;
+	}
+
 	std::vector<std::string>& FK_StoryFlowCluster::getEpisodeDescription(){
 		return episodeDescription;
 	}
@@ -398,11 +425,30 @@ namespace fk_engine{
 		if (storyEvents.empty() || storyIndex < 0){
 			return 0.f;
 		}
-		return 100.f * (f32)(storyIndex + 1) / storyEvents.size();
+		u32 size = storyEvents.size();
+		if (storyEvents[size - 1]->getType() == FK_StoryItem::ItemType::Credits) {
+			size -= 1;
+		}
+		if (size == 0) {
+			return 0.f;
+		}
+		return 100.f * (f32)(storyIndex + 1) / size;
 	}
 
 	bool FK_StoryFlowCluster::isLastEvent(){
 		return storyIndex >= (s32)storyEvents.size() + 1;
+	}
+
+	FK_StoryCredits::FK_StoryCredits()
+	{
+		type = FK_StoryItem::ItemType::Credits;
+	}
+
+	void FK_StoryCredits::setup(std::string filename, std::string episodeDirectory, std::string episodeRelativePath)
+	{
+		configFileName = filename;
+		episodePath = episodeRelativePath;
+		storyDirectory = episodeDirectory;
 	}
 
 }

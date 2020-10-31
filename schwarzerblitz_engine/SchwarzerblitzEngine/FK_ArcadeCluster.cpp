@@ -304,6 +304,47 @@ namespace fk_engine{
 			configurationFile.clear();
 			configurationFile.close();
 		}
+		if (!outfitName.empty()) {
+			std::string subfolder = outfitName;
+			std::string path = mediaDirectoryPath + playerPath + subfolder;
+			std::ifstream configurationFile((path + additionalMeshConfigFilename).c_str());
+			if (configurationFile) {
+				std::string temp;
+				FK_Character::FK_CharacterOutfit newOutfit;
+				while (configurationFile >> temp) {
+					if (temp == outfitKeysMap[FK_Character::FK_OutfitFileKeys::OutfitFilename]) {
+						configurationFile >> temp;
+						newOutfit.outfitFilename = temp;
+						newOutfit.outfitDirectory = subfolder;
+					}
+					else if (temp == outfitKeysMap[FK_Character::FK_OutfitFileKeys::OutfitName]) {
+						configurationFile >> temp;
+						std::replace(temp.begin(), temp.end(), '_', ' ');
+						newOutfit.outfitName = temp;
+					}
+					else if (temp == outfitKeysMap[FK_Character::FK_OutfitFileKeys::OutfitAvailable]) {
+						u32 availabilityFlag;
+						configurationFile >> availabilityFlag;
+						newOutfit.isAvailableFromBeginning = (bool)availabilityFlag;
+					}
+					else if (temp == outfitKeysMap[FK_Character::FK_OutfitFileKeys::OutfitAlternativeCharacterName]) {
+						configurationFile >> temp;
+						std::replace(temp.begin(), temp.end(), '_', ' ');
+						newOutfit.outfitCharacterName = temp;
+						newOutfit.outfitDisplayName = temp;
+					}
+					else if (temp == outfitKeysMap[FK_Character::FK_OutfitFileKeys::OutfitAlternativeDisplayName]) {
+						configurationFile >> temp;
+						std::replace(temp.begin(), temp.end(), '_', ' ');
+						newOutfit.outfitDisplayName = temp;
+					}
+				}
+				newOutfit.outfitId = (s32)availableCharacterOutfits.size();
+				availableCharacterOutfits.push_back(newOutfit);
+				configurationFile.clear();
+				configurationFile.close();
+			}
+		}
 		if (outfitName.empty()){
 			outfit = availableCharacterOutfits[outfitId];
 		}
@@ -371,6 +412,14 @@ namespace fk_engine{
 			}
 			else {
 				successFlag &= currentProgress.numberOfRingouts < conditionsToFulfill[numberOfRingoutsTag].first;
+			}
+		}
+		if (conditionsToFulfill.count(numberOfTimeoutsTag) > 0) {
+			if (conditionsToFulfill[numberOfTimeoutsTag].second) {
+				successFlag &= currentProgress.numberOfTimeouts > conditionsToFulfill[numberOfTimeoutsTag].first;
+			}
+			else {
+				successFlag &= currentProgress.numberOfTimeouts < conditionsToFulfill[numberOfTimeoutsTag].first;
 			}
 		}
 		if (conditionsToFulfill.count(numberOfRoundsLostTag) > 0) {

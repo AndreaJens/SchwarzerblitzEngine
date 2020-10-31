@@ -262,8 +262,24 @@ namespace fk_engine{
 				return;
 			}
 			if (lastButtonPlayer1 == FK_Input_Buttons::Cancel_Button){
-				activateExitMenu();
 				lastInputTime = now;
+				std::vector < std::map<FK_Input_Buttons, u32>> originalInputMap = {
+					std::map<FK_Input_Buttons, u32>(inputMapper->getKeyboardMap(0))
+				};
+				bool needsSaving = false;
+				for (auto key : originalInputMap[0]) {
+					if (originalInputMap[0][key.first] !=
+						modifiedInputMap[0][key.first]) {
+						needsSaving = true;
+						break;
+					}
+				}
+				if (needsSaving) {
+					activateExitMenu();
+				}
+				else {
+					exitScene(false);
+				}
 				return;
 			}
 			else{
@@ -301,8 +317,24 @@ namespace fk_engine{
 				return;
 			}
 			if (lastButtonPlayer2 == FK_Input_Buttons::Cancel_Button){
-				activateExitMenu();
 				lastInputTime = now;
+				std::vector < std::map<FK_Input_Buttons, u32>> originalInputMap = {
+					std::map<FK_Input_Buttons, u32>(inputMapper->getKeyboardMap(0))
+				};
+				bool needsSaving = false;
+				for (auto key : originalInputMap[0]) {
+					if (originalInputMap[0][key.first] !=
+						modifiedInputMap[0][key.first]) {
+						needsSaving = true;
+						break;
+					}
+				}
+				if (needsSaving) {
+					activateExitMenu();
+				}
+				else {
+					exitScene(false);
+				}
 				return;
 			}
 			else{

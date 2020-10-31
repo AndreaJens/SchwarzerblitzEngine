@@ -26,6 +26,7 @@ namespace fk_engine{
 		~FK_InputBuffer();
 		void setLastInputTime(int newTime);
 		void update(int totalTimeMs, bool* keyArray, bool updateBuffer = true);
+		void update(int totalTimeMs, std::vector<bool>& keyArray, bool updateBuffer = true);
 		/*FK_Move *readBuffer(std::deque<FK_Move> &availableMoves, bool leftScreenSide, FK_Stance_Type playerStance,
 			 bool allowFollowupOnlyMoves = false, FK_Move* currentMove = NULL);*/
 		FK_Move *readBuffer(FK_Character* character);
@@ -38,6 +39,8 @@ namespace fk_engine{
 		u32  getBufferElement(int elementIndex);
 		u32  getLastDirection();
 		u32  getPressedButtons();
+		void setPressedButtons(u32 allButtonsPressed);
+		void setLastDirection(u32 lastDirection);
 		bool isModified();
 		void resetModified();
 		std::deque<u32> getBuffer();

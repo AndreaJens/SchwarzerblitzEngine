@@ -71,6 +71,7 @@ namespace fk_engine {
 			{ "moongravity", FK_CheatType::CheatMoonGravity },
 			{ "wireframe", FK_CheatType::CheatWireframe },
 			{ "trigger_party", FK_CheatType::CheatTriggerFest },
+			{ "extra_costumes", FK_CheatType::CheatUnlockExtraCostumes },
 		};
 		std::string stringToParse = std::string();
 		while(ifile >> stringToParse){

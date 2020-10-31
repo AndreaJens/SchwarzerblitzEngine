@@ -261,6 +261,18 @@
     <ClCompile Include="FK_SceneOptionsEmbedded.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="FK_SceneMusicPlayer.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_AchievementManager.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_SceneInputMapping_JoypadPlayer.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="FK_WorkshopContentManager.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FK_Character.h">
@@ -510,6 +522,18 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneMusicPlayer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_AchievementManager.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_SceneInputMapping_JoypadPlayer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="FK_WorkshopContentManager.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

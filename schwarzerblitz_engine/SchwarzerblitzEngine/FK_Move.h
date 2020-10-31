@@ -319,6 +319,9 @@ namespace fk_engine{
 		/* check if move is multichainable */
 		bool canBeUsedMultipleTimesInChain();
 		void setAsMultichainable();
+		/* flag for throws that cannot hit airborne opponents */
+		bool canThrowAirborneOpponents();
+		void setNoAirborneThrowFlag();
 		// clear everything
 		void clear();
 	private:
@@ -372,6 +375,8 @@ namespace fk_engine{
 		bool isTauntMove;
 		// can be used more than once in same chain
 		bool isMultiChainable;
+		/* flag for throws that cannot hit airborne opponents */
+		bool noThrowOnAirborneFlag;
 		// transversal mirror (check if UP and DOWN have to be mirrored when the move is performed from the other side)
 		bool transversalMirrorFlag;
 		// object moves (each string is a required object id)

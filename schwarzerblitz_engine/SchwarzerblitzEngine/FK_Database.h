@@ -292,6 +292,7 @@ namespace fk_engine{
 		OnlyWithoutSpecificObject,
 		CounterattackIdentifier,
 		CounterattackEndIdentifier,
+		NoThrowOnAerealIdentifier,
 		ToggleItemIdentifier,
 		PickupItemIdentifier,
 		PickupOnlyMoveIdentifier,
@@ -387,6 +388,7 @@ namespace fk_engine{
 		BulletMeshName,
 		BulletRange,
 		BulletRotation,
+		BulletAcceleration,
 		BulletVelocity,
 		BulletHitbox,
 		BulletHitboxEnd,
@@ -485,6 +487,7 @@ namespace fk_engine{
 		StageAdditionalObject_MeshName,
 		StageAdditionalObject_Position,
 		StageAdditionalObject_Rotation,
+		StageAdditionalObject_Scale,
 		StageAdditionalObject_BackfaceCulling,
 		StageAdditionalObject_MaterialEffect,
 		StageAdditionalObject_Animator,
@@ -587,11 +590,17 @@ namespace fk_engine{
 		const std::string AdditionalCharacterMeshSubfolderRoot = "Mesh";
 		/* folder denomination for external character mesh */
 		const std::string DLCCharacterMeshSubfolderRoot = "AdditionalMesh";
+		/* folder denomination for extra (hidden) character mesh */
+		const std::string ExtraCharacterMeshSubfolderRoot = "ExtraMesh";
 		/* arcade configuration file */
 		const std::string FK_ArcadeConfigFileName = "arcadeConfig.ini";
 		/* personal arcade config file */
 		const std::string FK_CharacterArcadeFlowFileName = "arcadeFlow.txt";
-		/* personal arcade config file */
+		/* steam workshop file */
+		const std::string FK_WorkshopContentFileName = "workshop.ini";
+		/* dlc file */
+		const std::string FK_DLCContentFileName = "dlcs.ini";
+		/* personal ending file */
 		const std::string FK_CharacterArcadeEndingFileName = "ending.txt";
 		/* personal arcade config file - alternate/secret ending*/
 		const std::string FK_CharacterArcadeAlternateEndingFileName = "ending_alt.txt";
@@ -601,10 +610,22 @@ namespace fk_engine{
 		const static std::string FK_ConfigurationFileFolder = "config\\";
 		/* media folder */
 		const static std::string FK_MediaFileFolder = "media\\";
+		/* workshop folder (must be placed inside media folder) */
+		const static std::string FK_WorkshopFolder = "workshop\\";
+		/* workshop folder (must be placed inside media folder) */
+		const static std::string FK_DLCFolder = "dlc\\";
 		/* character folder (must be placed inside media folder) */
 		const static std::string FK_CharactersFileFolder = "characters\\";
 		/* stages folder (must be placed inside media folder)*/
 		const static std::string FK_StagesFileFolder = "stages\\";
+		/* workshop story episodes folder (must be placed inside workshop folder)*/
+		const static std::string FK_WorkshopStoryEpisodesFolder = "episodes\\";
+		/* workshop trials folder (must be placed inside workshop folder)*/
+		const static std::string FK_WorkshopTrialsFolder = "trials\\";
+		/* dlc story episodes folder (must be placed inside dlc folder)*/
+		const static std::string FK_DLCStoryEpisodesFolder = "episodes\\";
+		/* dlc trials folder (must be placed inside dlc folder)*/
+		const static std::string FK_DLCTrialsFolder = "trials\\";
 		/* common resources folder (must be placed inside media folder)*/
 		const static std::string FK_CommonResourcesFileFolder = "common\\";
 		/* fonts folder (must be placed inside common resources folder)*/
@@ -630,7 +651,7 @@ namespace fk_engine{
 		/* file which contains input mapping from any joypad to Xbox buttons */
 		const static std::string FK_JoypadToXboxTranslatorFileName = "joypadToXboxMap.ini";
 		/* string which defines the guard particle effect */
-		const static std::string FK_GuardSFXFileName = "..\\..\\common\\particlewhite.bmp";
+		const static std::string FK_GuardSFXFileName = "particlewhite.bmp";
 		/* string with the name of the character portrait */
 		const static std::string FK_CharacterPortraitFileName = "portrait.png";
 		/* file which contains a list of the selectable characters */
@@ -722,6 +743,7 @@ namespace fk_engine{
 		const static std::string characterSelectionGenericPreviewFilename = "selectionScreenUnknown.png";
 		const static std::string characterSelectionOverlayFileName = "selectionScreenOverlay.png";
 		const static std::string characterSelectionLockedCharacterSignFileName = "lockedcostumeflag.png";
+		const static std::string characterSelectionNoArcadeSignFileName = "noArcadeEnding.png";
 		const static std::string characterSelectionEmptyCostumeDotFileName = "costumeDot.png";
 		const static std::string characterSelectionFullCostumeDotFileName = "costumeDotFull.png";
 	};

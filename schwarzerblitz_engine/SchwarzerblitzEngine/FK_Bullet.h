@@ -39,6 +39,7 @@ namespace fk_engine{
 		void setRange(f32 new_range);
 		void setHitbox(FK_Hitbox new_hitbox);
 		void setVelocity(core::vector3df new_velocity);
+		void setAcceleration(core::vector3df new_acceleration);
 		void setRotation(core::vector3df new_rotation);
 		void applyRotation(core::vector3df new_rotation);
 		void setIntrinsicRotation(core::vector3df new_rotation);
@@ -61,6 +62,7 @@ namespace fk_engine{
 		core::vector3df getScale();
 		// velocity has to be given in term of parallel, perpendicular and vertical velocity
 		core::vector3df getVelocity();
+		core::vector3df getAcceleration();
 		core::vector3df getHitboxRadius();
 		std::string getMeshPath();
 		scene::ISceneNode* getHitboxNode();
@@ -98,6 +100,7 @@ namespace fk_engine{
 		core::vector3df intrinsicRotation;
 		core::vector3df hitboxRadius;
 		core::vector3df velocityPerSecond;
+		core::vector3df accelerationPerSecond;
 		core::vector3df scale;
 		FK_Hitbox hitbox;
 		bool removable;

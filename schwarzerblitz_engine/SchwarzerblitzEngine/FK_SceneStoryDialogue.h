@@ -132,6 +132,8 @@ namespace fk_engine{
 		u32 now;
 		u32 then;
 		u32 delta_t_ms;
+		u32 nowReal;
+		u32 thenReal;
 		s32 selection_timer_ms;
 		std::vector<FK_DialogueWindow*> windows;
 		std::string resourcesPath;

@@ -125,9 +125,262 @@ namespace fk_engine{
 
 	u32 FK_InputBuffer::getPressedButtons(){
 		return allPressedButtons;
-	};
+	}
+
+	void FK_InputBuffer::setPressedButtons(u32 newAllButtonsPressed)
+	{
+		allPressedButtons = newAllButtonsPressed;
+	}
+
+	void FK_InputBuffer::setLastDirection(u32 newDirection)
+	{
+		lastDirection = newDirection;
+	}
 
 	void FK_InputBuffer::update(int totalTimeMs, bool* keyArray, bool updateBuffer){
+		/* get time difference from last input received*/
+		u32 delta_t_ms = totalTimeMs - lastRecordedTimeMs;
+		int timeSinceLast = totalTimeMs - lastInputTimeMs;
+		historyCounterMs += delta_t_ms;
+		//u32 fixedDeltaDelayMs = 100;
+		lastRecordedTimeMs = totalTimeMs;
+		bool updateHistory = true;
+		/* if too much time has passed, clear the buffer*/
+		if (timeSinceLast > inputSpanTimeMs)
+		{
+			inputBuffer.clear();
+			bufferCurrentSize = 0;
+		}
+		if (timeSinceLast > historyDurationMs){
+			historyDepth = 0;
+			inputBufferHistory.clear();
+		}
+		/* re-initialize the pressed buttons value (used by the player for one update) */
+		allPressedButtons = 0;
+		/* initialize bitmasks */
+		u32 buttonMap = 0;
+		u32 pressedButtons = 0;
+		u32 oldBufferSize = bufferCurrentSize;
+		bool addTriggerToInput = false;
+		u32 numberOfNonDirectionButtons = 0;
+		for (std::map<FK_Input_Buttons, u32>::iterator iter = rawInputToButtons.begin(); iter != rawInputToButtons.end(); ++iter)
+		{
+			FK_Input_Buttons currentButton = iter->first;
+			u32 keyCode = iter->second;
+			/* check first for non-direction buttons*/
+			if (keyArray[keyCode] == true){
+				allPressedButtons |= currentButton;
+			}
+			if (previousState[keyCode] == false &&
+				keyArray[keyCode] == true){
+				if (currentButton & FK_Input_Buttons::Any_NonDirectionButton){
+					pressedButtons |= currentButton;
+					if (currentButton != FK_Input_Buttons::Trigger_Button) {
+						numberOfNonDirectionButtons += 1;
+					}
+				}
+				/* store the full input for further analysis*/
+				buttonMap |= currentButton;
+			}
+
+			if (keyArray[keyCode] == true && currentButton == FK_Input_Buttons::Trigger_Button) {
+				addTriggerToInput = true;
+			}
+
+			/* in case a direction is pressed, store it anyway even if it was still pressed before*/
+			if (keyArray[keyCode] == true && (currentButton & FK_Input_Buttons::Any_Direction)){
+				buttonMap |= currentButton;
+			}
+			/* store currently pressed keys for the following cycles*/
+			previousState[keyCode] = keyArray[keyCode];
+			/* if button is kept pressed, add time to holding time*/
+			if (keyArray[keyCode]) {
+				holdingTimeForButton[currentButton] += delta_t_ms;
+			}else{
+				holdingTimeForButton[currentButton] = -1;
+			}
+		}
+		bool sameInputFlag = false;
+		bool sameDirectionFlag = false;
+		if (lastButtonMap == allPressedButtons){
+			sameInputFlag = true;
+			if (!updateBuffer){
+				//timeForRepeatCounterMs += delta_t_ms;
+				if ((allPressedButtons & FK_Input_Buttons::Any_Direction_Plus_Held) != 0 ||
+					allPressedButtons != 0){
+					//if (timeForRepeatCounterMs < timeSinceRepeatMs){
+					lastInputTimeMs = totalTimeMs;
+					//}
+					/*else{
+						timeForRepeatCounterMs = timeSinceRepeatMs - fixedDeltaDelayMs;
+					}*/
+				}
+				else{
+					timeForRepeatCounterMs = 0;
+				}
+			}
+			//updateBuffer = false;
+		}
+		else{
+			timeForRepeatCounterMs = 0;
+		}
+
+		if (numberOfNonDirectionButtons > 0 && addTriggerToInput) {
+			pressedButtons |= FK_Input_Buttons::Trigger_Button;
+		}
+
+		lastButtonMap = allPressedButtons;
+		// It is very hard to press two buttons on exactly the same frame.
+		// If they are close enough, consider them pressed at the same time.
+		bool mergeInput = (bufferCurrentSize > 0 && timeSinceLast < inputMergeTimeMs);
+		// now, check for direction and compare it to the last stored
+		u32 newDirection = getNewDirection(buttonMap);
+		pressedButtons |= newDirection;
+		if (lastDirection != newDirection)
+		{
+			lastDirection = newDirection;
+			// combine the direction with the buttons.
+			// pressedButtons |= newDirection;
+			if (lastDirection != 0){
+				if (updateBuffer){
+					inputBuffer.push_back(newDirection);
+					bufferCurrentSize += 1;
+					inputBufferHistory.push_back(newDirection);
+					historyDepth += 1;
+				}
+				lastInputTimeMs = totalTimeMs;
+			}
+			// Don't merge two different directions. This avoids having impossible
+			// directions such as Left+Up+Right. This also has the side effect that
+			// the direction needs to be pressed at the same time or slightly before
+			// the buttons for merging to work.
+			mergeInput = false;			
+		}
+		// store NULL button
+		else if (newDirection == FK_Input_Buttons::None && timeSinceLast > inputNullTimeMs && bufferCurrentSize > 0){
+			if (updateBuffer){
+				if (inputBuffer[bufferCurrentSize - 1] != newDirection){
+					inputBuffer.push_back(newDirection);
+					bufferCurrentSize += 1;
+					lastInputTimeMs = totalTimeMs;
+					inputBufferHistory.push_back(newDirection);
+					historyDepth += 1;
+				}
+			}
+		}
+		// store button as held (only direction can be held, and only one at any time)
+		/*else if (sameInputFlag && newDirection != FK_Input_Buttons::None && bufferCurrentSize > 0 && timeSinceLast > inputHoldTimeMs){
+			if (updateBuffer){
+				if (inputBuffer[bufferCurrentSize - 1] == newDirection){
+					inputBuffer[bufferCurrentSize - 1] = newDirection << FK_Input_Buttons::TaptoHoldButtonShift;
+					mergeInput = false;
+					lastInputTimeMs = totalTimeMs;
+				}
+			}
+		}*/
+		else if (newDirection != FK_Input_Buttons::None && bufferCurrentSize > 0) {
+			if (updateBuffer) {
+				if (inputBuffer[bufferCurrentSize - 1] == newDirection) {
+					bool buttonHeldSuccesfully = false;
+					switch (newDirection) {
+					case FK_Input_Buttons::UpRight_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Up_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Right_Direction] >= inputHoldTimeMs;
+						break;
+					case FK_Input_Buttons::UpLeft_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Up_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Left_Direction] >= inputHoldTimeMs;
+						break;
+					case FK_Input_Buttons::DownRight_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Down_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Right_Direction] >= inputHoldTimeMs;
+						break;
+					case FK_Input_Buttons::DownLeft_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Down_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Left_Direction] >= inputHoldTimeMs;
+						break;
+					default:
+						buttonHeldSuccesfully = holdingTimeForButton[newDirection] >= inputHoldTimeMs;
+						break;
+					}
+					if (buttonHeldSuccesfully) {
+						inputBuffer[bufferCurrentSize - 1] = newDirection << FK_Input_Buttons::TaptoHoldButtonShift;
+						mergeInput = false;
+						lastInputTimeMs = totalTimeMs;
+						if (historyDepth > 0) {
+							inputBufferHistory[historyDepth - 1] = inputBuffer[bufferCurrentSize - 1];
+						}
+					}
+				}
+			}
+		}
+		else if (bufferCurrentSize == 0 && lastDirection != FK_Input_Buttons::None && 
+			newDirection == lastDirection){
+			if (updateBuffer){
+				inputBuffer.push_back(lastDirection << FK_Input_Buttons::TaptoHoldButtonShift);
+				updateHistory = false;
+				bufferCurrentSize = 1;
+				mergeInput = false;
+				lastInputTimeMs = totalTimeMs;
+			}
+		}
+		/* if at least one button has been pressed, update buffer */
+		u32 inputToAddToBuffer = pressedButtons /*& ~fk_constants::FK_TriggerButton*/;
+		pressedButtons &= FK_Input_Buttons::Any_NonDirectionButton;
+		u32 bitmask = ~((u32)FK_Input_Buttons::Any_SystemButton | (u32)FK_Input_Buttons::Any_MenuButton);
+		pressedButtons &= bitmask;
+		/* exclude trigger button */
+		u32 inputButtons = pressedButtons /*& ~fk_constants::FK_TriggerButton*/;
+		if (inputButtons != 0){
+			if (updateBuffer){
+				if (mergeInput){
+					if (!(inputBuffer[bufferCurrentSize - 1] & FK_Input_Buttons::Any_Direction_Plus_Held)){
+						inputBuffer[bufferCurrentSize - 1] = inputBuffer[bufferCurrentSize - 1] | inputButtons;
+						updateHistory = true;
+						if (historyDepth > 0) {
+							inputBufferHistory[historyDepth - 1] = inputBuffer[bufferCurrentSize - 1] | inputButtons;
+						}
+					}
+					else{
+						inputBuffer.push_back(inputToAddToBuffer);
+						bufferCurrentSize += 1;
+						inputBufferHistory.push_back(inputToAddToBuffer);
+						historyDepth += 1;
+						updateHistory = true;
+					}
+				}
+				else{
+					inputBuffer.push_back(inputToAddToBuffer);
+					bufferCurrentSize += 1;
+					inputBufferHistory.push_back(inputToAddToBuffer);
+					historyDepth += 1;
+					updateHistory = true;
+				}
+				if (bufferCurrentSize > bufferCapacity){
+					inputBuffer.pop_front();
+					bufferCurrentSize -= 1;
+				}
+			}
+			/* record the time this function has been called*/
+			lastInputTimeMs = totalTimeMs;
+		}
+		if (lastInputTimeMs == totalTimeMs && updateBuffer){
+			modified = true;
+			if (updateHistory){
+				while (historyDepth > maxHistoryDepth) {
+					inputBufferHistory.pop_front();
+					historyDepth -= 1;
+				}
+				historyCounterMs = 0;
+			}
+		}
+		if (modified){
+			readable = true;
+		}
+		lastPressedButtons = pressedButtons;
+	};
+
+	void FK_InputBuffer::update(int totalTimeMs, std::vector<bool>&keyArray, bool updateBuffer){
 		/* get time difference from last input received*/
 		u32 delta_t_ms = totalTimeMs - lastRecordedTimeMs;
 		int timeSinceLast = totalTimeMs - lastInputTimeMs;

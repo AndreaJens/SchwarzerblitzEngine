@@ -531,6 +531,8 @@ namespace fk_engine{
 		std::string DefenseBuffKey = "#defense_buff";
 		// armor
 		std::string ArmorEffectWhenActiveKey = "#armor_when_active";
+		// damage limiter
+		std::string DamageLimiterKey = "#max_damage_limited_to";
 		// invincibility
 		std::string InvincibilityEffectWhenActiveKey = "#invincibility_when_active";
 		// breaking conditions key
@@ -666,7 +668,8 @@ namespace fk_engine{
 		reactionTypeMap["WeakMid"] = FK_Reaction_Type::WeakMedium;
 		reactionTypeMap["WeakLow"] = FK_Reaction_Type::WeakLow;
 		reactionTypeMap["All"] = FK_Reaction_Type::AnyLowReaction | FK_Reaction_Type::AnyMediumReaction | FK_Reaction_Type::AnyHighReaction |
-			FK_Reaction_Type::StrongFlight | FK_Reaction_Type::ReverseStrongFlight | FK_Reaction_Type::WeakFlight;
+			FK_Reaction_Type::StrongFlight | FK_Reaction_Type::ReverseStrongFlight | FK_Reaction_Type::WeakFlight |
+			FK_Reaction_Type::StandingFlight | FK_Reaction_Type::SmackdownLanding;
 		// after use actions
 		std::map<std::string, FK_CharacterAdditionalObject::AfterUseAction> afterUseActionsMap;
 		afterUseActionsMap["hide"] = FK_CharacterAdditionalObject::AfterUseAction::Hide;
@@ -771,6 +774,11 @@ namespace fk_engine{
 				if (attackTypeMap.count(temp) > 0) {
 					newObject.invincibilityWhenActive |= attackTypeMap[temp];
 				}
+			}
+			else if (temp == DamageLimiterKey) {
+				f32 limit = 0.f;
+				configurationFile >> limit;
+				newObject.maxDamageLimit = limit;
 			}
 			else if (temp == AttackBuffKey){
 				f32 value;
@@ -945,10 +953,10 @@ namespace fk_engine{
 				newObject.useable = true;
 				configurationFile >> temp;
 				if (afterUseActionsMap.count(temp) > 0) {
-					newObject.expirationAction = afterUseActionsMap[temp];
+					newObject.afterUsageAction = afterUseActionsMap[temp];
 				}
 				else {
-					newObject.expirationAction = FK_CharacterAdditionalObject::AfterUseAction::NoAction;
+					newObject.afterUsageAction = FK_CharacterAdditionalObject::AfterUseAction::NoAction;
 				}
 			}
 			else if (temp == BreakableKey){

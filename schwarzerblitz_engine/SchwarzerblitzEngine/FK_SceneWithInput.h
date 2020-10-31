@@ -12,6 +12,7 @@
 #include "FK_PixelShaderSceneGameCallback.h"
 #include "FK_DialogueWindow.h"
 #include "FK_Cheat.h"
+#include "FK_WorkshopContentManager.h"
 #include <string>
 
 using namespace irr;
@@ -75,6 +76,7 @@ namespace fk_engine{
 		virtual void setNextScene(FK_SceneType);
 		virtual void setPreviousScene(FK_SceneType);
 		virtual IrrlichtDevice* getIrrlichtDevice() const;
+		virtual FK_InputReceiver* getInputReceiver();
 		virtual void setPreviouslyUnlockedContent(FK_UnlockedContent oldContent);
 		virtual FK_UnlockedContent getPreviouslyUnlockedContent();
 		virtual FK_UnlockedContent getCurrentlyUnlockedContent();
@@ -103,6 +105,8 @@ namespace fk_engine{
 		void readRewardFile();
 		void writeSaveFile();
 		void readSaveFile();
+		void loadWorkshopContent();
+		void loadDLCContent();
 		virtual void updateSaveFileData();
 		void setupJoypadConfigWindow(std::vector<std::string>& content);
 		void setJoypadConfigWindowText(std::vector<std::string>& content);
@@ -167,6 +171,7 @@ namespace fk_engine{
 		bool unlockAllFlag;
 		bool unlockAllCharactersFlag;
 		bool unlockAllStagesFlag;
+		bool unlockExtraCostumesForeverFlag;
 		std::map<u32, u32> numberOfArcadeBeatenPerDifficultyLevel;
 		std::map<u32, std::pair<std::string, u32>> survivalRecordPerDifficultyLevel;
 		std::map<u32, std::pair<std::string, u32>> timeAttackRecordPerDifficultyLevel;
@@ -194,6 +199,8 @@ namespace fk_engine{
 		u32 joypadConfigCurrentNumberOfButtons;
 		u32 joypadConfigTimeSinceLastButtonPress;
 		std::vector<FK_Cheat> availableCheats;
+		std::vector<FK_WorkshopContentManager::WorkshopItem> enabledWorkshopItems;
+		std::vector<FK_WorkshopContentManager::WorkshopItem> enabledDLCItems;
 	};
 }
 #endif

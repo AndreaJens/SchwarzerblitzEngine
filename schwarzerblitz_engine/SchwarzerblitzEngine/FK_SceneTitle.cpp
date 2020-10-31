@@ -18,7 +18,12 @@ namespace fk_engine{
 		setupJoypad();
 		setupInputMapper(false);
 		resourcesPath = mediaPath + FK_SceneTitle::TitleFilesDirectory;
-		configFileName = resourcesPath + FK_SceneTitle::TitleConfigFileName;
+		if (gameOptions->getTourneyMode()) {
+			configFileName = resourcesPath + "tourney_" + FK_SceneTitle::TitleConfigFileName;
+		}
+		else {
+			configFileName = resourcesPath + FK_SceneTitle::TitleConfigFileName;
+		}
 		readConfigFile();
 		setupBGM();
 		setupSoundManager();
@@ -67,7 +72,7 @@ namespace fk_engine{
 		}
 		else{
 			captionTimeMS += delta_t_ms;
-			if (!isInputingCheat() && demoMatchTimerMs > FK_SceneTitle::timeUntilDemoMatchMs) {
+			if (!isInputingCheat() && allowAttractMode && demoMatchTimerMs > FK_SceneTitle::timeUntilDemoMatchMs) {
 				transitionCounter += delta_t_ms;
 				if (!anyKeyPressed) {
 					setNextScene(FK_SceneType::SceneGameAttractMode);
@@ -203,7 +208,7 @@ namespace fk_engine{
 	};
 
 	void FK_SceneTitle::readConfigFile(){
-		std::ifstream inputFile((mediaPath + TitleFilesDirectory + TitleConfigFileName).c_str());
+		std::ifstream inputFile(configFileName);
 		std::string temp;
 		while (inputFile >> temp){
 			if (temp == FK_SceneTitle::BackgroundPictureFileKey){

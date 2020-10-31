@@ -2,6 +2,7 @@
 #include "FK_SceneInputMapping_MultiplayerKeyboard.h"
 #include "FK_SceneInputMapping_SingleplayerKeyboard.h"
 #include "FK_SceneInputMapping_Joypads.h"
+#include "FK_SceneInputMapping_JoypadPlayer.h"
 #include "ExternalAddons.h"
 #include <Windows.h>
 #include<iostream>
@@ -123,7 +124,7 @@ namespace fk_engine{
 	void FK_SceneOptions::drawItems(){
 		std::vector<u32> tempArray = getCurrentIndexArray();
 		s32 menuItemsArraySize = tempArray.size();
-		s32 fixedOffsetY = 96;
+		s32 fixedOffsetY = 52;
 		s32 fixedSpacingY = 18;
 		s32 fixedOffsetX = 32;
 		s32 selectedItemAdditionalOffsetX = 15;
@@ -161,7 +162,7 @@ namespace fk_engine{
 	void FK_SceneOptions::drawItemValues(){
 		std::vector<u32> tempArray = getCurrentIndexArray();
 		s32 menuItemsArraySize = tempArray.size();
-		s32 fixedOffsetY = 96;
+		s32 fixedOffsetY = 56;
 		s32 fixedSpacingY = 18;
 		s32 fixedOffsetX = 32;
 		s32 selectedItemAdditionalOffsetX = 15;
@@ -261,7 +262,7 @@ namespace fk_engine{
 
 	void FK_SceneOptions::drawBasicCategories(){
 		s32 menuItemsArraySize = menuOptionsCategoriesStrings.size();
-		s32 fixedOffsetY = 64;
+		s32 fixedOffsetY = 42;
 		s32 fixedSpacingY = 24;
 		s32 fixedOffsetX = 32;
 		s32 selectedItemAdditionalOffsetX = 15;
@@ -383,6 +384,14 @@ namespace fk_engine{
 			ppOptionIndex %= FK_Options::FK_PostProcessingEffect::PostProcessingOptionsSize;
 			gameOptions->setPostProcessingShadersFlag((FK_Options::FK_PostProcessingEffect)ppOptionIndex);
 		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_MasterVolume) {
+			s32 volume = (s32)(100 * gameOptions->getMasterVolume());
+			volume += 5;
+			if (volume >= 100) {
+				volume = 100;
+			}
+			gameOptions->setMasterVolume((f32)(volume) / 100.0f);
+		}
 		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_SFXMute){
 			gameOptions->setSFXMute(!gameOptions->getSFXMute());
 		}
@@ -436,10 +445,29 @@ namespace fk_engine{
 			freeMatchRoundsIndex %= rounds.size();
 			gameOptions->setNumberOfRoundsFreeMatch((u32)rounds[freeMatchRoundsIndex]);
 		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_TourneyMode) {
+			gameOptions->setTourneyMode(!gameOptions->getTourneyMode());
+		}
 		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_AILevel){
 			AIindex += 1;
 			AIindex %= AILevels.size();
 			gameOptions->setAILevel(AILevels[AIindex]);
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_Player1InputDelay) {
+			u32 frameDelay = (u32)gameOptions->getInputDelayPlayer1();
+			frameDelay += 1;
+			if (frameDelay > maxInputDelay) {
+				frameDelay = 0;
+			}
+			gameOptions->setInputDelayPlayer1(frameDelay);
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_Player2InputDelay) {
+			u32 frameDelay = (u32)gameOptions->getInputDelayPlayer2();
+			frameDelay += 1;
+			if (frameDelay > maxInputDelay) {
+				frameDelay = 0;
+			}
+			gameOptions->setInputDelayPlayer2(frameDelay);
 		}
 		menu_bgm.setVolume(menuBGMvolume * gameOptions->getMusicVolume());
 	}
@@ -550,6 +578,14 @@ namespace fk_engine{
 			}
 			gameOptions->setPostProcessingShadersFlag((FK_Options::FK_PostProcessingEffect)ppOptionIndex);
 		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_MasterVolume) {
+			s32 volume = (s32)(100 * gameOptions->getMasterVolume());
+			volume -= 5;
+			if (volume <= 0) {
+				volume = 0;
+			}
+			gameOptions->setMasterVolume((f32)(volume) / 100.0f);
+		}
 		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_SFXMute){
 			gameOptions->setSFXMute(!gameOptions->getSFXMute());
 		}
@@ -619,6 +655,9 @@ namespace fk_engine{
 			}
 			gameOptions->setNumberOfRoundsFreeMatch((u32)rounds[freeMatchRoundsIndex]);
 		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_TourneyMode) {
+			gameOptions->setTourneyMode(!gameOptions->getTourneyMode());
+		}
 		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_AILevel){
 			if (AIindex <= 0){
 				AIindex = AILevels.size() - 1;
@@ -627,6 +666,26 @@ namespace fk_engine{
 				AIindex -= 1;
 			}
 			gameOptions->setAILevel(AILevels[AIindex]);
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_Player1InputDelay) {
+			u32 frameDelay = (u32)gameOptions->getInputDelayPlayer1();
+			if (frameDelay == 0) {
+				frameDelay = maxInputDelay;
+			}
+			else {
+				frameDelay -= 1;
+			}
+			gameOptions->setInputDelayPlayer1(frameDelay);
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_Player2InputDelay) {
+			u32 frameDelay = (u32)gameOptions->getInputDelayPlayer2();
+			if (frameDelay == 0) {
+				frameDelay = maxInputDelay;
+			}
+			else {
+				frameDelay -= 1;
+			}
+			gameOptions->setInputDelayPlayer2(frameDelay);
 		}
 		menu_bgm.setVolume(menuBGMvolume * gameOptions->getMusicVolume());
 	}
@@ -699,6 +758,9 @@ namespace fk_engine{
 				itemString = L"No effects";
 			}
 		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_MasterVolume) {
+			itemString += std::to_wstring((u32)(100 * gameOptions->getMasterVolume()));
+		}
 		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_SFXMute){
 			if (gameOptions->getSFXMute()){
 				itemString = L"OFF";
@@ -761,6 +823,20 @@ namespace fk_engine{
 			else {
 				itemString = L"OFF";
 			}
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_TourneyMode) {
+			if (gameOptions->getTourneyMode()) {
+				itemString = L"ON";
+			}
+			else {
+				itemString = L"OFF";
+			}
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_Player1InputDelay) {
+			itemString = std::to_wstring(gameOptions->getInputDelayPlayer1());
+		}
+		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_Player2InputDelay) {
+			itemString = std::to_wstring(gameOptions->getInputDelayPlayer2());
 		}
 		if (optionIndex == FK_SceneOptions_OptionsIndex::Opt_AILevel){
 			switch (gameOptions->getAILevel()){
@@ -856,6 +932,7 @@ namespace fk_engine{
 			keyMappingSubscene->dispose();
 			delete keyMappingSubscene;
 			keyMappingSubscene = NULL;
+			inputReceiver = NULL;
 		}
 		delete soundManager;
 		delete gameTutorial;
@@ -896,7 +973,9 @@ namespace fk_engine{
 		return subcategorySelected &&
 			(currentCategory == FK_SceneOptions_SubSystem::KeyboardRemappingSolo ||
 				currentCategory == FK_SceneOptions_SubSystem::KeyboardRemappingMultiplayer ||
-				currentCategory == FK_SceneOptions_SubSystem::JoypadRemapping);
+				currentCategory == FK_SceneOptions_SubSystem::JoypadRemapping ||
+				currentCategory == FK_SceneOptions_SubSystem::JoypadRemappingPlayer1 ||
+				currentCategory == FK_SceneOptions_SubSystem::JoypadRemappingPlayer2);
 	}
 
 	void FK_SceneOptions::drawKeyMappingScene(bool drawSceneBackground)
@@ -980,14 +1059,19 @@ namespace fk_engine{
 		keyMappingSubscene = new FK_SceneInputMapping_SingleplayerKeyboard(device, joystickInfo, gameOptions);
 	}
 
-	void FK_SceneOptions::initializeJoypadMapping(){
+	void FK_SceneOptions::initializeJoypadMapping(u32 playerIndex){
 		if (keyMappingSubscene != NULL){
 			keyMappingSubscene->dispose();
 			delete keyMappingSubscene;
 			keyMappingSubscene = NULL;
 			resetInputRoutines();
 		}
-		keyMappingSubscene = new FK_SceneInputMapping_Joypads(device, joystickInfo, gameOptions);
+		if (playerIndex < 0) {
+			keyMappingSubscene = new FK_SceneInputMapping_Joypads(device, joystickInfo, gameOptions);
+		}
+		else {
+			keyMappingSubscene = new FK_SceneInputMapping_JoypadPlayer(playerIndex, device, joystickInfo, gameOptions);
+		}
 	}
 
 	void FK_SceneOptions::update() {
@@ -1060,7 +1144,8 @@ namespace fk_engine{
 			"Game Options",
 			"Keyboard settings (single player)",
 			"Keyboard settings (multiplayer)",
-			"Joypad settings",
+			"Joypad settings (player 1)",
+			"Joypad settings (player 2)",
 			"Remap joypad to std. controller",
 			"Open game guide",
 			"Credits",
@@ -1072,7 +1157,8 @@ namespace fk_engine{
 			"Customize game options, such as the AI level and the number of rounds, for both ARCADE and FREE MATCH mode",
 			"Customize the keyboard layout for single player game modes",
 			"Customize the keyboard layout for split-keyboard multiplayer games",
-			"Customize the joypad layout (can be selected only if at least a joypad is connected)",
+			"Customize the joypad layout for player 1",
+			"Customize the joypad layout for player 2",
 			"Remap the joypad layout on the standard joypad layout used throughout the game. Normally, you need to do this only once",
 			"Open a quick reference guide about the game mechanics. You can access this document from the PAUSE MENU anytime during a match",
 			"Watch the game credits, to learn who did what in this game",
@@ -1084,15 +1170,20 @@ namespace fk_engine{
 			FK_SceneOptions_SubSystem::GameOptions,
 			FK_SceneOptions_SubSystem::KeyboardRemappingSolo,
 			FK_SceneOptions_SubSystem::KeyboardRemappingMultiplayer,
-			FK_SceneOptions_SubSystem::JoypadRemapping,
+			FK_SceneOptions_SubSystem::JoypadRemappingPlayer1,
+			FK_SceneOptions_SubSystem::JoypadRemappingPlayer2,
 			FK_SceneOptions_SubSystem::JoypadToXboxTranslation,
 			FK_SceneOptions_SubSystem::ShowTutorial,
 			FK_SceneOptions_SubSystem::ShowCredits,
 			FK_SceneOptions_SubSystem::BackToMenu,
 		};
-		menuOptionsCategoriesActiveItems = { true, true, true, true, true, false, false, true, true, true };
+		menuOptionsCategoriesActiveItems = { true, true, true, true, true, false, false, false, true, true, true };
 		if (joystickInfo.size() > 0){
 			menuOptionsCategoriesActiveItems[5] = true;
+			menuOptionsCategoriesActiveItems[7] = true;
+		}
+
+		if (joystickInfo.size() > 1) {
 			menuOptionsCategoriesActiveItems[6] = true;
 		}
 		
@@ -1113,7 +1204,7 @@ namespace fk_engine{
 		menuOptionsStrings.push_back("Play BGM");
 		menuOptionsStrings.push_back("BGM volume");
 		soundOptionsIndex = {
-			5,6,7,8,9,10,
+			19,5,6,7,8,9,10,
 		};
 		// game
 		menuOptionsStrings.push_back("Match Timer (arcade mode)");
@@ -1123,11 +1214,15 @@ namespace fk_engine{
 		menuOptionsStrings.push_back("AI Level");
 
 		gameOptionsIndex = {
-			11,12,13,14,15
+			11, 12, 13, 14, 15, 17, 18, 20
 		};
 
 		// additional and late options
 		menuOptionsStrings.push_back("Dynamic resolution");
+		menuOptionsStrings.push_back("Player 1 frame delay");
+		menuOptionsStrings.push_back("Player 2 frame delay");
+		menuOptionsStrings.push_back("Master volume");
+		menuOptionsStrings.push_back("Tourney mode");
 
 		// other
 		menuOptionsStrings.push_back("Cancel");
@@ -1161,6 +1256,10 @@ namespace fk_engine{
 
 		// additional
 		menuOptionsCaptions.push_back("When ON, if the frame rate is low, dynamic resolution tries to improve performance by reducing the rendering size. Switching it OFF prevents this optimization, by always keeping the nominal resolution active");
+		menuOptionsCaptions.push_back("Set additional frames of input delay for player 1. This can be useful while playing against a friend through Parsec/Steam Remote Play Together");
+		menuOptionsCaptions.push_back("Set additional frames of input delay for player 2. This can be useful while playing against a friend through Parsec/Steam Remote Play Together");
+		menuOptionsCaptions.push_back("Change the master volume. This value affects all sounds in-game");
+		menuOptionsCaptions.push_back("Set Tourney Mode to ON to use the game in a tourney setup. This mode restricts the selection of modes, characters, stages, costumes and options to those that are currently considered tournament legal");
 
 		//other
 		menuOptionsCaptions.push_back("Cancel changes and go back to the option screen");
@@ -1175,9 +1274,12 @@ namespace fk_engine{
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_DynamicResolution] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_SFXVolume] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_VoiceVolume] = true;
+		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_MasterVolume] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_BGMVolume] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_FreeMatchTimer] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_FreeMatchRounds] = true;
+		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_AILevel] = true;
+		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_Player2InputDelay] = true;
 	}
 
 	/* setup tutorial */
@@ -1290,7 +1392,13 @@ namespace fk_engine{
 					initializeKeyboardMappingSolo();
 				}
 				else if (currentCategory == FK_SceneOptions::FK_SceneOptions_SubSystem::JoypadRemapping){
-					initializeJoypadMapping();
+					initializeJoypadMapping(-1);
+				}
+				else if (currentCategory == FK_SceneOptions::FK_SceneOptions_SubSystem::JoypadRemappingPlayer1) {
+					initializeJoypadMapping(0);
+				}
+				else if (currentCategory == FK_SceneOptions::FK_SceneOptions_SubSystem::JoypadRemappingPlayer2) {
+					initializeJoypadMapping(1);
 				}
 				else if (currentCategory == FK_SceneOptions::FK_SceneOptions_SubSystem::JoypadToXboxTranslation){
 					for (int i = 0; i < joystickInfo.size(); ++i){
@@ -1316,7 +1424,7 @@ namespace fk_engine{
 				}
 			}
 			else{
-				soundManager->playSound("cancel");
+				soundManager->playSound("cancel", 100.f * gameOptions->getSFXVolume());
 				return;
 			}
 		}

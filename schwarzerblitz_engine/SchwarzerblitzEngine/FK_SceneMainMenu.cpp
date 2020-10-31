@@ -2,6 +2,8 @@
 #include "ExternalAddons.h"
 #include<iostream>
 #include<Windows.h>
+#include <shellapi.h>
+#include "FK_AchievementManager.h"
 
 using namespace irr;
 using namespace scene;
@@ -49,6 +51,9 @@ namespace fk_engine{
 		loadConfigurationFile();
 		setUnavailableMenuItems();
 		menuIndex = newMenuIndex;
+		if (menuIndex >= menuOptionsStrings.size()) {
+			menuIndex = 0;
+		}
 		setupSoundManager();
 		setupBGM();
 		setupGraphics();
@@ -540,6 +545,14 @@ namespace fk_engine{
 			cycleId = 1;
 			menu_bgm.play();
 			delta_t_ms = 0;
+#ifdef STEAM_SUPPORT
+			FK_StatManager manager;
+			manager.retrieveStatsFromServer();
+			manager.checkForStoryAchievements(storyEpisodesCleared);
+			manager.checkForTagAchievements(specialTagsAcquired);
+			manager.checkForTrialAchievements(tutorialChallengesCleared);
+			manager.uploadStatsToServer();
+#endif
 		}
 		if (hasToSetupJoypad()){
 			updateJoypadSetup(delta_t_ms);
@@ -761,9 +774,22 @@ namespace fk_engine{
 	bool FK_SceneMainMenu::loadConfigurationFile(){
 		std::string resourcePath = mediaPath + FK_SceneMainMenu::MenuResourcesPath;
 		std::string filename = resourcePath + "config.txt";
+		if (gameOptions->getTourneyMode()) {
+			filename = resourcePath + "tourney_config.txt";
+		}
 		std::ifstream inputFile(filename.c_str());
 		if (!inputFile) {
-			return false;
+			if (gameOptions->getTourneyMode()) {
+				filename = resourcePath + "config.txt";
+				inputFile.clear();
+				inputFile.open(filename);
+				if (!inputFile) {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
 		}
 		std::map<FK_MainMenuConfigFileKeys, std::string> fileKeys;
 		fileKeys[FK_MainMenuConfigFileKeys::MenuBGM] = "#bgm";
@@ -844,6 +870,8 @@ namespace fk_engine{
 		extraItemFileKeys["##ARCADE_ENDINGS"] = FK_SceneExtraType::ExtraArcadeEndingGallery;
 		extraItemFileKeys["##VIEWER"] = FK_SceneExtraType::ExtraStages;
 		extraItemFileKeys["##DIORAMA"] = FK_SceneExtraType::ExtraDiorama;
+		extraItemFileKeys["##MUSIC"] = FK_SceneExtraType::ExtraMusicPlayer;
+		extraItemFileKeys["##DISCORD"] = FK_SceneExtraType::ExtraDiscordLink;
 
 		std::map<std::string, FK_SceneTrainingType> trainingItemFileKeys;
 		trainingItemFileKeys["##TRAINING"] = FK_SceneTrainingType::TrainingNormal;
@@ -1393,7 +1421,16 @@ namespace fk_engine{
 				if (extraMenuActiveItems[subMenuIndex]) {
 					soundManager->playSound("confirm", 100.f * gameOptions->getSFXVolume());
 					itemSelected = true;
-					if (extraMenuOptionsScenes[subMenuIndex] == FK_Scene::FK_SceneExtraType::ExtraDiorama ||
+					if (extraMenuOptionsScenes[subMenuIndex] == FK_Scene::FK_SceneExtraType::ExtraDiscordLink) {
+						// call Discord link
+						ShellExecute(0, 0, "https://discord.gg/vXKrvpV", 0, 0, SW_SHOW);
+						itemSelected = false;
+						Sleep(500);
+					}
+					else if (extraMenuOptionsScenes[subMenuIndex] == FK_Scene::FK_SceneExtraType::ExtraMusicPlayer) {
+						setNextScene(FK_SceneType::SceneMusicPlayer);
+					}
+					else if (extraMenuOptionsScenes[subMenuIndex] == FK_Scene::FK_SceneExtraType::ExtraDiorama ||
 						extraMenuOptionsScenes[subMenuIndex] == FK_Scene::FK_SceneExtraType::ExtraArcadeEndingGallery) {
 						setNextScene(FK_SceneType::SceneCharacterSelectionExtra);
 					}
@@ -1552,103 +1589,113 @@ namespace fk_engine{
 	void FK_SceneMainMenu::compareUnlockables() {
 		canProcessUnlockedContent = false;
 		unlockablesToProcess = FK_SceneWithInput::FK_UnlockedContent();
-		// characters
-		std::vector<std::string> unlockedCharasToCheck = previouslyUnlockedContent.unlockedCharacters;
-		for each(auto characterPath in currentlyUnlockedContent.unlockedCharacters) {
-			if (std::find(unlockedCharasToCheck.begin(), unlockedCharasToCheck.end(), characterPath) == unlockedCharasToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedCharacters.begin(), 
-					unlockablesToProcess.unlockedCharacters.end(), characterPath) == 
-					unlockablesToProcess.unlockedCharacters.end()) {
-					unlockablesToProcess.unlockedCharacters.push_back(characterPath);
-					canProcessUnlockedContent = true;
+		if (!gameOptions->getTourneyMode()) {
+			// characters
+			std::vector<std::string> unlockedCharasToCheck = previouslyUnlockedContent.unlockedCharacters;
+			for each (auto characterPath in currentlyUnlockedContent.unlockedCharacters) {
+				if (std::find(unlockedCharasToCheck.begin(), unlockedCharasToCheck.end(), characterPath) == unlockedCharasToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedCharacters.begin(),
+						unlockablesToProcess.unlockedCharacters.end(), characterPath) ==
+						unlockablesToProcess.unlockedCharacters.end()) {
+						unlockablesToProcess.unlockedCharacters.push_back(characterPath);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// costumes
-		std::vector<std::string> unlockedCostumesToCheck = previouslyUnlockedContent.unlockedOutfits;
-		for each(auto outfit in currentlyUnlockedContent.unlockedOutfits) {
-			if (std::find(unlockedCostumesToCheck.begin(), unlockedCostumesToCheck.end(), outfit) == unlockedCostumesToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedOutfits.begin(),
-					unlockablesToProcess.unlockedOutfits.end(), outfit) ==
-					unlockablesToProcess.unlockedOutfits.end()) {
-					unlockablesToProcess.unlockedOutfits.push_back(outfit);
-					canProcessUnlockedContent = true;
+			// costumes
+			std::vector<std::string> unlockedCostumesToCheck = previouslyUnlockedContent.unlockedOutfits;
+			for each (auto outfit in currentlyUnlockedContent.unlockedOutfits) {
+				if (std::find(unlockedCostumesToCheck.begin(), unlockedCostumesToCheck.end(), outfit) == unlockedCostumesToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedOutfits.begin(),
+						unlockablesToProcess.unlockedOutfits.end(), outfit) ==
+						unlockablesToProcess.unlockedOutfits.end()) {
+						unlockablesToProcess.unlockedOutfits.push_back(outfit);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// stages
-		std::vector<std::string> unlockedStagesToCheck = previouslyUnlockedContent.unlockedStages;
-		for each(auto stage in currentlyUnlockedContent.unlockedStages) {
-			if (std::find(unlockedStagesToCheck.begin(), unlockedStagesToCheck.end(), stage) == unlockedStagesToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedStages.begin(),
-					unlockablesToProcess.unlockedStages.end(), stage) ==
-					unlockablesToProcess.unlockedStages.end()) {
-					unlockablesToProcess.unlockedStages.push_back(stage);
-					canProcessUnlockedContent = true;
+			// stages
+			std::vector<std::string> unlockedStagesToCheck = previouslyUnlockedContent.unlockedStages;
+			for each (auto stage in currentlyUnlockedContent.unlockedStages) {
+				if (std::find(unlockedStagesToCheck.begin(), unlockedStagesToCheck.end(), stage) == unlockedStagesToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedStages.begin(),
+						unlockablesToProcess.unlockedStages.end(), stage) ==
+						unlockablesToProcess.unlockedStages.end()) {
+						unlockablesToProcess.unlockedStages.push_back(stage);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// dioramas
-		std::vector<std::string> unlockedDioramasToCheck = previouslyUnlockedContent.unlockedCharacterDioramas;
-		for each(auto diorama in currentlyUnlockedContent.unlockedCharacterDioramas) {
-			if (std::find(unlockedDioramasToCheck.begin(), unlockedDioramasToCheck.end(), diorama) == unlockedDioramasToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedCharacterDioramas.begin(),
-					unlockablesToProcess.unlockedCharacterDioramas.end(), diorama) ==
-					unlockablesToProcess.unlockedCharacterDioramas.end()) {
-					unlockablesToProcess.unlockedCharacterDioramas.push_back(diorama);
-					canProcessUnlockedContent = true;
+			// dioramas
+			std::vector<std::string> unlockedDioramasToCheck = previouslyUnlockedContent.unlockedCharacterDioramas;
+			for each (auto diorama in currentlyUnlockedContent.unlockedCharacterDioramas) {
+				if (std::find(unlockedDioramasToCheck.begin(), unlockedDioramasToCheck.end(), diorama) == unlockedDioramasToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedCharacterDioramas.begin(),
+						unlockablesToProcess.unlockedCharacterDioramas.end(), diorama) ==
+						unlockablesToProcess.unlockedCharacterDioramas.end()) {
+						unlockablesToProcess.unlockedCharacterDioramas.push_back(diorama);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// game modes
-		std::vector<std::string> unlockedGameModesToCheck = previouslyUnlockedContent.unlockedGameModes;
-		for each(auto mode in currentlyUnlockedContent.unlockedGameModes) {
-			if (std::find(unlockedGameModesToCheck.begin(), unlockedGameModesToCheck.end(), mode) ==
-				unlockedGameModesToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedGameModes.begin(),
-					unlockablesToProcess.unlockedGameModes.end(), mode) ==
-					unlockablesToProcess.unlockedGameModes.end()) {
-					unlockablesToProcess.unlockedGameModes.push_back(mode);
-					canProcessUnlockedContent = true;
+			// game modes
+			std::vector<std::string> unlockedGameModesToCheck = previouslyUnlockedContent.unlockedGameModes;
+			for each (auto mode in currentlyUnlockedContent.unlockedGameModes) {
+				if (std::find(unlockedGameModesToCheck.begin(), unlockedGameModesToCheck.end(), mode) ==
+					unlockedGameModesToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedGameModes.begin(),
+						unlockablesToProcess.unlockedGameModes.end(), mode) ==
+						unlockablesToProcess.unlockedGameModes.end()) {
+						unlockablesToProcess.unlockedGameModes.push_back(mode);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// story episodes
-		std::vector<std::string> unlockedStoryEpisodesToCheck = previouslyUnlockedContent.unlockedStoryEpisodes;
-		for each(auto episode in currentlyUnlockedContent.unlockedStoryEpisodes) {
-			if (std::find(unlockedStoryEpisodesToCheck.begin(), unlockedStoryEpisodesToCheck.end(), episode) ==
-				unlockedStoryEpisodesToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedStoryEpisodes.begin(),
-					unlockablesToProcess.unlockedStoryEpisodes.end(), episode) ==
-					unlockablesToProcess.unlockedStoryEpisodes.end()) {
-					unlockablesToProcess.unlockedStoryEpisodes.push_back(episode);
-					canProcessUnlockedContent = true;
+			// story episodes
+			std::vector<std::string> unlockedStoryEpisodesToCheck = previouslyUnlockedContent.unlockedStoryEpisodes;
+			for each (auto episode in currentlyUnlockedContent.unlockedStoryEpisodes) {
+				if (std::find(unlockedStoryEpisodesToCheck.begin(), unlockedStoryEpisodesToCheck.end(), episode) ==
+					unlockedStoryEpisodesToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedStoryEpisodes.begin(),
+						unlockablesToProcess.unlockedStoryEpisodes.end(), episode) ==
+						unlockablesToProcess.unlockedStoryEpisodes.end()) {
+						unlockablesToProcess.unlockedStoryEpisodes.push_back(episode);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// trials and tutorials
-		std::vector<std::string> unlockedTutorialChallengesToCheck = previouslyUnlockedContent.unlockedTutorialChallenges;
-		for each(auto challenge in currentlyUnlockedContent.unlockedTutorialChallenges) {
-			if (std::find(unlockedTutorialChallengesToCheck.begin(), unlockedTutorialChallengesToCheck.end(), challenge) ==
-				unlockedTutorialChallengesToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedTutorialChallenges.begin(),
-					unlockablesToProcess.unlockedTutorialChallenges.end(), challenge) ==
-					unlockablesToProcess.unlockedTutorialChallenges.end()) {
-					unlockablesToProcess.unlockedTutorialChallenges.push_back(challenge);
-					canProcessUnlockedContent = true;
+			// trials and tutorials
+			std::vector<std::string> unlockedTutorialChallengesToCheck = previouslyUnlockedContent.unlockedTutorialChallenges;
+			for each (auto challenge in currentlyUnlockedContent.unlockedTutorialChallenges) {
+				if (std::find(unlockedTutorialChallengesToCheck.begin(), unlockedTutorialChallengesToCheck.end(), challenge) ==
+					unlockedTutorialChallengesToCheck.end()) {
+					if (std::find(unlockablesToProcess.unlockedTutorialChallenges.begin(),
+						unlockablesToProcess.unlockedTutorialChallenges.end(), challenge) ==
+						unlockablesToProcess.unlockedTutorialChallenges.end()) {
+						unlockablesToProcess.unlockedTutorialChallenges.push_back(challenge);
+						canProcessUnlockedContent = true;
+					}
 				}
 			}
-		}
-		// pictures
-		std::deque<u32> unlockedPicturesToCheck = previouslyUnlockedContent.unlockedGalleryPictures;
-		for each(auto picture in currentlyUnlockedContent.unlockedGalleryPictures) {
-			if (std::find(unlockedPicturesToCheck.begin(), unlockedPicturesToCheck.end(), picture) ==
-				unlockedPicturesToCheck.end()) {
-				if (std::find(unlockablesToProcess.unlockedGalleryPictures.begin(),
-					unlockablesToProcess.unlockedGalleryPictures.end(), picture) ==
-					unlockablesToProcess.unlockedGalleryPictures.end()) {
-					unlockablesToProcess.unlockedGalleryPictures.push_back(picture);
-					canProcessUnlockedContent = true;
+			// pictures (only if Gallery is unlocked)
+			bool galleryAvailable = false;
+			for (u32 i = 0; i < extraMenuActiveItems.size(); ++i) {
+				if (extraMenuOptionsScenes[i] == FK_Scene::FK_SceneExtraType::ExtraGallery && extraMenuActiveItems[i]) {
+					galleryAvailable = true;
+				}
+			}
+			if (galleryAvailable) {
+				std::deque<u32> unlockedPicturesToCheck = previouslyUnlockedContent.unlockedGalleryPictures;
+				for each (auto picture in currentlyUnlockedContent.unlockedGalleryPictures) {
+					if (std::find(unlockedPicturesToCheck.begin(), unlockedPicturesToCheck.end(), picture) ==
+						unlockedPicturesToCheck.end()) {
+						if (std::find(unlockablesToProcess.unlockedGalleryPictures.begin(),
+							unlockablesToProcess.unlockedGalleryPictures.end(), picture) ==
+							unlockablesToProcess.unlockedGalleryPictures.end()) {
+							unlockablesToProcess.unlockedGalleryPictures.push_back(picture);
+							canProcessUnlockedContent = true;
+						}
+					}
 				}
 			}
 		}

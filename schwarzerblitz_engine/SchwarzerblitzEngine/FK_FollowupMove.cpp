@@ -20,6 +20,13 @@ namespace fk_engine{
 		moveId = newId;
 	}
 
+	bool FK_FollowupMove::operator==(const FK_FollowupMove& otherMove) const
+	{
+		return (moveName == otherMove.moveName && moveId == otherMove.moveId &&
+			inputWindowStartingFrame == otherMove.inputWindowStartingFrame &&
+			inputWindowEndingFrame == otherMove.inputWindowEndingFrame);
+	}
+
 	int FK_FollowupMove::getInputWindowStartingFrame()
 	{
 		return inputWindowStartingFrame;

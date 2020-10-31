@@ -25,34 +25,42 @@ namespace fk_engine{
 			matchSettings->opponentOutfitId = 1;
 		}
 		FK_Character* tempCharacter = new FK_Character;
+		std::string character1Path = charactersPath + new_player1path;
+		if (!isValidCharacterPath(character1Path) && isValidCharacterPath(new_player1path)) {
+			character1Path = new_player1path;
+		}
 		if (matchSettings->playerOutfitName.empty()){
 			tempCharacter->loadBasicVariables(
 				databaseAccessor,
-				"character.txt", charactersPath + new_player1path,
+				"character.txt", character1Path,
 				commonResourcesPath,
 				smgr, matchSettings->playerOutfitId);
 		}
 		else{
 			tempCharacter->loadBasicVariables(
 				databaseAccessor,
-				"character.txt", charactersPath + new_player1path,
+				"character.txt", character1Path,
 				commonResourcesPath,
 				smgr, matchSettings->playerOutfitName);
 		}
 		FK_Character::FK_CharacterOutfit outfitPlayer = tempCharacter->getOutfit();
 		delete tempCharacter;
 		tempCharacter = new FK_Character;
+		std::string character2Path = charactersPath + new_player2path;
+		if (!isValidCharacterPath(character2Path) && isValidCharacterPath(new_player2path)) {
+			character2Path = new_player2path;
+		}
 		if (matchSettings->opponentOutfitName.empty()){
 			tempCharacter->loadBasicVariables(
 				databaseAccessor,
-				"character.txt", charactersPath + new_player2path,
+				"character.txt", character2Path,
 				commonResourcesPath,
 				smgr, matchSettings->opponentOutfitId);
 		}
 		else{
 			tempCharacter->loadBasicVariables(
 				databaseAccessor,
-				"character.txt", charactersPath + new_player2path,
+				"character.txt", character2Path,
 				commonResourcesPath,
 				smgr, matchSettings->opponentOutfitName);
 		}
@@ -248,7 +256,8 @@ namespace fk_engine{
 
 	/* get round winner (for survive missions) */
 	int FK_SceneGameStory::getRoundWinner(bool updateWins) {
-		if (matchSettings->winCondition.first == FK_StoryMatch::MatchWinCondition::Normal) {
+		if (matchSettings->winCondition.first == FK_StoryMatch::MatchWinCondition::Normal ||
+			matchSettings->winCondition.first == FK_StoryMatch::MatchWinCondition::Poison) {
 			return FK_SceneGame::getRoundWinner(updateWins);
 		}
 		else if (matchSettings->winCondition.first == FK_StoryMatch::MatchWinCondition::Percentage) {
@@ -318,7 +327,7 @@ namespace fk_engine{
 			delete winConditionDialogueWindow;
 			winConditionDialogueWindow = NULL;
 		}
-		s32 width = screenSize.Width * 1 / 4;
+		s32 width = screenSize.Width * 1 / 3;
 		s32 x = (screenSize.Width - width) / 2;
 		s32 height = screenSize.Height / 16;
 		std::vector<std::string> content;
@@ -330,6 +339,11 @@ namespace fk_engine{
 			std::string textToAdd = "Defeat your opponent before the timer runs out!";
 			content.push_back(textToAdd);
 			height = height * 3;
+		}
+		else if (matchSettings->winCondition.first == FK_StoryMatch::MatchWinCondition::Poison) {
+			std::string textToAdd = "Your energy goes down with time!";
+			content.push_back(textToAdd);
+			height = height * 2;
 		}
 		else if (matchSettings->winCondition.first == FK_StoryMatch::MatchWinCondition::Percentage) {
 			std::string textToAdd = "Reduce the opponent's health below ";

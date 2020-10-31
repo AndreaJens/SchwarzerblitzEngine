@@ -94,8 +94,10 @@ namespace fk_engine{
 		u32 numberOfRoundsLost;
 		u32 currentTimer;
 		u32 numberOfSufferedThrows;
+		u32 lastTimeDeltaMs;
 		FK_Character::FK_AIArchetypes AIarchetype;
 		u32 numberOfChainAttempts;
+		s32 lastAIFrameNumber;
 		bool reshuffleMoveSinceInvalid;
 		bool isAvoidingBullet;
 	};

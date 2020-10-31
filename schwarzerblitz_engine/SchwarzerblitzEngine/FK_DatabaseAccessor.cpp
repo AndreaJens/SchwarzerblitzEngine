@@ -52,6 +52,8 @@ namespace fk_engine {
 		ringoutDistanceFromWall = fk_constants::FK_MaximumDistanceFromRingBorderForRingout;
 		// character
 		characterWalkingSpeed = 80.0f;
+		characterSidestepSpeed = 150.f;
+		characterMixedStepSpeed = 100.f;
 		characterRunningSpeed = 200.0f;
 		characterWeakHitstunDurationMs = 250;
 		characterWeakHitstunMovementDurationMs = 100;
@@ -77,6 +79,9 @@ namespace fk_engine {
 		triggerGuardFrameAdvantage = 0;
 		// run jump cancel
 		allowJumpRunCancel = true;
+		// extended juggles
+		extendedJugglesAllowedFlag = false;
+		juggleDamageMultiplier = 1.f;
 	}
 
 	void FK_DatabaseAccessor::setupFromFile(std::string filename) {
@@ -283,6 +288,16 @@ namespace fk_engine {
 				ifile >> val;
 				characterWalkingSpeed = val;
 			}
+			else if (temp == "#sidestep_speed") {
+				f32 val;
+				ifile >> val;
+				characterSidestepSpeed = val;
+			}
+			else if (temp == "#mixedstep_speed") {
+				f32 val;
+				ifile >> val;
+				characterMixedStepSpeed = val;
+			}
 			else if (temp == "#running_speed") {
 				f32 val;
 				ifile >> val;
@@ -387,6 +402,20 @@ namespace fk_engine {
 				ifile >> val;
 				allowJumpRunCancel = val != 0;
 			}
+			// extend juggle modifier
+			else if (temp == "#allow_extended_juggles") {
+				s32 val;
+				ifile >> val;
+				extendedJugglesAllowedFlag = val != 0;
+			}
+			// extend juggle modifier
+			else if (temp == "#juggle_damage_scaling_factor") {
+				f32 val;
+				ifile >> val;
+				if (val >= 0.f) {
+					juggleDamageMultiplier = val;
+				}
+			}
 		}
 	}
 
@@ -423,6 +452,14 @@ namespace fk_engine {
 	bool FK_DatabaseAccessor::showStageIntro()
 	{
 		return showStageIntroFlag;
+	}
+	bool FK_DatabaseAccessor::extendedJugglesAllowed()
+	{
+		return extendedJugglesAllowedFlag;
+	}
+	f32 FK_DatabaseAccessor::getJuggleDamageMultiplier()
+	{
+		return juggleDamageMultiplier;
 	}
 	bool FK_DatabaseAccessor::triggerRegenAllowed()
 	{
@@ -701,6 +738,16 @@ namespace fk_engine {
 	f32 FK_DatabaseAccessor::getBasicCharacterWalkSpeed()
 	{
 		return characterWalkingSpeed;
+	}
+
+	f32 FK_DatabaseAccessor::getBasicCharacterSidestepSpeed()
+	{
+		return characterSidestepSpeed;
+	}
+
+	f32 FK_DatabaseAccessor::getBasicCharacterMixedStepSpeed()
+	{
+		return characterMixedStepSpeed;
 	}
 
 	f32 FK_DatabaseAccessor::getBasicCharacterRunningSpeed()

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <filesystem>
 
 namespace fk_engine{
 	FK_SceneCharacterSelectArcade::FK_SceneCharacterSelectArcade() : FK_SceneCharacterSelect_Base(){};
@@ -217,19 +218,19 @@ namespace fk_engine{
 				updateInputBuffer();
 				u32 directionPlayer = getCurrentInputBuffer()->getLastDirection();
 				u32 lastButtonPlayer = getCurrentInputBuffer()->getPressedButtons();// &FK_Input_Buttons::Any_MenuButton;
-				if ((lastButtonPlayer &  FK_Input_Buttons::Cancel_Button) != 0){
+				if (!forcePlayerSelection && (lastButtonPlayer &  FK_Input_Buttons::Cancel_Button) != 0){
 					lastInputTime = now;
 					goBackToMainMenu();
 					return;
 				}
-				if (selectionMap.count((FK_Input_Buttons)directionPlayer) > 0){
+				if (!forcePlayerSelection && selectionMap.count((FK_Input_Buttons)directionPlayer) > 0){
 					lastInputTime = now;
 					soundManager->playSound("cursor", 100.0 * gameOptions->getSFXVolume());
 					playerIndex = getNearestNeighbourIndex(playerIndex, selectionMap.at((FK_Input_Buttons)directionPlayer));
 				}
 				else if (playerIndex <= characterPaths.size() && isCharacterAvailable(playerIndex)){
 					// update outfits
-					if (/*now - lastTimeInputButtonsPlayer > FK_SceneCharacterSelect_Base::NonDirectionInputThresholdMs &&*/
+					if (!forcePlayerSelection && /*now - lastTimeInputButtonsPlayer > FK_SceneCharacterSelect_Base::NonDirectionInputThresholdMs &&*/
 						(lastButtonPlayer & FK_Input_Buttons::Modifier_Button) != 0){
 						lastInputTime = now;
 						soundManager->playSound("cursor", 100.0 * gameOptions->getSFXVolume());
@@ -319,7 +320,11 @@ namespace fk_engine{
 				removeCharacterNodeFromCache(playerCharacter);
 				delete playerCharacter;
 			}
-			loadPlayerCharacter(charactersDirectory + playerPath, playerPosition, playerOutfitId, playerAngle,
+			std::string fullPath = charactersDirectory + playerPath;
+			if (!isValidCharacterPath(fullPath) && isValidCharacterPath(playerPath)) {
+				fullPath = playerPath;
+			}
+			loadPlayerCharacter(fullPath, playerPosition, playerOutfitId, playerAngle,
 				changeOnlyOutfit);
 		}
 	}
@@ -604,9 +609,9 @@ namespace fk_engine{
 
 		// change text color accordingly
 		video::SColor tcolor = normalTextColor;
-		if (!isCharacterSelectable(playerCharacter)) {
-			tcolor = inactiveTextColor;
-		}
+		//if (!isCharacterSelectable(playerCharacter)) {
+		//	tcolor = inactiveTextColor;
+		//}
 
 		// draw different icon and text, depending on the keyboard/joypad notation
 		// start by drawing the modifier/change costume button
@@ -672,7 +677,9 @@ namespace fk_engine{
 
 		// do the same for selection button
 		// check what icon has to be used
-
+		if (!isCharacterSelectable(playerCharacter)) {
+			tcolor = inactiveTextColor;
+		}
 		// offset y
 		y -= textSize.Height;
 
@@ -747,7 +754,7 @@ namespace fk_engine{
 
 		// cancel selection button
 		y -= textSize.Height;
-
+		tcolor = normalTextColor;
 		if (playerUsesJoypad) {
 			modifierButtonTexture = joypadButtonsTexturesMap[
 				(FK_JoypadInput)buttonInputLayout[FK_Input_Buttons::Cancel_Button]];
@@ -849,6 +856,40 @@ namespace fk_engine{
 	//		video::SColor(255, 255, 255, 255),
 	//		core::rect<s32>(0, 0, screenSize.Width, screenSize.Height));
 	//}
+
+	/* draw disclaimer for no arcade ending */
+	void FK_SceneCharacterSelectArcade::drawNoEndingDisclaimer() {
+		if (!characterHasAvailableEndingMap[getPlayerIndex()]) {
+			s32 x1, y1;
+			f32 width, height;
+			width = screenSize.Width / 4;
+			s32 centerX1 = screenSize.Width / 6;
+			core::dimension2d<u32> size = noArcadeEndingSign->getSize();
+			f32 scaleFactor = width / size.Width;
+			irr::core::vector2df scale(scaleFactor, scaleFactor);
+			height = size.Height * scaleFactor;
+			// player 1
+			y1 = (s32)std::floor(screenSize.Height / 2 - height / 2);
+			x1 = (s32)std::floor(centerX1 - width / 2);
+			if (!player1IsActive) {
+				fk_addons::draw2DImage(driver, noArcadeEndingSign,
+					core::rect<s32>(0, 0, size.Width, size.Height),
+					core::vector2d<s32>(x1, y1),
+					core::vector2d<s32>(0, 0), 0, scale,
+					true, video::SColor(255, 255, 255, 255), core::rect<s32>(0, 0, screenSize.Width, screenSize.Height));
+			}
+			// player 2
+			centerX1 = screenSize.Width - centerX1;
+			x1 = (s32)std::floor(centerX1 - width / 2);
+			if (player1IsActive) {
+				fk_addons::draw2DImage(driver, noArcadeEndingSign,
+					core::rect<s32>(0, 0, size.Width, size.Height),
+					core::vector2d<s32>(x1, y1),
+					core::vector2d<s32>(0, 0), 0, scale,
+					true, video::SColor(255, 255, 255, 255), core::rect<s32>(0, 0, screenSize.Width, screenSize.Height));
+			}
+		}
+	};
 
 	// draw survival record if needed
 	void FK_SceneCharacterSelectArcade::drawSurvivalRecord() {
@@ -1273,6 +1314,10 @@ namespace fk_engine{
 		if (sceneResources.useImagePreviewsInsteadOfMesh) {
 			drawCharacterPreview(player1IsActive, playerPreview);
 		}
+		if (arcadeType != FK_SceneArcadeType::ArcadeSurvival &&
+			arcadeType != FK_SceneArcadeType::ArcadeTimeAttack) {
+			drawNoEndingDisclaimer();
+		}
 		drawSurvivalRecord();
 		drawTimeAttackRecord();
 		drawPlayerNames();
@@ -1339,6 +1384,21 @@ namespace fk_engine{
 		}
 	}
 
+	/* check if ending is available to play */
+	bool FK_SceneCharacterSelectArcade::checkIfEndingIsAvailable(std::string& characterPath) {
+		std::string charactersPath = FK_SceneCharacterSelectArcade::charactersDirectory;
+		std::string endingFilePath =
+			charactersPath + characterPath +
+			fk_constants::FK_CharacterArcadeFolder + fk_constants::FK_CharacterArcadeEndingFileName;
+		std::ifstream inputFile(endingFilePath.c_str());
+		if (!inputFile) {
+			inputFile.clear();
+			inputFile.close();
+			return false;
+		}
+		return true;
+	}
+
 	/* load character files */
 	void FK_SceneCharacterSelectArcade::loadCharacterList(){
 		availableCharactersArcade.clear();
@@ -1346,6 +1406,7 @@ namespace fk_engine{
 		characterPathsArcade.clear();
 		availableCharacters.clear();
 		characterNames.clear();
+		characterHasAvailableEndingMap.clear();
 		drawLoadingScreen(0);
 		dummyCharacterDirectory = "chara_dummy\\";
 		std::string characterFileName = charactersDirectory + fk_constants::FK_CharacterRosterFileName;
@@ -1363,6 +1424,7 @@ namespace fk_engine{
 				characterPaths.push_back(charaPath);
 				characterPathsArcade.push_back(charaPath);
 				availableCharactersArcade.push_back(characterIdArcadeOpponent);
+				characterHasAvailableEndingMap[characterId] = checkIfEndingIsAvailable(charaPath);
 				characterId += 1;
 				characterIdArcadeOpponent += 1;
 			}
@@ -1370,6 +1432,7 @@ namespace fk_engine{
 				availabilityIdentifier == CharacterUnlockKeys::Character_Unlockable_NoArcadeOpponent){
 				characterPaths.push_back(charaPath);
 				characterPathsArcade.push_back(charaPath);
+				characterHasAvailableEndingMap[characterId] = checkIfEndingIsAvailable(charaPath);
 				if (std::find(unlockedCharacters.begin(), unlockedCharacters.end(), key) != unlockedCharacters.end()){
 					if (availabilityIdentifier != CharacterUnlockKeys::Character_Unlockable_NoArcadeOpponent){
 						availableCharactersArcade.push_back(characterIdArcadeOpponent);
@@ -1395,19 +1458,47 @@ namespace fk_engine{
 						availableCharactersArcade.push_back(characterIdArcadeOpponent);
 						//characterIdArcadeOpponent += 1;
 					}
-					characterIdArcadeOpponent += 1;
 					availableCharacters.push_back(characterId);
 					characterPaths.push_back(charaPath);
+					characterHasAvailableEndingMap[characterId] = checkIfEndingIsAvailable(charaPath);
+					characterIdArcadeOpponent += 1;
 					characterId += 1;
 				}
 			}
 		};
 		characterFile.close();
+		// load workshop characters
+		for (auto item : enabledWorkshopItems) {
+			if (item.type == FK_WorkshopContentManager::WorkshopItemType::Character &&
+				item.enabled) {
+				charaPath = "..\\" + fk_constants::FK_WorkshopFolder + fk_constants::FK_CharactersFileFolder + item.path;
+				availableCharacters.push_back(characterId);
+				if (!charaPath.empty()) {
+					availableCharacters.push_back(characterId);
+					characterPaths.push_back(charaPath);
+				}
+				characterHasAvailableEndingMap[characterId] = checkIfEndingIsAvailable(charaPath);
+				characterId += 1;
+			}
+		};
+		// load dlc characters
+		for (auto item : enabledDLCItems) {
+			if (item.type == FK_WorkshopContentManager::WorkshopItemType::Character &&
+				item.enabled) {
+				charaPath = "..\\" + fk_constants::FK_DLCFolder + fk_constants::FK_CharactersFileFolder + item.path;
+				availableCharacters.push_back(characterId);
+				characterPaths.push_back(charaPath);
+				characterPathsArcade.push_back(charaPath);
+				characterHasAvailableEndingMap[characterId] = checkIfEndingIsAvailable(charaPath);
+				characterId += 1;
+			}
+		};
+		characterHasAvailableEndingMap[characterId] = true;
 		availableCharacters.push_back(characterId);
 		finalizeCharacterList();
 	};
 
-	/* finalize character list (costumes, cahracter infos, et cetera)*/
+	/* finalize character list (costumes, character infos, et cetera)*/
 	void FK_SceneCharacterSelectArcade::finalizeCharacterList() {
 		f32 totalProgress = (f32)characterPaths.size() + 1;
 		f32 currentProgress = 0;
@@ -1419,10 +1510,20 @@ namespace fk_engine{
 		characterInfos.clear();
 		for each(std::string chara_path in characterPaths) {
 			std::string temp;
-			loadSingleCharacterFile(charactersDirectory + chara_path, temp);
+			std::string fullPath = charactersDirectory + chara_path;
+			if (isValidCharacterPath(charactersDirectory + chara_path)) {
+				loadSingleCharacterFile(charactersDirectory + chara_path, temp);
+			}
+			else if (isValidCharacterPath(chara_path)) {
+				fullPath = chara_path;
+				loadSingleCharacterFile(chara_path, temp);
+			}
+			else {
+				temp = std::string();
+			}
 			std::wstring wtemp = fk_addons::convertNameToNonASCIIWstring(temp);
 			characterNames.push_back(wtemp);
-			loadSingleCharacterOutfitList(selectableCharacterIndex, characterInfos[charactersDirectory + chara_path]);
+			loadSingleCharacterOutfitList(selectableCharacterIndex, characterInfos[fullPath]);
 			selectableCharacterIndex += 1;
 			currentProgress += 1.f;
 			drawLoadingScreen(100.f * currentProgress / totalProgress);
@@ -1493,25 +1594,6 @@ namespace fk_engine{
 					outfit_id %= (s32)costumeListSize;
 					character->setOutfitId(characterAvailableCostumes[characterIndex][outfit_id].first);
 				}
-				/*if (!character->getOutfit().isAvailableFromBeginning){
-					if (!characterAvailableCostumes[characterIndex][outfit_id].second){
-						lighting = true;
-						validOutfit = onlyValidOutfit ? false : true;
-					}
-					else{
-						lighting = basicLighting;
-						validOutfit = true;
-					}
-					if (validOutfit == false){
-						outfit_id += 1;
-						outfit_id %= (s32)costumeListSize;
-						character->setOutfitId(characterAvailableCostumes[characterIndex][outfit_id].first);
-					}
-				}
-				else{
-					lighting = basicLighting;
-					validOutfit = true;
-				}*/
 			}
 		}
 		else{
@@ -1618,6 +1700,26 @@ namespace fk_engine{
 			}
 		};
 		stageFile.close();
+		//add workshop and dlc stages
+		for (auto item : enabledWorkshopItems) {
+			if (item.type == FK_WorkshopContentManager::WorkshopItemType::Stage &&
+				item.enabled) {
+				std::string stagePath;
+				stagePath = "..\\" + fk_constants::FK_WorkshopFolder + fk_constants::FK_StagesFileFolder + item.path;
+				if (!stagePath.empty()) {
+					stagePaths.push_back(stagePath);
+				}
+			}
+		};
+		//add workshop and dlc stages
+		for (auto item : enabledDLCItems) {
+			if (item.type == FK_WorkshopContentManager::WorkshopItemType::Stage &&
+				item.enabled) {
+				std::string stagePath;
+				stagePath = "..\\" + fk_constants::FK_DLCFolder + fk_constants::FK_StagesFileFolder + item.path;
+				stagePaths.push_back(stagePath);
+			}
+		};
 		return stagePaths;
 	}
 
@@ -1713,12 +1815,12 @@ namespace fk_engine{
 		s32 arcadeIndex = -1;
 		s32 arcadeIndexClimaticOpponent = -1;
 		for (u32 i = 0; i < randomCharacters.size(); ++i){
-			if (characterPaths[playerIndex] == characterPathsArcade[i]){
-				arcadeIndex = (s32)i;
+			if (characterPaths[playerIndex] == characterPathsArcade[randomCharacters[i]]){
+				arcadeIndex = (s32)randomCharacters[i];
 			}
 			if (hasClimaticBattle){
-				if (characterArcadeFlow.climaticBattleOpponentPath == characterPathsArcade[i]){
-					arcadeIndexClimaticOpponent = (s32)i;
+				if (characterArcadeFlow.climaticBattleOpponentPath == characterPathsArcade[randomCharacters[i]]){
+					arcadeIndexClimaticOpponent = (s32)randomCharacters[i];
 				}
 			}
 		}
@@ -1754,7 +1856,9 @@ namespace fk_engine{
 		drawArcadeLadderLoadingScreen(loadingProgress);
 
 		// using built-in random generator to shuffle vector
-		std::random_shuffle(randomCharacters.begin(), randomCharacters.end());
+		std::random_device rd;
+		std::mt19937 randomGenerator(rd());
+		std::shuffle(randomCharacters.begin(), randomCharacters.end(), randomGenerator);
 		// build player paths
 		std::vector<std::string> availablePlayerPaths = std::vector<std::string>();
 		for (int i = 0; i < randomCharacters.size(); ++i){
@@ -1768,7 +1872,7 @@ namespace fk_engine{
 		if (hasClimaticBattle){
 			availableStages.erase(std::remove(availableStages.begin(), availableStages.end(), climaticBattleStagePath), availableStages.end());
 		}
-		std::random_shuffle(availableStages.begin(), availableStages.end());
+		std::shuffle(availableStages.begin(), availableStages.end(), randomGenerator);
 		// prepare AI array
 
 		f32 loadingProgressAdvancePerCharacter = (100.0f - loadingProgress) / (numberOfMatches + 1);
@@ -1901,9 +2005,10 @@ namespace fk_engine{
 
 		loadingProgress += 5.0f;
 		drawArcadeLadderLoadingScreen(loadingProgress);
-
+		std::random_device rd;
+		std::mt19937 randomGenerator(rd());
 		// using built-in random generator to shuffle vector
-		std::random_shuffle(randomCharacters.begin(), randomCharacters.end());
+		std::shuffle(randomCharacters.begin(), randomCharacters.end(), randomGenerator);
 		// build player paths
 		std::vector<std::string> availablePlayerPaths = std::vector<std::string>();
 		for (int i = 0; i < randomCharacters.size(); ++i) {
@@ -1913,7 +2018,7 @@ namespace fk_engine{
 		std::vector<std::string> availableStages = loadStageList();
 		// remove the boss stage
 		availableStages.erase(std::remove(availableStages.begin(), availableStages.end(), stageBossPath), availableStages.end());
-		std::random_shuffle(availableStages.begin(), availableStages.end());
+		std::shuffle(availableStages.begin(), availableStages.end(), randomGenerator);
 		// prepare AI array
 
 		f32 loadingProgressAdvancePerCharacter = (100.0f - loadingProgress) / (numberOfMatches + 1);

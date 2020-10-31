@@ -33,6 +33,7 @@ namespace fk_engine{
 		bool KeyIsDownJoypad2[32];*/
 		std::map<int, bool*> KeyIsDownJoypad;
 		std::map<int, SEvent::SJoystickEvent> JoypadState;
+		//std::map<int, int> joypadIndexMap;
 		const f32 AxisMaximumMovement = 32767.f;
 		const int maxInputSize = 256;
 		u32 joypadRecordedNumber;

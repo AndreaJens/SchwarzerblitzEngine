@@ -69,6 +69,7 @@ namespace fk_engine{
 		intrinsicRotation = otherBullet->getIntrinsicRotation();
 		rotation = otherBullet->getRotation();
 		velocityPerSecond = otherBullet->getVelocity();
+		accelerationPerSecond = otherBullet->getAcceleration();
 		range = otherBullet->getRange();
 		scale = otherBullet->getScale();
 		meshFilePath = otherBullet->getMeshPath();
@@ -258,6 +259,10 @@ namespace fk_engine{
 	void FK_Bullet::setVelocity(core::vector3df new_velocity){ 
 		velocityPerSecond = new_velocity; 
 	}
+	void FK_Bullet::setAcceleration(core::vector3df new_acceleration)
+	{
+		accelerationPerSecond = new_acceleration;
+	}
 	//! set hitbox radius
 	void FK_Bullet::setHitboxRadius(core::vector3df new_radius){
 		hitboxRadius = new_radius;
@@ -319,6 +324,10 @@ namespace fk_engine{
 	//! get velocity
 	core::vector3df FK_Bullet::getVelocity(){
 		return velocityPerSecond;
+	}
+	core::vector3df FK_Bullet::getAcceleration()
+	{
+		return accelerationPerSecond;
 	}
 	//! get hitbox radius
 	core::vector3df FK_Bullet::getHitboxRadius(){
@@ -388,6 +397,7 @@ namespace fk_engine{
 			}
 		}
 		else{
+			velocityPerSecond += accelerationPerSecond * frame_delta_time;
 			core::vector3df realVelocity;
 			float angle_degree = rotation.Y - intrinsicRotation.Y;
 			float angle = angle_degree * 3.1415926f / 180.0f;

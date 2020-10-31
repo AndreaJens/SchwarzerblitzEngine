@@ -23,7 +23,8 @@ namespace fk_engine {
 			"Game Options",
 			"Keyboard settings (single player)",
 			"Keyboard settings (multiplayer)",
-			"Joypad settings",
+			"Joypad settings (player 1)",
+			"Joypad settings (player 2)",
 			"Remap joypad to std. controller",
 			"Back",
 		};
@@ -31,7 +32,8 @@ namespace fk_engine {
 			"Customize game options",
 			"Customize the keyboard layout for single player game modes",
 			"Customize the keyboard layout for split-keyboard multiplayer games",
-			"Customize the joypad layout (can be selected only if at least a joypad is connected)",
+			"Customize the joypad layout (player 1)",
+			"Customize the joypad layout (player 2)",
 			"Remap the joypad layout on the standard joypad layout used throughout the game. Normally, you need to do this only once",
 			"Go back to selection",
 		};
@@ -39,13 +41,18 @@ namespace fk_engine {
 			FK_SceneOptions_SubSystem::GameOptions,
 			FK_SceneOptions_SubSystem::KeyboardRemappingSolo,
 			FK_SceneOptions_SubSystem::KeyboardRemappingMultiplayer,
-			FK_SceneOptions_SubSystem::JoypadRemapping,
+			FK_SceneOptions_SubSystem::JoypadRemappingPlayer1,
+			FK_SceneOptions_SubSystem::JoypadRemappingPlayer2,
 			FK_SceneOptions_SubSystem::JoypadToXboxTranslation,
 			FK_SceneOptions_SubSystem::BackToMenu,
 		};
-		menuOptionsCategoriesActiveItems = { true, true, true, false, false, true };
+		menuOptionsCategoriesActiveItems = { true, true, true, false, false, false, true };
 		if (joystickInfo.size() > 0) {
 			menuOptionsCategoriesActiveItems[3] = true;
+			menuOptionsCategoriesActiveItems[5] = true;
+		}
+
+		if (joystickInfo.size() > 1) {
 			menuOptionsCategoriesActiveItems[4] = true;
 		}
 
@@ -74,11 +81,13 @@ namespace fk_engine {
 		menuOptionsStrings.push_back("AI Level");
 
 		gameOptionsIndex = {
-			11,12,13,14,15
+			11,12,13,14,15, 17, 18
 		};
 
 		// additional and late options
 		menuOptionsStrings.push_back("Dynamic resolution");
+		menuOptionsStrings.push_back("Player 1 frame delay");
+		menuOptionsStrings.push_back("Player 2 frame delay");
 
 		// other
 		menuOptionsStrings.push_back("Cancel");
@@ -112,6 +121,8 @@ namespace fk_engine {
 
 		// additional
 		menuOptionsCaptions.push_back("When ON, if the frame rate is low, dynamic resolution tries to improve performance by reducing the rendering size. Switching it OFF prevents this optimization, by always keeping the nominal resolution active");
+		menuOptionsCaptions.push_back("Set additional frames of input delay for player 1. This can be useful while playing against a friend through Parsec/Steam Remote Play Together");
+		menuOptionsCaptions.push_back("Set additional frames of input delay for player 2. This can be useful while playing against a friend through Parsec/Steam Remote Play Together");
 
 		//other
 		menuOptionsCaptions.push_back("Cancel changes and go back to the option screen");
@@ -122,6 +133,7 @@ namespace fk_engine {
 		}
 
 		//set additional spacing after certain options
+		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_AILevel] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_Resolution] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_DynamicResolution] = true;
 		additionalSpacingAfterOptionIndex[FK_SceneOptions_OptionsIndex::Opt_SFXVolume] = true;

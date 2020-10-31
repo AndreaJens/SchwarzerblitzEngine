@@ -8,13 +8,21 @@ using namespace gui;
 
 namespace fk_engine{
 	FK_SceneCredits::FK_SceneCredits() : FK_SceneWithInput(){
-		
+		fadeToBlackFlag = true;
+		showPicturesSlideshow = false;
+		configurationFileName = std::string();
+		pictureDurationCounter = -1;
+		currentPictureDurationMs = 0;
+		pictureIndex = 0;
 	};
 	FK_SceneCredits::FK_SceneCredits(IrrlichtDevice *newDevice, core::array<SJoystickInfo> joypadInfo,
-		FK_Options* newOptions, bool fadeToBlack) : FK_SceneCredits(){
+		FK_Options* newOptions, bool fadeToBlack, bool showPictures, std::string newConfigFileName) : FK_SceneCredits(){
 		FK_SceneWithInput::setup(newDevice, joypadInfo, newOptions);
-		FK_SceneCredits::initialize();
 		fadeToBlackFlag = fadeToBlack;
+		showPicturesSlideshow = showPictures;
+		configurationFileName = newConfigFileName;
+		pictureDurationCounter = -1;
+		FK_SceneCredits::initialize();
 	};
 
 	/* update input*/
@@ -74,6 +82,26 @@ namespace fk_engine{
 			}
 			credits_bgm.setVolume(creditsBGMvolume * gameOptions->getMusicVolume() * ratio);
 		}
+		if (showPicturesSlideshow) {
+			if (pictureDurationCounter < 0) {
+				if (pictureIndex < pictures.size()) {
+					std::string picturePath = mediaPath + pictures[pictureIndex].path;
+					if (pictures[pictureIndex].duration < 0) {
+						pictureDurationCounter = defaultPictureDurationMs;
+						currentPictureDurationMs = defaultPictureDurationMs;
+					}
+					else {
+						pictureDurationCounter = pictures[pictureIndex].duration;
+						currentPictureDurationMs = pictureDurationCounter;
+					}
+					lastFrame = driver->getTexture(picturePath.c_str());
+					pictureIndex += 1;
+				}
+			}
+			else {
+				pictureDurationCounter -= delta_t_ms;
+			}
+		}
 		// draw scene
 		driver->beginScene(ECBF_COLOR | ECBF_DEPTH, SColor(255, 0, 0, 0));
 		FK_SceneWithInput::executePreRenderingRoutine();
@@ -116,6 +144,7 @@ namespace fk_engine{
 		basicSize = (f32)fsize.Height;
 		setNextScene(FK_SceneType::SceneMainMenu);
 		readLinesFromFile();
+		readPicturesFromFile();
 		setupBGM();
 		video::IImage* image = driver->createScreenShot();
 		lastFrame = fk_addons::ImageTexture(driver, image, "lastScreenshot");
@@ -257,6 +286,25 @@ namespace fk_engine{
 		};
 		core::rect<s32> sourceRect = core::rect<s32>(0, 0, lastFrame->getSize().Width, lastFrame->getSize().Height);
 		driver->draw2DImage(lastFrame, core::rect<s32>(0, 0, screenSize.Width, screenSize.Height), sourceRect, 0, vertexColors);
+		if (showPicturesSlideshow) {
+			core::rect<s32> destRect(0, 0, screenSize.Width, screenSize.Height);
+			s32 alpha = 1;
+			if (pictureDurationCounter <= defaultFadeInTimeMsSlideshow) {
+				alpha = 255 * (defaultFadeInTimeMsSlideshow - pictureDurationCounter) / defaultFadeInTimeMsSlideshow;
+			}
+			else if (pictureDurationCounter >= (currentPictureDurationMs - defaultFadeInTimeMsSlideshow)) {
+				s32 delta = currentPictureDurationMs - defaultFadeInTimeMsSlideshow;
+				alpha = 255 * (pictureDurationCounter - delta) / defaultFadeInTimeMsSlideshow;
+			}
+			alpha = core::clamp(alpha, 1, 255);
+			if (pictureIndex > pictures.size()) {
+				alpha = 255;
+			}
+			if (alpha > 1) {
+				video::SColor const color = video::SColor(alpha, 0, 0, 0);
+				driver->draw2DRectangle(color, destRect);
+			}
+		}
 	}
 
 	// draw
@@ -271,6 +319,9 @@ namespace fk_engine{
 
 	void FK_SceneCredits::readLinesFromFile(){
 		std::string filename = mediaPath + CreditsResourcesDirectory + FK_SceneCredits::CreditsFileName;
+		if (!configurationFileName.empty()) {
+			filename = mediaPath + CreditsResourcesDirectory + configurationFileName;
+		}
 		std::ifstream inputFile(filename.c_str());
 		std::string line;
 		inputFile >> creditsBGMName >> creditsBGMvolume >> creditsBGMpitch;
@@ -283,6 +334,19 @@ namespace fk_engine{
 			}
 			else{
 				lines.push_back(line);
+			}
+		};
+	}
+
+	void FK_SceneCredits::readPicturesFromFile() {
+		std::string filename = mediaPath + CreditsResourcesDirectory + FK_SceneCredits::PicturesFileName;
+		std::ifstream inputFile(filename.c_str());
+		std::string line;
+		while (!inputFile.eof()) {
+			FK_CreditPicture pic;
+			inputFile >> pic.path >> pic.duration;
+			if (!pic.path.empty()) {
+				pictures.push_back(pic);
 			}
 		};
 	}

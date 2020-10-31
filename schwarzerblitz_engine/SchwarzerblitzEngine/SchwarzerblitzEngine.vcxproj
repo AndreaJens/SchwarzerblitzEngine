@@ -49,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)..\SFML-2.3.2\include;$(SolutionDir)..\irrlicht\schwarzerlicht\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\SFML-2.3.2\lib;$(SolutionDir)..\irrlicht\schwarzerlicht\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
-    <TargetName>Schwarzerblitz Engine v1.0</TargetName>
+    <TargetName>Schwarzerblitz Engine v1.3</TargetName>
     <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -82,6 +82,7 @@
     <ClCompile Include="CShaderPre.cpp" />
     <ClCompile Include="EffectHandler.cpp" />
     <ClCompile Include="ExternalAddons.cpp" />
+    <ClCompile Include="FK_AchievementManager.cpp" />
     <ClCompile Include="FK_AIManager.cpp" />
     <ClCompile Include="FK_AnimationEndCallback.cpp" />
     <ClCompile Include="FK_AnimationKeyMap.cpp" />
@@ -124,11 +125,13 @@
     <ClCompile Include="FK_SceneGameTraining_TrainingOptionsMenu.cpp" />
     <ClCompile Include="FK_SceneGameTutorial.cpp" />
     <ClCompile Include="FK_SceneInputMapping.cpp" />
+    <ClCompile Include="FK_SceneInputMapping_JoypadPlayer.cpp" />
     <ClCompile Include="FK_SceneInputMapping_Joypads.cpp" />
     <ClCompile Include="FK_SceneInputMapping_MultiplayerKeyboard.cpp" />
     <ClCompile Include="FK_SceneInputMapping_SingleplayerKeyboard.cpp" />
     <ClCompile Include="FK_SceneIntro.cpp" />
     <ClCompile Include="FK_SceneMainMenu.cpp" />
+    <ClCompile Include="FK_SceneMusicPlayer.cpp" />
     <ClCompile Include="FK_SceneOptions.cpp" />
     <ClCompile Include="FK_SceneOptionsEmbedded.cpp" />
     <ClCompile Include="FK_SceneStoryDialogue.cpp" />
@@ -155,6 +158,7 @@
     <ClCompile Include="FK_StoryFlowCluster.cpp" />
     <ClCompile Include="FK_Tutorial.cpp" />
     <ClCompile Include="FK_Window.cpp" />
+    <ClCompile Include="FK_WorkshopContentManager.cpp" />
     <ClCompile Include="FK_WorldCollisionCallback.cpp" />
     <ClCompile Include="Irrlicht_TMovie.cpp" />
     <ClCompile Include="Main.cpp">
@@ -170,6 +174,7 @@
     <ClInclude Include="EffectHandler.h" />
     <ClInclude Include="EffectShaders.h" />
     <ClInclude Include="ExternalAddons.h" />
+    <ClInclude Include="FK_AchievementManager.h" />
     <ClInclude Include="FK_AIManager.h" />
     <ClInclude Include="FK_AnimationEndCallback.h" />
     <ClInclude Include="FK_AnimationKeyMap.h">
@@ -209,11 +214,13 @@
     <ClInclude Include="FK_SceneGameStory.h" />
     <ClInclude Include="FK_SceneGameTutorial.h" />
     <ClInclude Include="FK_SceneInputMapping.h" />
+    <ClInclude Include="FK_SceneInputMapping_JoypadPlayer.h" />
     <ClInclude Include="FK_SceneInputMapping_Joypads.h" />
     <ClInclude Include="FK_SceneInputMapping_MultiplayerKeyboard.h" />
     <ClInclude Include="FK_SceneInputMapping_SingleplayerKeyboard.h" />
     <ClInclude Include="FK_SceneIntro.h" />
     <ClInclude Include="FK_SceneMainMenu.h" />
+    <ClInclude Include="FK_SceneMusicPlayer.h" />
     <ClInclude Include="FK_SceneOptions.h" />
     <ClInclude Include="FK_SceneOptionsEmbedded.h" />
     <ClInclude Include="FK_SceneStoryDialogue.h" />
@@ -244,6 +251,7 @@
     <ClInclude Include="FK_StoryFlowCluster.h" />
     <ClInclude Include="FK_Tutorial.h" />
     <ClInclude Include="FK_Window.h" />
+    <ClInclude Include="FK_WorkshopContentManager.h" />
     <ClInclude Include="FK_WorldCollisionCallback.h" />
     <ClInclude Include="FK_SceneGameTraining.h" />
     <ClInclude Include="FK_SceneCredits.h" />

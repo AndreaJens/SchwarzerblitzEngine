@@ -54,6 +54,7 @@ namespace fk_engine{
 		bool isGameButton(FK_Input_Buttons testButton);
 		bool isMenuButton(FK_Input_Buttons testButton);
 		void exitScene(bool playSound = true);
+		virtual void exitSceneFromExitMenu(bool playSound = true);
 		void saveAndExit(bool playSound = true);
 		virtual u32 getLastPressedButton();
 		virtual void updateSelection();

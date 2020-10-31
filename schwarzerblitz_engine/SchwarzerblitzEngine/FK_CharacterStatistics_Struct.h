@@ -109,6 +109,7 @@ namespace fk_engine{
 		const std::string UnlockAllContentsTag = "iwantitalliwantitalliwantitnow";
 		const std::string UnlockAllCharactersTag = "everyoneisherethefeastcansoonbegin";
 		const std::string UnlockAllStagesTag = "allaroundtheworld";
+		const std::string UnlockExtraCostumesTag = "emperorsnewclothes";
 	};
 }
 

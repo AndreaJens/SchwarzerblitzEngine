@@ -590,7 +590,13 @@ namespace fk_engine{
 		}
 		endScene = true;
 		Sleep(200);
-	};
+	}
+
+	void FK_SceneInputMapping::exitSceneFromExitMenu(bool playSound)
+	{
+		exitScene(playSound);
+	}
+	
 
 	// end scene
 	void FK_SceneInputMapping::saveAndExit(bool playSound){
@@ -658,6 +664,7 @@ namespace fk_engine{
 		inputButtonsForMenu |= player2input->getPressedButtons();
 		if ((inputButtonsForMenu & FK_Input_Buttons::Cancel_Button) != 0){
 			deactivateExitMenu();
+			Sleep(300);
 			return;
 		}
 		else{
@@ -670,7 +677,7 @@ namespace fk_engine{
 					saveAndExit(false);
 					break;
 				case 1:
-					exitScene(false);
+					exitSceneFromExitMenu(false);
 					break;
 				case 2:
 					deactivateExitMenu();

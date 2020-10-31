@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <Windows.h>
+#include <filesystem>
 
 namespace fk_engine{
 	FK_SceneCharacterSelect::FK_SceneCharacterSelect() : FK_SceneCharacterSelect_Base(){
@@ -749,11 +750,6 @@ namespace fk_engine{
 	void FK_SceneCharacterSelect::updateCharacterSelection(bool force_update){
 		// break if thread is loading
 		if (force_update || oldIndexPlayer1 != player1Index || player1OldOutfitId != player1OutfitId){
-			//if (!(player1ThreadProcessing.load())){
-			//std::cout << "loading Player1" << std::endl;
-			//bool thread1Flag = player1ThreadProcessing.load();
-			//bool thread2Flag = player2ThreadProcessing.load();
-			//bool threadFlag = thread1Flag || thread2Flag;
 			bool threadFlag = false;
 			if (player1Character != NULL){
 				std::exception_ptr eptr;
@@ -800,7 +796,11 @@ namespace fk_engine{
 					delete player1Character;
 					player1Character = NULL;
 				}
-				loadPlayer1Character(charactersDirectory + player1Path, player1Position,
+				std::string fullPath = charactersDirectory + player1Path;
+				if (!isValidCharacterPath(fullPath) && isValidCharacterPath(player1Path)) {
+					fullPath = player1Path;
+				}
+				loadPlayer1Character(fullPath, player1Position,
 					player1OutfitId, playerAngle, changeOutfitOnly);
 				oldIndexPlayer1 = player1Index;
 				player1OldOutfitId = player1OutfitId;
@@ -863,7 +863,11 @@ namespace fk_engine{
 				//loadPlayer2CharacterThread = std::thread(
 				//&FK_SceneCharacterSelect::loadPlayer2Character, this, charactersDirectory + player2Path,
 				//player2Position, player2OutfitId, playerAngle);
-				loadPlayer2Character(charactersDirectory + player2Path, player2Position,
+				std::string fullPath = charactersDirectory + player2Path;
+				if (!isValidCharacterPath(fullPath) && isValidCharacterPath(player2Path)) {
+					fullPath = player2Path;
+				}
+				loadPlayer2Character(fullPath, player2Position,
 					player2OutfitId, playerAngle, changeOutfitOnly);
 				oldIndexPlayer2 = player2Index;
 				player2OldOutfitId = player2OutfitId;
@@ -1172,6 +1176,9 @@ namespace fk_engine{
 			std::string previewPictureFilename = mediaPath + FK_SceneCharacterSelect_Base::SelectionResourcePath + "random_stage_preview.jpg";
 			if (stageIndex >= 0){
 				previewPictureFilename = stagesResourcePath + stagePaths[stageIndex] + "preview.jpg";
+				if (!isValidStagePath(stagesResourcePath + stagePaths[stageIndex]) && isValidStagePath(stagePaths[stageIndex])) {
+					previewPictureFilename = stagePaths[stageIndex] + "preview.jpg";
+				}
 			}
 			video::ITexture* tex = driver->getTexture(previewPictureFilename.c_str());
 			core::dimension2d<u32> texSize = tex->getSize();
@@ -1507,10 +1514,6 @@ namespace fk_engine{
 
 			// change text color accordingly
 			video::SColor tcolor = normalTextColor;
-			if (!isCharacterSelectable(player1Character, true)) {
-				tcolor = inactiveTextColor;
-			}
-
 			// draw different icon and text, depending on the keyboard/joypad notation
 			// start by drawing the modifier/change costume button
 			core::dimension2d<u32> iconSize = modifierButtonTexture->getSize();
@@ -1541,7 +1544,7 @@ namespace fk_engine{
 					keyboardLetterColor, keyboardLetterBorder,
 					true, true);
 			}
-
+			
 			std::wstring itemToDraw = L": " + costumeSelectionText;
 			textSize = hintfont->getDimension(itemToDraw.c_str());
 			core::rect<s32> destRect = core::rect<s32>(
@@ -1557,7 +1560,9 @@ namespace fk_engine{
 
 			// offset y
 			y -= textSize.Height;
-
+			if (!isCharacterSelectable(player1Character, true)) {
+				tcolor = inactiveTextColor;
+			}
 			if (player1UsesJoypad) {
 				modifierButtonTexture = joypadButtonsTexturesMap[
 					(FK_JoypadInput)buttonInputLayoutPlayer1[FK_Input_Buttons::Selection_Button]];
@@ -1678,9 +1683,9 @@ namespace fk_engine{
 
 			// change text color accordingly
 			video::SColor tcolor = normalTextColor;
-			if (!isCharacterSelectable(player2Character, false)) {
-				tcolor = inactiveTextColor;
-			}
+			//if (!isCharacterSelectable(player2Character, false)) {
+			//	tcolor = inactiveTextColor;
+			//}
 
 			// draw different icon and text, depending on the keyboard/joypad notation
 			// start by drawing the modifier/change costume button
@@ -1741,6 +1746,10 @@ namespace fk_engine{
 			}
 			else {
 				modifierButtonTexture = keyboardButtonTexture;
+			}
+
+			if (!isCharacterSelectable(player2Character, false)) {
+				tcolor = inactiveTextColor;
 			}
 
 			itemToDraw = characterSelectionText + L": ";
@@ -1859,7 +1868,11 @@ namespace fk_engine{
 			(s32)screenSize.Width, (s32)screenSize.Height));
 		std::string previewPictureFilename = mediaPath + FK_SceneCharacterSelect_Base::SelectionResourcePath + "random_stage_preview.jpg";
 		if (stageIndex >= 0){
-			previewPictureFilename = stagesResourcePath + stagePaths[stageIndex] + "preview.jpg";
+			std::string fullPath = stagesResourcePath + stagePaths[stageIndex];
+			if (!isValidStagePath(fullPath) && isValidStagePath(stagePaths[stageIndex])) {
+				fullPath = stagePaths[stageIndex];
+			}
+			previewPictureFilename = fullPath + "preview.jpg";
 			currentStageName = stageNames[stageIndex];
 		}
 		video::ITexture* tex = driver->getTexture(previewPictureFilename.c_str());
@@ -2327,6 +2340,9 @@ namespace fk_engine{
 		characterInfos.clear();
 		dummyCharacterDirectory = "chara_dummy\\";
 		std::string characterFileName = charactersDirectory + fk_constants::FK_CharacterRosterFileName;
+		if (gameOptions->getTourneyMode()) {
+			characterFileName = charactersDirectory + "tourney_" + fk_constants::FK_CharacterRosterFileName;
+		}
 		std::ifstream characterFile(characterFileName.c_str());
 		u32 characterId = 0;
 		std::string charaPath = std::string();
@@ -2360,12 +2376,44 @@ namespace fk_engine{
 				}
 			}
 		};
+		if (!gameOptions->getTourneyMode()) {
+			// load workshop characters
+			for (auto item : enabledWorkshopItems) {
+				if (item.type == FK_WorkshopContentManager::WorkshopItemType::Character &&
+					item.enabled) {
+					charaPath = "..\\" + fk_constants::FK_WorkshopFolder + fk_constants::FK_CharactersFileFolder + item.path;
+					if (!charaPath.empty()) {
+						availableCharacters.push_back(characterId);
+						characterPaths.push_back(charaPath);
+					}
+					characterId += 1;
+				}
+			};
+			// load dlc characters
+			for (auto item : enabledDLCItems) {
+				if (item.type == FK_WorkshopContentManager::WorkshopItemType::Character &&
+					item.enabled) {
+					charaPath = "..\\" + fk_constants::FK_DLCFolder + fk_constants::FK_CharactersFileFolder + item.path;
+					availableCharacters.push_back(characterId);
+					characterPaths.push_back(charaPath);
+					characterId += 1;
+				}
+			};
+		}
 		availableCharacters.push_back(characterId);
 		f32 totalProgress = (f32)characterPaths.size() + 1;
 		f32 currentProgress = 0;
 		for each(std::string chara_path in characterPaths){
 			std::string temp;
-			loadSingleCharacterFile(charactersDirectory + chara_path, temp);
+			if (isValidCharacterPath(charactersDirectory + chara_path)){
+				loadSingleCharacterFile(charactersDirectory + chara_path, temp);
+			}
+			else if (isValidCharacterPath(chara_path)){
+				loadSingleCharacterFile(chara_path, temp);
+			}
+			else {
+				temp = std::string();
+			}
 			std::wstring wtemp = fk_addons::convertNameToNonASCIIWstring(temp);
 			characterNames.push_back(wtemp);
 			currentProgress += 1.f;
@@ -2416,6 +2464,7 @@ namespace fk_engine{
 							if (outfit_id == player2Character->getOutfitId()) {
 								outfit_id += 1;
 								outfit_id %= character->getNumberOfOutfits();
+								character->setOutfitId(outfit_id);
 							}
 						}
 					}
@@ -2424,6 +2473,7 @@ namespace fk_engine{
 							if (outfit_id == player1Character->getOutfitId()) {
 								outfit_id += 1;
 								outfit_id %= character->getNumberOfOutfits();
+								character->setOutfitId(outfit_id);
 							}
 						}
 					}
@@ -2492,6 +2542,9 @@ namespace fk_engine{
 		stagePaths.clear();
 		stageReady = false;
 		std::string stageFileName = stagesResourcePath + fk_constants::FK_AvailableStagesFileName;
+		if (gameOptions->getTourneyMode()) {
+			stageFileName = stagesResourcePath + "tourney_" + fk_constants::FK_AvailableStagesFileName;
+		}
 		std::ifstream stageFile(stageFileName.c_str());
 		while (!stageFile.eof()){
 			std::string stagePath;
@@ -2503,14 +2556,40 @@ namespace fk_engine{
 				stagePaths.push_back(stagePath);
 			}
 		};
+		if (!gameOptions->getTourneyMode()) {
+			//add workshop and dlc stages
+			for (auto item : enabledWorkshopItems) {
+				if (item.type == FK_WorkshopContentManager::WorkshopItemType::Stage &&
+					item.enabled) {
+					std::string stagePath;
+					stagePath = "..\\" + fk_constants::FK_WorkshopFolder + fk_constants::FK_StagesFileFolder + item.path;
+					if (!stagePath.empty()) {
+						stagePaths.push_back(stagePath);
+					}
+				}
+			};
+			//add workshop and dlc stages
+			for (auto item : enabledDLCItems) {
+				if (item.type == FK_WorkshopContentManager::WorkshopItemType::Stage &&
+					item.enabled) {
+					std::string stagePath;
+					stagePath = "..\\" + fk_constants::FK_DLCFolder + fk_constants::FK_StagesFileFolder + item.path;
+					stagePaths.push_back(stagePath);
+				}
+			};
+		}
 		stageNames.clear();
 		// load stage names & sound clips
 		for each (std::string stagePath in stagePaths)
 		{
+			std::string stageFullPath = stagesResourcePath + stagePath;
+			if (!isValidStagePath(stageFullPath) && isValidStagePath(stagePath)) {
+				stageFullPath = stagePath;
+			}
 			// load stage clips
-			soundManager->addSoundFullPath(stagePath, stagesResourcePath + stagePath + fk_constants::FK_VoiceoverEffectsFileFolder + "name.wav");
+			soundManager->addSoundFullPath(stagePath, stageFullPath + fk_constants::FK_VoiceoverEffectsFileFolder + "name.wav");
 			// load stage name
-			std::ifstream stageFile((stagesResourcePath + stagePath + "config.txt").c_str());
+			std::ifstream stageFile((stageFullPath + "config.txt").c_str());
 			std::string stageFileKeyName = "#NAME";
 			std::string wallboxKeyName = "#WALLBOX";
 			std::string ringoutKeyName = "#ALLOW_RINGOUT";

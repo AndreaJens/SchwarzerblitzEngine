@@ -12,6 +12,7 @@ namespace fk_engine {
 			CheatUnlockAllStages = 1 << 1,
 			CheatUnlockAllStoryEpisodes = 1 << 2,
 			CheatUnlockAllCostumes = 1 << 3,
+			CheatUnlockExtraCostumes = 1 << 4,
 			CheatTriggerFest = 1 << 28,
 			CheatWireframe = 1 << 29,
 			CheatMoonGravity = 1 << 30,

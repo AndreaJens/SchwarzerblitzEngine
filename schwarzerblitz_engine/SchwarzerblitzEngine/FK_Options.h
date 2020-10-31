@@ -93,6 +93,10 @@ namespace fk_engine{
 			ArcadeRounds,
 			PostProcessingEffects,
 			LightEffects,
+			InputDelayPlayer1,
+			InputDelayPlayer2,
+			MasterVolume,
+			TourneyMode,
 		};
 	public:
 		FK_Options();
@@ -113,6 +117,7 @@ namespace fk_engine{
 		void setVoicesMute(bool muteVoices);
 		void setMusicVolume(f32 new_volume);
 		void setMusicMute(bool muteMusic);
+		void setMasterVolume(f32 new_volume);
 		void setAILevel(FK_AILevel newAILevel);
 		void setTimerArcade(FK_TimerOptions timerOption);
 		void setTimerFreeMatch(FK_TimerOptions timerOption);
@@ -127,6 +132,9 @@ namespace fk_engine{
 		void increaseResolutionIndex(bool fullscreen);
 		void decreaseResolutionIndex(bool fullscreen);
 		void setDynamicResolutionScalingFlag(bool dynamicResolutionFlag);
+		void setInputDelayPlayer1(u32 newPlayer1DelayFrames);
+		void setInputDelayPlayer2(u32 newPlayer1DelayFrames);
+		void setTourneyMode(bool tourneyFlag);
 		//std::vector<u32> getAvailableScreenResolutions(bool fullscreenResolutionFlag);
 		/* getters */
 		core::dimension2d<u32> getResolution();
@@ -141,6 +149,7 @@ namespace fk_engine{
 		bool getVoicesMute();
 		f32 getMusicVolume();
 		bool getMusicMute();
+		f32 getMasterVolume();
 		u32 getAILevel();
 		u32 getTimerArcade();
 		u32 getTimerFreeMatch();
@@ -153,10 +162,13 @@ namespace fk_engine{
 		FK_ShadowsSettings getLightEffectsActiveFlag();
 		u32 getTextureQuality();
 		u32 getShadowQuality();
+		u32 getInputDelayPlayer1();
+		u32 getInputDelayPlayer2();
 		FK_PostProcessingEffect getPostProcessingShadersFlag();
 		void setActiveCheatCodes(u32 cheatCodes);
 		u32 getActiveCheatCodes();
 		bool getDynamicResolutionScalingFlag();
+		bool getTourneyMode();
 	private:
 		//FK_ScreenResolutions current_resolutionFlag;
 		//FK_ScreenResolutions current_resolutionFlag_Windowed;
@@ -186,6 +198,10 @@ namespace fk_engine{
 		f32 samplingFactor;
 		std::map<FK_OptionType, std::string> optionLabels;
 		u32 activeCheatCodes = 0;
+		u32 inputDelayPlayer1Frames = 0;
+		u32 inputDelayPlayer2Frames = 0;
+		f32 masterVolume;
+		bool tourneyModeFlag;
 	};
 };
 #endif

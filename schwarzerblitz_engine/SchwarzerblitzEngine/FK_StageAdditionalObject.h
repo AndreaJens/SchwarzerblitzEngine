@@ -18,6 +18,7 @@ namespace fk_engine{
 		std::string getParticleTextureName();
 		core::vector3df getPosition();
 		core::vector3df getRotation();
+		core::vector3df getScale();
 		FK_StageAdditionalObject_AnimatorType getAnimatorType();
 		video::E_MATERIAL_TYPE getMaterialEffect();
 		scene::ISceneNodeAnimator* setupAnimator(scene::ISceneManager*);
@@ -29,6 +30,7 @@ namespace fk_engine{
 		void setMeshName(std::string);
 		void setPosition(core::vector3df position);
 		void setRotation(core::vector3df rotation);
+		void setScale(core::vector3df newScale);
 		void setMaterialEffect(video::E_MATERIAL_TYPE);
 		void setParticleTextureName(std::string new_name);
 		void setBackfaceCulling(bool new_flag);
@@ -40,6 +42,7 @@ namespace fk_engine{
 		std::string particleTextureName;
 		core::vector3df position;
 		core::vector3df rotation;
+		core::vector3df scale;
 		FK_StageAdditionalObject_AnimatorType animatorType;
 		std::string meshName;
 		video::E_MATERIAL_TYPE materialEffect;

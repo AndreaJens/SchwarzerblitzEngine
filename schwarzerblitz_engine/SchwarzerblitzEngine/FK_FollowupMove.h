@@ -17,6 +17,7 @@ namespace fk_engine{
 		void setName(std::string new_name);
 		irr::u32 getMoveId();
 		void setMoveId(irr::u32 newId);
+		bool operator==(const FK_FollowupMove& otherMove) const;
 	private:
 		std::string moveName;
 		irr::u32 moveId;

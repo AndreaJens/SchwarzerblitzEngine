@@ -5,10 +5,6 @@
 #include <stdlib.h>
 #include <SFML\Audio.hpp>
 #include "Shlwapi.h"
-//#include <thread>
-
-//#define DEBUG_FLAG_CHARACTER true
-//#define WINE_COMPATIBLE_VERSION true
 
 using namespace irr;
 using namespace core;
@@ -66,6 +62,8 @@ namespace fk_engine{
 		updateCounterAttackEffectFlag = false;
 		counterAttackEffectCounterMs = 0;
 		counterAttackEffectCooldownCounterMs = 0;
+		histopEffectCounterMs = 0;
+		updateHistopAttackEffectFlag = false;
 		triggerTimer = 0;
 		player1CollisionCallback = NULL;
 		player2CollisionCallback = NULL;
@@ -73,6 +71,11 @@ namespace fk_engine{
 		moveListPlayer1 = NULL;
 		moveListPlayer2 = NULL;
 		hudManager = NULL;
+		inputDelayMsPlayer1 = 0;
+		inputDelayMsPlayer2 = 0;
+		processingIntroStage = false;
+		processingIntroPlayer1 = false;
+		processingIntroPlayer2 = false;
 	};
 	/* create the setup function */
 	void FK_SceneGame::setup(IrrlichtDevice *newDevice,
@@ -144,6 +147,8 @@ namespace fk_engine{
 		for (int i = 0; i < 4; ++i){
 			scenePixelShaderParameters[i] = 0.0f;
 		}
+		inputDelayMsPlayer1 = gameOptions->getInputDelayPlayer1() * 1000 / 60;
+		inputDelayMsPlayer2 = gameOptions->getInputDelayPlayer2() * 1000 / 60;
 		// read save file
 		FK_SceneWithInput::readSaveFile();
 		// setup additional variables for every subclass
@@ -390,12 +395,12 @@ namespace fk_engine{
 				if (alphaParameter >= 1.f) {
 					alpha = 255;
 				}
-				if (alphaParameter >= 2.f) {
+				if (alphaParameter >= 2.5f) {
 					freeCameraCanTakePicture = true;
 				}
 				else {
 					core::rect<s32> screenRect = core::rect<s32>(0, 0, (s32)screenSize.Width, (s32)screenSize.Height);
-					driver->draw2DRectangle(video::SColor(alpha, 255, 255, 255), screenRect);
+					//driver->draw2DRectangle(video::SColor(alpha, 255, 255, 255), screenRect);
 				}
 			}
 		}
@@ -424,18 +429,34 @@ namespace fk_engine{
 
 	// update the match processing
 	void FK_SceneGame::update(){
+		bool performLogicUpdate = true;
 		if (!abortMatch){
 			/* update the timer*/
+			u32 inputUpdateDeltaTime = 0;
 			if (isPlayingReplay() && canUpdateInput() && !isPaused()){
 				//if (!isPaused()){
 				readReplayData(replayTimeInformationRead);
 				//}
 			}
 			else{
+				nowClock = std::chrono::high_resolution_clock::now();
+				auto elapsed = nowClock - thenClock;
+				long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+				long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 				nowReal = device->getTimer()->getRealTime();
 				now = device->getTimer()->getTime();
 				f32 timerSpeed = device->getTimer()->getSpeed();
 				// slow game down if fps are dwindling
+				// try to set an FPS limiter to 60 (test?)
+				inputUpdateDeltaTime = milliseconds;
+				if (microseconds < 16500) {
+					performLogicUpdate = false;
+					//Sleep(1);
+					//return;
+				}
+				else {
+					thenClock = nowClock;
+				}
 				u32 targetFrameSpeed = 40;
 				if (cycleId > 0 && (nowReal - thenReal) > targetFrameSpeed) {
 					u32 newTime = (u32)std::ceil((f32)then + (f32)targetFrameSpeed * timerSpeed);
@@ -458,6 +479,8 @@ namespace fk_engine{
 				cycleId = 1;
 				nowReal = device->getTimer()->getRealTime();
 				thenReal = device->getTimer()->getRealTime();
+				nowClock = std::chrono::high_resolution_clock::now();
+				thenClock = std::chrono::high_resolution_clock::now();
 				now = device->getTimer()->getTime();
 				then = now = device->getTimer()->getTime();
 				// set random seend
@@ -511,7 +534,9 @@ namespace fk_engine{
 					storeReplayData();
 				}
 				if (canUpdateInput() && !isPaused()){
-					updateInput(frameDeltaMsReal);
+					if (performLogicUpdate) {
+						updateInput(inputUpdateDeltaTime);
+					}
 				}
 			}
 
@@ -535,8 +560,12 @@ namespace fk_engine{
 			if (isProcessingThrow()){
 				updateThrowAttempt((u32)(1000 * frameDeltaTime));
 			}else{
-				player1->setLastDamagingMoveId(0);
-				player2->setLastDamagingMoveId(0);
+				if (!player1->isHitStun()) {
+					player1->setLastDamagingMoveId(0);
+				}
+				if (!player2->isHitStun()) {
+					player2->setLastDamagingMoveId(0);
+				}
 				/* update bullet collisions */
 				updateBulletCollisions();
 				/* update reactions and collisions*/
@@ -762,27 +791,38 @@ namespace fk_engine{
 	//! load loading textures
 	void FK_SceneGame::loadLoadingTextures(){
 		std::string previewPictureFilename = stagesPath + arena_configPath + "preview.jpg";
+		if (!isValidStagePath(stagesPath + arena_configPath) && isValidStagePath(arena_configPath)) {
+			previewPictureFilename = arena_configPath + "preview.jpg";
+		}
 		stageTex = driver->getTexture(previewPictureFilename.c_str());
 		font = device->getGUIEnvironment()->getFont(fk_constants::FK_GameFontIdentifier.c_str());
 		textFont = device->getGUIEnvironment()->getFont(fk_constants::FK_WindowFontIdentifier.c_str());
 		titleFont = device->getGUIEnvironment()->getFont(fk_constants::FK_BattleFontIdentifier.c_str());
-		player1NameLoadingScreen = getCharacterName(charactersPath + player1_configPath);
-		player2NameLoadingScreen = getCharacterName(charactersPath + player2_configPath);
+		std::string player1FullPath = charactersPath + player1_configPath;
+		std::string player2FullPath = charactersPath + player2_configPath;
+		if (!isValidCharacterPath(player1FullPath) && isValidCharacterPath(player1_configPath)) {
+			player1FullPath = player1_configPath;
+		}
+		if (!isValidCharacterPath(player2FullPath) && isValidCharacterPath(player2_configPath)) {
+			player2FullPath = player2_configPath;
+		}
+		player1NameLoadingScreen = getCharacterName(player1FullPath);
+		player2NameLoadingScreen = getCharacterName(player2FullPath);
 		if (!player1Outfit.outfitCharacterName.empty()){
 			player1NameLoadingScreen = player1Outfit.outfitCharacterName;
 		}
 		if (!player2Outfit.outfitCharacterName.empty()){
 			player2NameLoadingScreen = player2Outfit.outfitCharacterName;
 		}
-		player1Preview = driver->getTexture((charactersPath + player1_configPath + 
+		player1Preview = driver->getTexture((player1FullPath +
 			player1Outfit.outfitDirectory + "fightPreview.png").c_str());
 		if (!player1Preview){
-			player1Preview = driver->getTexture((charactersPath + player1_configPath + "fightPreview.png").c_str());
+			player1Preview = driver->getTexture((player1FullPath + "fightPreview.png").c_str());
 		}
-		player2Preview = driver->getTexture((charactersPath + player2_configPath +
+		player2Preview = driver->getTexture((player2FullPath +
 			player2Outfit.outfitDirectory + "fightPreview.png").c_str());
 		if (!player2Preview){
-			player2Preview = driver->getTexture((charactersPath + player2_configPath + "fightPreview.png").c_str());
+			player2Preview = driver->getTexture((player2FullPath + "fightPreview.png").c_str());
 		}
 		// load story from stage file
 
@@ -966,6 +1006,8 @@ namespace fk_engine{
 	}
 	/* pause game*/
 	void FK_SceneGame::pauseGame(){
+		delayedInputBufferPlayer1.clear();
+		delayedInputBufferPlayer2.clear();
 		pause = true;
 		device->getTimer()->setSpeed(0.0f);
 		stage_bgm.setVolume(stage->getBGMPauseVolume() * gameOptions->getMusicVolume());
@@ -1471,6 +1513,14 @@ namespace fk_engine{
 
 	/* setup announcer*/
 	void FK_SceneGame::setupAnnouncer(){
+		std::string player1FullPath = charactersPath + player1_configPath;
+		std::string player2FullPath = charactersPath + player2_configPath;
+		if (!isValidCharacterPath(player1FullPath) && isValidCharacterPath(player1_configPath)) {
+			player1FullPath = player1_configPath;
+		}
+		if (!isValidCharacterPath(player2FullPath) && isValidCharacterPath(player2_configPath)) {
+			player2FullPath = player2_configPath;
+		}
 		// reset "start voice" boolean
 		canPlayAnnouncerVoice = false;
 		// create the announcer object
@@ -1499,7 +1549,7 @@ namespace fk_engine{
 		announcer->addSoundFromDefaultPath("round_final", "round_final.wav");
 		announcer->addSoundFromDefaultPath("time_up", "time_up.wav");
 		// add winning announcements for each playing character
-		std::string voiceName = charactersPath + player1_configPath + player1->getOutfitPath() + 
+		std::string voiceName = player1FullPath + player1->getOutfitPath() +
 			fk_constants::FK_VoiceoverEffectsFileFolder + "win.wav";
 		std::ifstream testFile(voiceName.c_str());
 		if (testFile.good()){
@@ -1510,11 +1560,11 @@ namespace fk_engine{
 		else{
 			testFile.clear();
 			testFile.close();
-			announcer->addSoundFullPath("player1_wins", charactersPath + player1_configPath + 
+			announcer->addSoundFullPath("player1_wins", player1FullPath +
 				fk_constants::FK_VoiceoverEffectsFileFolder + "win.wav");
 		}
 
-		voiceName = charactersPath + player2_configPath + player2->getOutfitPath() +
+		voiceName = player2FullPath + player2->getOutfitPath() +
 			fk_constants::FK_VoiceoverEffectsFileFolder + "win.wav";
 		testFile = std::ifstream(voiceName.c_str());
 		if (testFile.good()){
@@ -1525,7 +1575,7 @@ namespace fk_engine{
 		else{
 			testFile.clear();
 			testFile.close();
-			announcer->addSoundFullPath("player2_wins", charactersPath + player2_configPath +
+			announcer->addSoundFullPath("player2_wins", player2FullPath +
 				fk_constants::FK_VoiceoverEffectsFileFolder + "win.wav");
 		}
 		//Sleep(100);
@@ -1536,6 +1586,11 @@ namespace fk_engine{
 
 	/* set up battle sound manager */
 	void FK_SceneGame::setupBattleSoundManager(){
+		std::string stageFullPath = stagesPath + arena_configPath;
+		if (!isValidStagePath(stageFullPath) && isValidCharacterPath(arena_configPath)) {
+			stageFullPath = arena_configPath;
+		}
+
 		battleSoundManager = new FK_SoundManager(commonResourcesPath + "sound_effects\\");
 		battleSoundManager->addSoundFromDefaultPath("trigger", "trigger.ogg");
 		battleSoundManager->addSoundFromDefaultPath("guard", "guard03.wav");
@@ -1555,7 +1610,7 @@ namespace fk_engine{
 
 		if (!stage->getSplashSoundEffect().filename.empty()) {
 			battleSoundManager->addSoundFullPath("ringout_splash", 
-				stagesPath + arena_configPath + stage->getSplashSoundEffect().filename);
+				stageFullPath + stage->getSplashSoundEffect().filename);
 		}
 		else {
 			battleSoundManager->addSoundFromDefaultPath("ringout_splash", "splash.ogg");
@@ -1642,9 +1697,17 @@ namespace fk_engine{
 
 	/* add additional sounds to sound manager */
 	void FK_SceneGame::addCharacterSoundsToSoundManager(){
+		std::string player1FullPath = charactersPath + player1_configPath;
+		std::string player2FullPath = charactersPath + player2_configPath;
+		if (!isValidCharacterPath(player1FullPath) && isValidCharacterPath(player1_configPath)) {
+			player1FullPath = player1_configPath;
+		}
+		if (!isValidCharacterPath(player2FullPath) && isValidCharacterPath(player2_configPath)) {
+			player2FullPath = player2_configPath;
+		}
 		// start with Player 1
 		// add outfit specific sounds
-		std::string startingDirectory = charactersPath + player1_configPath + player1->getOutfitPath() +"sounds\\";
+		std::string startingDirectory = player1FullPath + player1->getOutfitPath() +"sounds\\";
 		if (fk_addons::directoryExists(startingDirectory.c_str())){
 			// look for all .ogg files
 			addSoundsFromDirectoryToSoundManager(startingDirectory, "ogg", "p1_");
@@ -1652,7 +1715,7 @@ namespace fk_engine{
 			addSoundsFromDirectoryToSoundManager(startingDirectory, "wav", "p1_");
 		}
 		for each (std::string transformationId in player1->getAvailableTransformationNames()) {
-			std::string directoryToCheck = charactersPath + player1_configPath + 
+			std::string directoryToCheck = player1FullPath +
 				player1->getOutfitPath() + transformationId + "\\sounds\\";
 			if (fk_addons::directoryExists(directoryToCheck.c_str())) {
 				// look for all .ogg files
@@ -1660,7 +1723,7 @@ namespace fk_engine{
 				// look for all .wav files
 				addSoundsFromDirectoryToSoundManager(directoryToCheck, "wav", "p1_" + transformationId + "_");
 			}
-			directoryToCheck = charactersPath + player1_configPath +
+			directoryToCheck = player1FullPath +
 				"sounds\\" + transformationId + "\\";
 			if (fk_addons::directoryExists(directoryToCheck.c_str())) {
 				// look for all .ogg files
@@ -1670,7 +1733,7 @@ namespace fk_engine{
 			}
 		}
 		// add normal sounds
-		startingDirectory = charactersPath + player1_configPath + "sounds\\";
+		startingDirectory = player1FullPath + "sounds\\";
 		if (fk_addons::directoryExists(startingDirectory.c_str())){
 			// look for all .ogg files
 			addSoundsFromDirectoryToSoundManager(startingDirectory, "ogg", "p1_");
@@ -1679,7 +1742,7 @@ namespace fk_engine{
 		}
 		// start with Player 2
 		// add outfit specific sounds
-		startingDirectory = charactersPath + player2_configPath + player2->getOutfitPath() +"sounds\\";
+		startingDirectory = player2FullPath + player2->getOutfitPath() +"sounds\\";
 		if (fk_addons::directoryExists(startingDirectory.c_str())){
 			// look for all .ogg files
 			addSoundsFromDirectoryToSoundManager(startingDirectory, "ogg", "p2_");
@@ -1687,7 +1750,7 @@ namespace fk_engine{
 			addSoundsFromDirectoryToSoundManager(startingDirectory, "wav", "p2_");
 		}
 		for each (std::string transformationId in player2->getAvailableTransformationNames()) {
-			std::string directoryToCheck = charactersPath + player2_configPath + 
+			std::string directoryToCheck = player2FullPath +
 				player2->getOutfitPath() + transformationId + "\\sounds\\";
 			if (fk_addons::directoryExists(directoryToCheck.c_str())) {
 				// look for all .ogg files
@@ -1695,7 +1758,7 @@ namespace fk_engine{
 				// look for all .wav files
 				addSoundsFromDirectoryToSoundManager(directoryToCheck, "wav", "p2_" + transformationId + "_");
 			}
-			directoryToCheck = charactersPath + player2_configPath +
+			directoryToCheck = player2FullPath +
 				"sounds\\" + transformationId + "\\";
 			if (fk_addons::directoryExists(directoryToCheck.c_str())) {
 				// look for all .ogg files
@@ -1705,7 +1768,7 @@ namespace fk_engine{
 			}
 		}
 		// add normal sounds
-		startingDirectory = charactersPath + player2_configPath + "sounds\\";
+		startingDirectory = player2FullPath + "sounds\\";
 		if (fk_addons::directoryExists(startingDirectory.c_str())){
 			// look for all .ogg files
 			addSoundsFromDirectoryToSoundManager(startingDirectory, "ogg", "p2_");
@@ -1747,9 +1810,30 @@ namespace fk_engine{
 		winnerId = -99;
 	}
 
+	bool FK_SceneGame::isValidCharacterPath(std::string path)
+	{
+		std::ifstream testFile(path + "character.txt");
+		if (!testFile) {
+			return false;
+		}
+		return true;
+	}
+
+	bool FK_SceneGame::isValidStagePath(std::string path)
+	{
+		std::ifstream testFile(path + "config.txt");
+		if (!testFile) {
+			return false;
+		}
+		return true;
+	}
+
 	/* setup the arena */
 	void FK_SceneGame::setupArena(){
 		std::string newStagePath = stagesPath + arena_configPath;
+		if (!isValidStagePath(newStagePath) && isValidStagePath(arena_configPath)) {
+			newStagePath = arena_configPath;
+		}
 		//std::string newStagePath = stagesPath + "Elevator\\";
 		//m_threadMutex.try_lock();
 		stage->setup(device, driver, smgr, newStagePath);
@@ -1804,9 +1888,12 @@ namespace fk_engine{
 		if ((pressedButtons & FK_Input_Buttons::ScrollRight_Button) != 0) {
 			additionalObjectString = "var_";
 		}
-
+		std::string fullPath = charactersPath + player1_configPath;
+		if (!isValidCharacterPath(fullPath) && isValidCharacterPath(player1_configPath)) {
+			fullPath = player1_configPath;
+		}
 		player1->setup(databaseAccessor,
-			"character.txt", charactersPath + player1_configPath,
+			"character.txt", fullPath,
 			commonResourcesPath,
 			smgr, player1startingPosition,
 			core::vector3df(0, 0, 0),
@@ -1872,10 +1959,14 @@ namespace fk_engine{
 		//m_threadMutex.lock();
 		/*startingPosition = player2startingPosition;
 		startingPosition.Y += (player2->getAnimatedMesh()->getScale().Y - 1.0f) * additionalYunitsPerScaleUnit;*/
+		std::string fullPath = charactersPath + ".\\" + player2_configPath;
+		if (!isValidCharacterPath(fullPath) && isValidCharacterPath(player2_configPath)) {
+			fullPath = player2_configPath + "\\.\\";
+		}
 		if (setupWithId) {
 			player2->setup(
 				databaseAccessor,
-				"character.txt", charactersPath + ".\\" + player2_configPath,
+				"character.txt", fullPath,
 				commonResourcesPath,
 				smgr, player2startingPosition,
 				core::vector3df(0, 180, 0),
@@ -1887,7 +1978,7 @@ namespace fk_engine{
 		}else{
 			player2->setup(
 				databaseAccessor,
-				"character.txt", charactersPath + ".\\" + player2_configPath,
+				"character.txt", fullPath,
 				commonResourcesPath,
 				smgr, player2startingPosition,
 				core::vector3df(0, 180, 0),
@@ -1915,8 +2006,8 @@ namespace fk_engine{
 		setupPlayer2Character(progress);
 
 		// setup throw reaction moves
-		player1->setOpponentThrowAnimation(player2->getMovesCollection());
-		player2->setOpponentThrowAnimation(player1->getMovesCollection());
+		player1->setOpponentThrowAnimation(player2->getMovesCollection(), player2->getAnimationDirectory());
+		player2->setOpponentThrowAnimation(player1->getMovesCollection(), player1->getAnimationDirectory());
 		////m_threadMutex.lock();
 		
 		//Sleep(100);
@@ -1931,10 +2022,19 @@ namespace fk_engine{
 		player1->toggleHurtboxVisibility(false);
 #endif
 		// add additional win and intro quotes
-		player1->loadWinQuotesFromCharacterDirectory(charactersPath + player2_configPath, player2->getName(), player2->getOutfit());
-		player2->loadWinQuotesFromCharacterDirectory(charactersPath + player1_configPath, player1->getName(), player1->getOutfit());
-		player1->loadIntroQuotesFromCharacterDirectory(charactersPath + player2_configPath, player2->getName(), player2->getOutfit());
-		player2->loadIntroQuotesFromCharacterDirectory(charactersPath + player1_configPath, player1->getName(), player1->getOutfit());
+		std::string player1FullPath = charactersPath + player1_configPath;
+		std::string player2FullPath = charactersPath + player2_configPath;
+		if (!isValidCharacterPath(player1FullPath) && isValidCharacterPath(player1_configPath)) {
+			player1FullPath = player1_configPath;
+		}
+		if (!isValidCharacterPath(player2FullPath) && isValidCharacterPath(player2_configPath)) {
+			player2FullPath = player2_configPath;
+		}
+
+		player1->loadWinQuotesFromCharacterDirectory(player2FullPath, player2->getName(), player2->getOutfit());
+		player2->loadWinQuotesFromCharacterDirectory(player1FullPath, player1->getName(), player1->getOutfit());
+		player1->loadIntroQuotesFromCharacterDirectory(player2FullPath, player2->getName(), player2->getOutfit());
+		player2->loadIntroQuotesFromCharacterDirectory(player1FullPath, player1->getName(), player1->getOutfit());
 		// reset triggers to zero if they can't be used
 		if (!additionalOptions.allowTriggers){
 			player1->setTriggerCounters(0);
@@ -2331,7 +2431,11 @@ namespace fk_engine{
 		// add stage shaders
 		for each(FK_Stage::FK_StagePixelShader shader in stage->getAdditionalPixelShaders()) {
 			if (!shader.parameters.empty()) {
-				std::string path = stagesPath + arena_configPath + shader.filename;
+				std::string path = stagesPath + arena_configPath;
+				if (!isValidStagePath(path) && isValidStagePath(arena_configPath)) {
+					path = arena_configPath;
+				}
+				path += shader.filename;
 				s32 materialId = lightManager->addPostProcessingEffectFromFile(core::stringc(path.c_str()) + shaderExt);
 				FK_PixelShaderStageCallback* stageCallback = new FK_PixelShaderStageCallback(materialId, this, shader);
 				stagePixelShaderCallback.push_back(stageCallback);
@@ -2862,6 +2966,7 @@ namespace fk_engine{
 		updateTriggerComboEffect(frameDeltaMs, newMovePlayer1, newMovePlayer2);
 		// update counter attack slowmo effect
 		updateCounterattackEffects(frameDeltaMs);
+		updateHitStopEffect(frameDeltaMs);
 		// update impact effect (if any)
 		updateImpactEffect(frameDeltaMs);
 		if (!isPaused()){
@@ -2926,8 +3031,16 @@ namespace fk_engine{
 
 	//! apply progressive damage/regeneration, if possible
 	void FK_SceneGame::updatePlayersPoisonEffect(f32 frameDeltaTime){
+		bool player1IsAlive = !player1->isKO();
+		bool player2IsAlive = !player2->isKO();
 		player1->receiveDamage(additionalOptions.continuousDamagePlayer1perSecond * frameDeltaTime, false);
 		player2->receiveDamage(additionalOptions.continuousDamagePlayer2perSecond * frameDeltaTime, false);
+		if (player1IsAlive && player1->isKO()) {
+			player1->setLife(1.f);
+		}
+		if (player2IsAlive && player2->isKO()) {
+			player2->setLife(1.f);
+		}
 	}
 	//! update trigger regeneration, if possible
 	void FK_SceneGame::updatePlayersTriggerRegen(u32 frameDeltaTimeMS){
@@ -3036,7 +3149,7 @@ namespace fk_engine{
 			jumpGravityToSet *= modifier;
 			sceneGravityToSet *= modifier;
 		}
-
+		
 		ISceneNodeAnimator* pAnim1 = *(player1->getAnimatedMesh()->getAnimators().begin());
 		if (pAnim1->getType() == ESNAT_COLLISION_RESPONSE)
 		{
@@ -3737,11 +3850,16 @@ namespace fk_engine{
 
 	/* this method must be implemented in a subclass*/
 	void FK_SceneGame::processEndOfRoundStatistics(){
-
+		if (player1ringoutFlag && player2ringoutFlag && !(player1isAI && player2isAI)) {
+			statManager.manageDoubleRingoutAchievement();
+		}
 	}
 
 	/* update game states*/
 	void FK_SceneGame::updateGameStates(u32 delta_t_ms){
+		if (delta_t_ms == 0 && introPhaseCounter == 1) {
+			return;
+		}
 		/* check if intros should be played */
 		if (processingIntroPlayer1 && player1->getAnimatedMesh()->getFrameNr() == player1->getAnimatedMesh()->getEndFrame()){
 			processingIntroPlayer1 = false;
@@ -4313,7 +4431,7 @@ namespace fk_engine{
 				/* || player2->isGuarding()*/){
 				skipThrowCheckPlayer1 = true;
 			}
-			if (!formerGuardPlayer2 && !player2->isGuarding() && !player2->isKO()){
+			if (!player2->isGuarding() && !player2->isKO()){
 				setupImpactEffect(reaction_pl2, 2);
 				if (!hitPl1 && reaction_pl2 == FK_Reaction_Type::StrongFlight){
 					player1->allowForImpactCancelCheck();
@@ -4349,7 +4467,7 @@ namespace fk_engine{
 				/* || player1->isGuarding()*/){
 				skipThrowCheckPlayer2 = true;
 			}
-			if (!formerGuardPlayer1 && !player1->isGuarding() && !player1->isKO()){
+			if (/*!formerGuardPlayer1 && */!player1->isGuarding() && !player1->isKO()){
 				setupImpactEffect(reaction_pl1, 1);
 				if (!hitPl2 && reaction_pl1 == FK_Reaction_Type::StrongFlight){
 					player2->allowForImpactCancelCheck();
@@ -4697,6 +4815,9 @@ namespace fk_engine{
 				bool lowGuardAttack = attackingBullet->getHitbox().canBeCrouchGuarded();
 				bool hitDeflection = (lowGuard && lowGuardAttack) || (hiGuard && hiGuardAttack);
 				/* check if the player has been hit on the back while guarding (guard break)*/
+				if (targetPlayer->isBeingThrown()) {
+					targetIsShowingBack = false;
+				}
 				if (hitDeflection){
 					if (attackingBullet->getHitbox().isGuardBreaking() || targetIsShowingBack) {
 						targetPlayer->breakGuard();
@@ -4742,6 +4863,11 @@ namespace fk_engine{
 					}
 					// multiply damage by bullet damage multiplier
 					damage *= targetPlayer->getReceivedBulletDamageMultiplier();
+					// apply juggle modifier
+					if (!targetPlayer->isBeingThrown() && targetPlayer->isHitStun() &&
+						targetPlayer->getVelocityPerSecond().Z != 0) {
+						damage *= databaseAccessor.getJuggleDamageMultiplier();
+					}
 					// check if damage is higher than 0
 					if (damage > 0){
 						hasDoneDamage = true;
@@ -4749,6 +4875,13 @@ namespace fk_engine{
 					damage *= targetPlayer->getObjectsDefenseMultiplier(attackingBullet->getHitbox().getAttackType());
 					damage *= targetPlayer->getObjectsDefenseMultiplier(FK_Attack_Type::BulletAttack);
 					damage *= bulletOwner->getObjectsAttackMultiplier(FK_Hitbox_Type::AllHitboxes, FK_Attack_Type::BulletAttack);
+					for (auto object : targetPlayer->getCharacterAdditionalObjects()) {
+						if (object.isActive() && object.maxDamageLimit > 0.f) {
+							if (damage > object.maxDamageLimit) {
+								damage = object.maxDamageLimit;
+							}
+						}
+					}
 					if (hasDoneDamage && damage <= 0){
 						damage = 1;
 					}
@@ -4810,11 +4943,22 @@ namespace fk_engine{
 				if (!hitboxIter->isActive(attackingPlayer->getAnimatedMesh()->getFrameNr())){
 					continue;
 				}
+				auto velocityTest = targetPlayer->getVelocityPerSecond();
+				bool airborneOpponentCondition =
+					(velocityTest.Z != 0.f || targetPlayer->isAirborne()) &&
+					!attackingPlayer->getCurrentMove()->canThrowAirborneOpponents();
+				if (airborneOpponentCondition && !targetPlayer->isKO()) {
+					auto atkType = hitboxIter->getAttackType();
+					if (atkType & FK_Attack_Type::BlockableThrowAtk) {
+						continue;
+					}
+				}
 				scene::ISceneNode* hitbox = attackingPlayer->getHitboxCollection()[type];
 				for (auto hurtboxIter = targetPlayer->getHurtboxCollection().begin(); hurtboxIter != targetPlayer->getHurtboxCollection().end(); ++hurtboxIter){
 					// browse through the hitboxes of the attacking player move to check if one of the active ones intesect with
 					// one of the hurtboxes
 					if ((((targetPlayer->getStance() & FK_Stance_Type::AnyGroundedStance) != 0 || 
+						(targetPlayer->getVelocityPerSecond().Z != 0 && databaseAccessor.extendedJugglesAllowed()) ||
 						targetPlayer->getStance() == FK_Stance_Type::WakeUpStance) &&
 						!targetPlayer->isBeingThrown()) &&
 						hurtboxIter->first == FK_Hurtbox_Type::FullBodyHurtbox){
@@ -4831,7 +4975,7 @@ namespace fk_engine{
 						if (hitboxIter->isSingleHit()){
 							for (auto otherHitboxIter = move->getHitboxCollection().begin(); otherHitboxIter != move->getHitboxCollection().end(); ++otherHitboxIter){
 								FK_Hitbox_Type otherType = otherHitboxIter->getType();
-								if (type == otherType && otherHitboxIter->isSingleHit()){
+								if (type == otherType && otherHitboxIter->isSingleHit() && otherHitboxIter->getStartingFrame() >= hitboxIter->getStartingFrame()){
 									otherHitboxIter->setHit(true);
 								}
 							}
@@ -4870,6 +5014,9 @@ namespace fk_engine{
 						bool lowGuardAttack = hitboxIter->canBeCrouchGuarded();
 						bool hitDeflection = (lowGuard && lowGuardAttack) || (hiGuard && hiGuardAttack);
 						/* first, check if trigger guard has been activated */
+						if (targetPlayer->isBeingThrown()) {
+							targetIsShowingBack = false;
+						}
 						if (!targetIsShowingBack && !targetPlayer->isBeingThrown() &&
 							targetPlayer->isTriggerGuardActive() && hitDeflection){
 							attackingPlayer->activateParticleEffect(type, hitDeflection);
@@ -4931,7 +5078,6 @@ namespace fk_engine{
 									bool hitAttackingOpponents = 
 										(hitboxIter->getAttackType() & FK_Attack_Type::BlockableThrowAtk) != 0 &&
 									hitboxIter->getPriority() > 0;
-									
 									if (!hitAttackingOpponents && /*(targetPlayer->getCurrentMove() != NULL &&
 										targetPlayer->getCurrentMove()->canBeTriggered()) &&
 										!(targetPlayer->getCurrentMove()->hasThrowAttacks())*/
@@ -4974,6 +5120,11 @@ namespace fk_engine{
 								damage = hitboxIter->getDamage();
 								// apply multiplier (guard break on trigger yields 0)
 								damage *= basicDamageMultiplier;
+								// apply juggle modifier
+								if (!targetPlayer->isBeingThrown() && targetPlayer->isHitStun() && 
+									targetPlayer->getVelocityPerSecond().Z != 0) {
+									damage *= databaseAccessor.getJuggleDamageMultiplier();
+								}
 								/* apply trigger modifier damage */
 								if (attackingPlayer->isTriggerModeActive()){
 									damage *= databaseAccessor.getTriggerComboDamageMultiplier();
@@ -5012,12 +5163,25 @@ namespace fk_engine{
 									hasDoneDamage = true;
 								}
 								if (hasDoneDamage) {
+									if (!updateCounterAttackEffectFlag && !(hitboxIter->getReaction() & FK_Reaction_Type::AnyImpactReaction)) {
+										if (!targetPlayer->isBeingThrown() && 
+											targetPlayer->getLastDamagingMoveId() != attackingPlayer->getCurrentMove()->getMoveId()) {
+											activateHitStopEffect();
+										}	
+									}
 									targetPlayer->setLastDamagingMoveId(
 										attackingPlayer->getCurrentMove()->getMoveId());
 								}
 								// apply buffs and nerfs
 								damage *= attackingPlayer->getObjectsAttackMultiplier(type, hitboxIter->getAttackType());
 								damage *= targetPlayer->getObjectsDefenseMultiplier(hitboxIter->getAttackType());
+								for (auto object : targetPlayer->getCharacterAdditionalObjects()) {
+									if (object.isActive() && object.maxDamageLimit > 0.f) {
+										if (damage > object.maxDamageLimit) {
+											damage = object.maxDamageLimit;
+										}
+									}
+								}
 								// apply damage scaling
 								if (hasDoneDamage && (!(targetPlayer->isBeingThrown()) || 
 									attackingPlayer->getCurrentMove()->isAffectedByDamageScaling())){
@@ -5062,11 +5226,31 @@ namespace fk_engine{
 										u32 numberOfRepetitions =
 											attackingPlayer->getNumberOfRepetitionOfSameMoveInCombo(moveId, hitboxId);
 										// apply hitstun multipliers for repeating moves
-										if (numberOfRepetitions > 1) {
-											hitstunMultiplier *= 0.5;
+										if (targetPlayer->isBeingThrown()) {
+											if (numberOfRepetitions > 1 && 
+												(targetPlayer->getThrowReaction() & FK_Reaction_Type::AnyImpactReaction)) {
+												//reactionToApply = FK_Reaction_Type::StrongFlight;
+												targetPlayer->setThrowMoveReaction(FK_Reaction_Type::WeakFlight);
+											}
 										}
-										else if (numberOfRepetitions > 0) {
-											hitstunMultiplier *= 0.7;
+										else if (!targetPlayer->isBeingThrown() && 
+											!cinematicCameraActivePlayer2 && 
+											!cinematicCameraActivePlayer1) {
+											if ((reactionToApply & FK_Reaction_Type::AnyImpactReaction)) {
+												//if (numberOfRepetitions > 1) {
+												//	reactionToApply = FK_Reaction_Type::WeakFlight;
+												//}
+											}
+											else {
+												if (numberOfRepetitions > 1) {
+													//reactionToApply = FK_Reaction_Type::StrongFlight;
+													hitstunMultiplier *= 0.5;
+												}
+												else if (numberOfRepetitions > 0) {
+													//reactionToApply = FK_Reaction_Type::WeakFlight;
+													hitstunMultiplier *= 0.7;
+												}
+											}
 										}
 									}
 									attackingPlayer->increaseComboCounter(damage, moveId, hitboxId);
@@ -5358,6 +5542,34 @@ namespace fk_engine{
 				battleSoundManager->playSound("hit_counter", 100.0 * gameOptions->getSFXVolume());
 			}
 			setupImpactEffect(FK_Reaction_Type::StrongFlight);
+		}
+	}
+
+	/* update slowmo effect for counter attack */
+	void FK_SceneGame::updateHitStopEffect(u32 frameDelta) {
+		if (updateHistopAttackEffectFlag) {
+			histopEffectCounterMs += frameDelta;
+			u32 hitstopFrames = 3;
+			u32 threshold = (u32)std::round(hitstopFrames * 1000 / 60 * device->getTimer()->getSpeed());
+			if (histopEffectCounterMs > threshold) {
+				cancelHitStopEffect();
+			}
+		}
+	}
+
+	void FK_SceneGame::activateHitStopEffect() {
+		/*if (device->getTimer()->getSpeed() == databaseAccessor.getNormalTimerVelocity()) {
+			histopEffectCounterMs = 0;
+			device->getTimer()->setSpeed(0.2f);
+			updateHistopAttackEffectFlag = true;
+		}*/
+	}
+
+	void FK_SceneGame::cancelHitStopEffect() {
+		histopEffectCounterMs = 0;
+		updateHistopAttackEffectFlag = false;
+		if (!isPaused() && device->getTimer()->getSpeed() != databaseAccessor.getNormalTimerVelocity()) {
+			device->getTimer()->setSpeed(databaseAccessor.getNormalTimerVelocity());
 		}
 	}
 
@@ -5722,6 +5934,7 @@ namespace fk_engine{
 
 	/* process match end */
 	void FK_SceneGame::processMatchEnd(){
+		processCharacterStats();
 		processingSceneEnd = true;
 		abortMatch = true;
 	}
@@ -5759,11 +5972,32 @@ namespace fk_engine{
 			}
 		}
 		else{
-			if (joystickInfo.size() > 0){
-				player1input->update(nowReal, inputReceiver->JoypadStatus(0));
-			}
-			else{
-				player1input->update(nowReal, inputReceiver->KeyboardStatus());
+			if (inputDelayMsPlayer1 > 0 && !isPaused()) {
+				FK_InputSnapshot currentSnapshot;
+				currentSnapshot.timeOfInput = nowReal;
+				bool* pointerToKeys = NULL;
+				if (joystickInfo.size() > 0) {
+					pointerToKeys = inputReceiver->JoypadStatus(0);
+				}
+				else {
+					pointerToKeys = inputReceiver->KeyboardStatus();
+				}
+				if (pointerToKeys != NULL) {
+					currentSnapshot.keys = std::vector<bool>(pointerToKeys, pointerToKeys + KEY_KEY_CODES_COUNT);
+					delayedInputBufferPlayer1.push_back(std::move(currentSnapshot));
+					auto& inputSnapshot = delayedInputBufferPlayer1[0];
+					if (inputSnapshot.timeOfInput <= nowReal - inputDelayMsPlayer1) {
+						player1input->update(nowReal, inputSnapshot.keys);
+						delayedInputBufferPlayer1.pop_front();
+					}
+				}
+			}else{
+				if (joystickInfo.size() > 0) {
+					player1input->update(nowReal, inputReceiver->JoypadStatus(0));
+				}
+				else {
+					player1input->update(nowReal, inputReceiver->KeyboardStatus());
+				}
 			}
 			if (player1input->isModified() && !cinematicCameraActivePlayer2){
 				// first check for followup moves, if the array is not empty
@@ -5794,11 +6028,33 @@ namespace fk_engine{
 			}
 		}
 		else {
-			if (joystickInfo.size() > 1) {
-				player2input->update(nowReal, inputReceiver->JoypadStatus(1));
+			if (inputDelayMsPlayer2 > 0 && !isPaused()) {
+				FK_InputSnapshot currentSnapshot;
+				currentSnapshot.timeOfInput = nowReal;
+				bool* pointerToKeys = NULL;
+				if (joystickInfo.size() > 1) {
+					pointerToKeys = inputReceiver->JoypadStatus(1);
+				}
+				else {
+					pointerToKeys = inputReceiver->KeyboardStatus();
+				}
+				if (pointerToKeys != NULL) {
+					currentSnapshot.keys = std::vector<bool>(pointerToKeys, pointerToKeys + KEY_KEY_CODES_COUNT);
+					delayedInputBufferPlayer2.push_back(std::move(currentSnapshot));
+					auto& inputSnapshot = delayedInputBufferPlayer2[0];
+					if (inputSnapshot.timeOfInput <= nowReal - inputDelayMsPlayer2) {
+						player2input->update(nowReal, inputSnapshot.keys);
+						delayedInputBufferPlayer2.pop_front();
+					}
+				}
 			}
 			else {
-				player2input->update(nowReal, inputReceiver->KeyboardStatus());
+				if (joystickInfo.size() > 1) {
+					player2input->update(nowReal, inputReceiver->JoypadStatus(1));
+				}
+				else {
+					player2input->update(nowReal, inputReceiver->KeyboardStatus());
+				}
 			}
 			if (player2input->isModified() && !cinematicCameraActivePlayer1) {
 				if (newMove == false) {
@@ -5990,11 +6246,39 @@ namespace fk_engine{
 				std::to_string(tstruct.tm_sec);
 			std::string path = applicationPath + filename;
 			bool result = device->getVideoDriver()->writeImageToFile(image, (path + ".png").c_str());
-			//result = device->getVideoDriver()->writeImageToFile(image, (path + ".jpg").c_str(), 100);
-			/*result = device->getVideoDriver()->writeImageToFile(image, (applicationPath + "/screenshots/test.jpg").c_str(), 100);
-			result = device->getVideoDriver()->writeImageToFile(image, (applicationPath + "/screenshots/test.png").c_str(), 100);*/
 			image->drop();
 		}
+	}
+	// process character stats
+	void FK_SceneGame::processCharacterStats()
+	{
+		if (player1isAI && player2isAI) {
+			return;
+		}
+		FK_Character* character = player1;
+		if (player1isAI) {
+			character = player2;
+		}
+		statManager.retrieveStatsFromServer();
+		auto stats = character->getCharacterStats();
+		statManager.totalDamageDealt += (s32)std::round(stats.totalDamage);
+		statManager.numberOfTriggerCancels += stats.numberOfTriggerCancels;
+		statManager.numberOfTriggerCombos += stats.numberOfTriggerCombos;
+		statManager.numberOfTriggerGuards += stats.numberOfTriggerGuards;
+		statManager.numberOfUsedBulletCounters += stats.numberOfUsedBullets;
+		s32 comboDamage = (s32)std::round(stats.maxComboDamage);
+		if (statManager.maxComboDamage < comboDamage) {
+			statManager.maxComboDamage = comboDamage;
+		}
+		if (statManager.maxComboLength < stats.maxComboLength) {
+			statManager.maxComboLength = stats.maxComboLength;
+		}
+		statManager.uploadStatsToServer();
+	}
+	// process arcade achievements
+	void FK_SceneGame::processArcadeAchievements(FK_SceneArcadeType arcadeType)
+	{
+		statManager.checkForArcadeAchievements(arcadeType);
 	}
 
 	/* update save file data */

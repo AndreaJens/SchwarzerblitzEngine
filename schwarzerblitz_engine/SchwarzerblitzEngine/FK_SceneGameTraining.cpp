@@ -24,6 +24,10 @@ namespace fk_engine{
 			newAdditionalOptions, false, false, 0, 0);
 		setFreeMacthType(FK_SceneFreeMatchType::FreeMatchTraining);
 	}
+	// we don't need statistics handling in training mode
+	void FK_SceneGameTraining::processEndOfRoundStatistics()
+	{
+	}
 
 	// make a basic setup for player input
 	void FK_SceneGameTraining::setupInputForPlayers(){
@@ -522,7 +526,8 @@ namespace fk_engine{
 				}
 				else{
 					groundedCounterMS += delta_t_ms;
-					if (groundedCounterMS > groundedDurationMS && 
+					if (!player2->isHitStun() && 
+						groundedCounterMS > groundedDurationMS && 
 						dummyRecoveryOptions == FK_RecoveryOptionsDummy::TutorialRecovery){
 						cameraManager->alignCharacters(player2);
 						player2->recoverFromGrounding();
@@ -680,6 +685,11 @@ namespace fk_engine{
 			}
 		}
 		return true;
+	}
+
+	// empty method
+	void FK_SceneGameTraining::processCharacterStats()
+	{
 	}
 
 
@@ -1050,6 +1060,19 @@ namespace fk_engine{
 				}
 				if (!hasBlockedAnAttack && player2->isHitStun() && player2->isGuarding()) {
 					hasBlockedAnAttack = true;
+				}
+				// landing quick rise
+				if (player2->getStance() == FK_Stance_Type::LandingStance &&
+					player2->getCurrentMove() == NULL) {
+					FK_UkemiOptionsDummy dummyUkemiOptionToCheck = dummyUkemiOptions;
+					if (dummyUkemiOptions == FK_UkemiOptionsDummy::RandomUkemi) {
+						u32 switchingVariable = (u32)std::floor((double)(FK_UkemiOptionsDummy::RandomUkemi + 1) * (double)rand() / RAND_MAX);
+						dummyUkemiOptionToCheck = (FK_UkemiOptionsDummy)(switchingVariable);
+					}
+					if (dummyUkemiOptionToCheck == FK_UkemiOptionsDummy::StandUpRecovery) {
+						pressedButtonsPlayer2 = FK_Input_Buttons::Guard_Button;
+						return;
+					}
 				}
 				pressedButtonsPlayer2 = 0;
 				// grounded

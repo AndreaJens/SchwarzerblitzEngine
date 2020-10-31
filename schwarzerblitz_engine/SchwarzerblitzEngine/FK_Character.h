@@ -13,6 +13,7 @@
 #include"FK_AnimationKeyMap.h"
 #include "FK_AnimationEndCallback.h"
 #include "FK_DatabaseAccessor.h"
+#include "FK_CharacterStats.h"
 
 using namespace irr;
 
@@ -215,6 +216,7 @@ namespace fk_engine{
 			std::string meshFilename = std::string();
 			std::vector<std::string> propMeshFilename = std::vector<std::string>();
 			std::string meshPath = std::string();
+			f32 maxDamageLimit = 0.f;
 
 			s32 objectArrayIndex = -1;
 			bool backfaceCulling = false;
@@ -366,6 +368,8 @@ namespace fk_engine{
 			bool loadMoves = false, bool loadQuotes = false);
 		void loadVariablesForSelectionScreen(FK_DatabaseAccessor newDatabaseAccessor, std::string characterFileName, std::string parentDirectory, std::string commonDirectory,
 			scene::ISceneManager* smgr);
+		void loadVariablesForSelectionScreenExtra(FK_DatabaseAccessor newDatabaseAccessor, std::string characterFileName, std::string parentDirectory, std::string commonDirectory,
+			scene::ISceneManager* smgr);
 		void loadMeshsAndEffects(core::vector3df startingPosition, core::vector3df startingRotation, 
 			std::string newAdditionalObjectTag = std::string(),
 			bool createHitbox = false, bool loadSFX = false, bool loadAllAnimations = false, bool loadAllProjectileMeshs = false);
@@ -379,6 +383,7 @@ namespace fk_engine{
 		std::deque<FK_Move> &getMovesCollection();
 		// number of alternative meshes
 		int getNumberOfOutfits();
+		std::string getAnimationDirectory();
 		void toggleHitboxVisibility(bool newVisibility);
 		void toggleHurtboxVisibility(bool newVisibility);
 		bool checkHitboxVisibility();
@@ -540,6 +545,7 @@ namespace fk_engine{
 		bool isBeingThrown();
 		void setThrowFlag(bool newThrowFlag);
 		void setThrowMove(FK_Move* throwToApply);
+		void setThrowMoveReaction(FK_Reaction_Type newReaction);
 		void setThrowingOpponentFlag(bool newThrowFlag);
 		void setThrowAnimation(FK_Pose reactionAnimation, core::vector3df rotationAngle);
 		void clearThrow();
@@ -618,7 +624,7 @@ namespace fk_engine{
 		// get AI archetype
 		FK_AIArchetypes getAIArchetype();
 		// set opponent's throw animations
-		void setOpponentThrowAnimation(std::deque<FK_Move>& moves);
+		void setOpponentThrowAnimation(std::deque<FK_Move>& moves, std::string opponentAnimationDirectory);
 		// get current mesh path
 		std::string getOutfitPath();
 		// get character outfit
@@ -713,15 +719,20 @@ namespace fk_engine{
 		/* damage received */
 		void setLastDamagingMoveId(u32 moveId);
 		u32 getLastDamagingMoveId();
+
+		/* stats */
+		FK_CharacterStats getCharacterStats();
 	protected:
 		void setDatabaseDrivenVariables();
-		void loadCommomMoves();
+		void loadCommonMoves();
 		void parseMoves();
 		void parseBones();
 		void parseCharacterFile(std::string filename);
 		void parseCharacterFileForSelectionScreen(std::string filename);
 		void parseMeshFiles(const std::string& additionalFolder = std::string());
+		void parseMeshFilesExtra(const std::string& additionalFolder = std::string());
 		void parseAllMeshFilesDirectorySearch(const std::string& additionalFolder = std::string());
+		void parseAllMeshFilesDirectorySearchExtra(const std::string& additionalFolder = std::string());
 		void parseSingleCostume(std::map<FK_OutfitFileKeys, std::string>& outfitKeysMap, std::string costumeDirectory);
 		void fillHitboxCollection();
 		void fillHurtboxCollection();
@@ -780,6 +791,10 @@ namespace fk_engine{
 		float damageScalingMultiplier;
 		/* walking speed*/
 		float walkingSpeed;
+		/* sidestep speed*/
+		float sidestepSpeed;
+		/* mixed step speed*/
+		float mixedstepSpeed;
 		/* running speed */
 		float runningSpeed;
 		/* jump speed*/
@@ -924,7 +939,7 @@ namespace fk_engine{
 		/* throwing flag */
 		bool isThrowing;
 		/* suffered throw */
-		FK_Move* targetThrowToApply;
+		FK_Move targetThrowToApply;
 		/* ring out flag */
 		bool isRingOut;
 		/* this variable is set externally by the position updater */
@@ -1018,6 +1033,11 @@ namespace fk_engine{
 		bool triggerButtonPressedBeforeHitstun;
 		/* database accessor */
 		FK_DatabaseAccessor databaseAccessor;
+		/* character stats */
+		FK_CharacterStats stats;
+		/* is sidestepping */
+		bool isSidestepping;
+		s32 sidestepCounter;
 	};
 };
 #endif

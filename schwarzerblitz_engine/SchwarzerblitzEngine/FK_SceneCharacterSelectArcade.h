@@ -73,11 +73,14 @@ namespace fk_engine{
 		void drawArcadeLadderLoadingScreen(f32 completionPercentage);
 		std::vector<FK_ArcadeCluster> buildClassicArcadeArray();
 		std::vector<FK_ArcadeCluster> buildSurvivalArcadeArray();
+		bool checkIfEndingIsAvailable(std::string& characterPath);
 	protected:
 		std::map<u32, std::vector<std::pair<u32, bool>> > characterAvailableCostumes;
 		bool player1IsActive;
+		std::map<u32, bool> characterHasAvailableEndingMap;
 		void drawSurvivalRecord();
 		void drawTimeAttackRecord();
+		void drawNoEndingDisclaimer();
 	private:
 		// selection map
 		std::map<FK_Input_Buttons, SelectionDirection> selectionMap;

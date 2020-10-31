@@ -96,6 +96,7 @@ namespace fk_engine{
 			std::string stageOverlayTexture;
 			std::string characterSelectorTexture;
 			std::string lockedCostumeMarkTexture;
+			std::string noArcadeEndingMarkTexture;
 			std::string currentCostumeIconTexture;
 			std::string availableCostumeIconTexture;
 			std::string loadingScreenTexture;
@@ -182,6 +183,8 @@ namespace fk_engine{
 		virtual s32 getNearestNeighbourIndex(s32 index, SelectionDirection direction);
 		virtual core::rect<s32> getCharacterIconPosition(u32 icon_index);
 	protected:
+		bool isValidCharacterPath(std::string path);
+		bool isValidStagePath(std::string path);
 		virtual u32 getNodeUsedTextures(ISceneNode* node, core::array<video::ITexture*>& a);
 		virtual void removeCharacterNodeFromCache(FK_Character* character);
 		virtual bool loadConfigurationFile();
@@ -210,6 +213,7 @@ namespace fk_engine{
 		video::ITexture* overlay;
 		video::ITexture* missingPreview;
 		video::ITexture* lockedCostumeSign;
+		video::ITexture* noArcadeEndingSign;
 		video::ITexture* currentCostumeDotTex;
 		video::ITexture* costumeDotTex;
 		std::vector<video::ITexture*> characterIcons;

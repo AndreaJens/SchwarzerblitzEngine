@@ -100,6 +100,7 @@ namespace fk_engine{
 		readerMap[FK_FileKey_Type::TightInputIdentifier] = "#REQUIRES_PRECISE_INPUT";
 		readerMap[FK_FileKey_Type::MultichainableMoveIdentifier] = "#MULTICHAINABLE";
 		readerMap[FK_FileKey_Type::OnlyDuringEnemyAttackIdentifier] = "#ONLY_WHEN_OPPONENT_ATTACKS";
+		readerMap[FK_FileKey_Type::NoThrowOnAerealIdentifier] = "#NO_THROW_ON_AIRBORNE_OPPONENT";
 		/* do the same for hitbox type... */
 		hitboxTypeMap["None"] = FK_Hitbox_Type::NoHitbox;
 		hitboxTypeMap["RightPunch"] = FK_Hitbox_Type::RightPunch;
@@ -160,6 +161,7 @@ namespace fk_engine{
 		bulletAttributesMap[FK_FileKey_BulletType::BulletHitbox] = "#hitbox";
 		bulletAttributesMap[FK_FileKey_BulletType::BulletHitboxEnd] = "#hitbox_end";
 		bulletAttributesMap[FK_FileKey_BulletType::BulletRange] = "#range";
+		bulletAttributesMap[FK_FileKey_BulletType::BulletAcceleration] = "#acceleration";
 		bulletAttributesMap[FK_FileKey_BulletType::BulletVelocity] = "#velocity";
 		bulletAttributesMap[FK_FileKey_BulletType::BulletHitboxRadius] = "#hitbox_radius";
 		bulletAttributesMap[FK_FileKey_BulletType::BulletBillboardTexture] = "#billboard";
@@ -603,6 +605,10 @@ namespace fk_engine{
 				/* if the MULTICHAINABLE tag is found, set move as uesable many times in same chain */
 				if (stringToParse == readerMap[FK_FileKey_Type::MultichainableMoveIdentifier]) {
 					move.setAsMultichainable();
+				}
+				/* if the NO_THROW_ON_AIRBORNE tag is found, the throw move cannot hit airborne opponents */
+				if (stringToParse == readerMap[FK_FileKey_Type::NoThrowOnAerealIdentifier]) {
+					move.setNoAirborneThrowFlag();
 				}
 				/* if the ANTI_AIR_ONLY tag is found, set the move as available to hit only air target*/
 				if (stringToParse == readerMap[FK_FileKey_Type::WorksVSAirOpponent]) {
@@ -1272,6 +1278,13 @@ namespace fk_engine{
 							moveInputFile >> vx >> vy >> vz;
 							tempBullet.setVelocity(core::vector3df(vx, vy, vz));
 						}
+						// acceleration
+						if (strcmp(temp.c_str(),
+							bulletAttributesMap[FK_FileKey_BulletType::BulletAcceleration].c_str()) == 0) {
+							f32 ax, ay, az;
+							moveInputFile >> ax >> ay >> az;
+							tempBullet.setAcceleration(core::vector3df(ax, ay, az));
+						}
 						// scale
 						if (strcmp(temp.c_str(),
 							bulletAttributesMap[FK_FileKey_BulletType::BulletScale].c_str()) == 0){
@@ -1559,7 +1572,11 @@ namespace fk_engine{
 							newMove.setInputWindowEndingFrame(endFrame);
 							newMove.setName(parsedMoves[k].getName());
 							newMove.setMoveId(parsedMoves[k].getMoveId());
-							parsedMoves[i].getFollowupMovesSet().push_back(newMove);
+							if (std::find(parsedMoves[i].getFollowupMovesSet().begin(),
+								parsedMoves[i].getFollowupMovesSet().end(),
+								newMove) == parsedMoves[i].getFollowupMovesSet().end()) {
+								parsedMoves[i].getFollowupMovesSet().push_back(newMove);
+							}
 						}
 					}
 				} 
@@ -1576,7 +1593,11 @@ namespace fk_engine{
 							newMove.setInputWindowEndingFrame(endFrame);
 							newMove.setName(parsedMoves[k].getName());
 							newMove.setMoveId(parsedMoves[k].getMoveId());
-							parsedMoves[i].getFollowupMovesSet().push_back(newMove);
+							if (std::find(parsedMoves[i].getFollowupMovesSet().begin(),
+								parsedMoves[i].getFollowupMovesSet().end(),
+								newMove) == parsedMoves[i].getFollowupMovesSet().end()) {
+								parsedMoves[i].getFollowupMovesSet().push_back(newMove);
+							}
 						}
 					}
 				}
@@ -1599,7 +1620,11 @@ namespace fk_engine{
 							newMove.setInputWindowEndingFrame(endFrame);
 							newMove.setName(parsedMoves[k].getName());
 							newMove.setMoveId(parsedMoves[k].getMoveId());
-							parsedMoves[i].getCancelIntoMovesSet().push_back(newMove);
+							if (std::find(parsedMoves[i].getCancelIntoMovesSet().begin(),
+								parsedMoves[i].getCancelIntoMovesSet().end(),
+								newMove) == parsedMoves[i].getCancelIntoMovesSet().end()) {
+								parsedMoves[i].getCancelIntoMovesSet().push_back(newMove);
+							}
 						}
 					}
 				}
@@ -1616,7 +1641,11 @@ namespace fk_engine{
 							newMove.setInputWindowEndingFrame(endFrame);
 							newMove.setName(parsedMoves[k].getName());
 							newMove.setMoveId(parsedMoves[k].getMoveId());
-							parsedMoves[i].getCancelIntoMovesSet().push_back(newMove);
+							if (std::find(parsedMoves[i].getCancelIntoMovesSet().begin(),
+								parsedMoves[i].getCancelIntoMovesSet().end(),
+								newMove) == parsedMoves[i].getCancelIntoMovesSet().end()) {
+								parsedMoves[i].getCancelIntoMovesSet().push_back(newMove);
+							}
 						}
 					}
 				}

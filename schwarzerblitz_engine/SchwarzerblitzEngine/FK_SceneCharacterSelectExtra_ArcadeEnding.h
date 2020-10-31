@@ -12,9 +12,10 @@ namespace fk_engine {
 		FK_SceneCharacterSelectExtra_ArcadeEnding();
 		FK_Scene::FK_SceneExtraType getExtraSceneType();
 		FK_StoryEvent getCutsceneToPlay();
+		void drawCharacterScreen() override;
 	protected:
-		void loadCharacterList();
-		bool checkIfEndingIsAvailable(std::string& characterPath);
+		void loadCharacterList() override;
+		bool checkIfExtraEndingIsAvailable(std::string& characterPath);
 		void loadSingleCharacterOutfitList(u32 characterId, FK_Character* character);
 	private:
 		std::map<u32, u32> availableEndingsIndexMap;

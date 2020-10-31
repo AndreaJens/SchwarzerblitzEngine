@@ -16,6 +16,7 @@ namespace fk_engine{
 		u32 numberOfContinues = 0;
 		u32 numberOfTriggersUsed = 0;
 		u32 numberOfRingouts = 0;
+		u32 numberOfTimeouts = 0;
 		u32 totalPlayTimeMs = 0;
 		f32 playerEnergyAtEndOfMatch = 1.0f;
 		std::vector<std::string> specialTagsUnlocked = std::vector<std::string>();
@@ -67,6 +68,7 @@ namespace fk_engine{
 		std::string numberOfPerfectWinsTag = "#perfect_rounds";
 		std::string numberOfContinuesTag = "#continues";
 		std::string numberOfRingoutsTag = "#ring_out_wins";
+		std::string numberOfTimeoutsTag = "#time_out_wins";
 		std::string AIdifficultyTag = "#AI_level";
 		std::string specialTagsBegin = "#tags";
 		std::string specialTagsEnd = "#tags_end";

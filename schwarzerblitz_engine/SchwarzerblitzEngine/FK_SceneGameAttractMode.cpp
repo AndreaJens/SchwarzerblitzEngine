@@ -27,14 +27,10 @@ namespace fk_engine {
 		FK_Options* newOptions,
 		FK_AdditionalSceneGameOptions new_additionalOptions)
 	{
-		HMODULE hModule = GetModuleHandleW(NULL);
-		TCHAR path[MAX_PATH];
-		int pathLength = GetModuleFileName(hModule, path, MAX_PATH);
-		TCHAR * out = PathFindFileName(path);
-		std::string exeName(out);
-		applicationPath = std::string(path).substr(0, pathLength - exeName.length());
+		applicationPath = std::string();
 		mediaPath = applicationPath + fk_constants::FK_MediaFileFolder;
 		configurationFilesPath = applicationPath + fk_constants::FK_ConfigurationFileFolder;
+		gameOptions = newOptions;
 		readSaveFile();
 		setupResourcesPaths("", "", "");
 		loadCharacterList();

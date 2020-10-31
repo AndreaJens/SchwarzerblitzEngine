@@ -95,6 +95,24 @@ namespace fk_engine {
 		voiceClipsPath = mediaPath + "voice_clips\\";
 	}
 
+	bool FK_SceneDiorama::isValidCharacterPath(std::string path)
+	{
+		std::ifstream testFile(path + "character.txt");
+		if (!testFile) {
+			return false;
+		}
+		return true;
+	}
+
+	bool FK_SceneDiorama::isValidStagePath(std::string path)
+	{
+		std::ifstream testFile(path + "config.txt");
+		if (!testFile) {
+			return false;
+		}
+		return true;
+	}
+
 	/* check if scene is running */
 	bool FK_SceneDiorama::isRunning() {
 		return (!backToCharacterSelection || (backToCharacterSelection && introCounter >= 0));
@@ -114,6 +132,9 @@ namespace fk_engine {
 
 	void FK_SceneDiorama::loadDioramaInformation() {
 		std::string path = charactersPath + character_configPath;
+		if (!isValidCharacterPath(path) && isValidCharacterPath(character_configPath)) {
+			path = character_configPath;
+		}
 		std::string configFile = "diorama.txt";
 		std::ifstream configurationFile((path + characterOutfit.outfitDirectory + configFile).c_str());
 		if (!configurationFile) {
@@ -211,6 +232,9 @@ namespace fk_engine {
 	/* setup stage */
 	void FK_SceneDiorama::setupStage() {
 		std::string newStagePath = stagesPath + stage_configPath;
+		if (!isValidStagePath(newStagePath) && isValidStagePath(stage_configPath)) {
+			newStagePath = stage_configPath;
+		}
 		//std::string newStagePath = stagesPath + "Elevator\\";
 		stage = new FK_Stage();
 		stage->setup(FK_SceneDiorama::device, driver, smgr, newStagePath);
@@ -231,13 +255,17 @@ namespace fk_engine {
 	/* setup character */
 	/* setup the characters */
 	void FK_SceneDiorama::setupCharacter() {
+		std::string path = charactersPath + character_configPath;
+		if (!isValidCharacterPath(path) && isValidCharacterPath(character_configPath)) {
+			path = character_configPath;
+		}
 		/* load player 1 */
 		//m_threadMutex.lock();
 		/*core::vector3df startingPosition = player1startingPosition;
 		startingPosition.Y += (player1->getAnimatedMesh()->getScale().Y - 1.0f) * additionalYunitsPerScaleUnit;*/
 		character = new FK_Character();
 		character->setup(databaseAccessor,
-			"character.txt", charactersPath + character_configPath,
+			"character.txt", path,
 			commonResourcesPath,
 			smgr, core::vector3df(50, 0, 0),
 			core::vector3df(0, 0, 0),

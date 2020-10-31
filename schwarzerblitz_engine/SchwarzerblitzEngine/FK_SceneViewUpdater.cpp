@@ -690,8 +690,10 @@ namespace fk_engine{
 		core::vector3d<f32> movementVectorNormal = movementVector;
 		/* compare the movement direction with the position of the walls (that is, find where the wall has been crossed) */
 		movementVectorNormal.normalize();
+		auto normalizedRingoutVector = movementVectorForRingout;
+		normalizedRingoutVector.normalize();
 		// make the dot product with the collision normal
-		f32 movementDirection = collisionNormal.dotProduct(movementVectorForRingout);
+		f32 movementDirection = collisionNormal.dotProduct(normalizedRingoutVector);
 		// if the movement is all in the direction of the wall, set flag that player is hitting the walls instead
 		if (movementDirection < -0.95) {
 			playerToUpdate->setRingWallCollisionFlag(true);
@@ -701,6 +703,7 @@ namespace fk_engine{
 		// check for ringout and shave movement
 		f32 ringoutDirectionThreshold = 0.87;
 		core::vector3d<f32> deltaToSubtract = movementVector.dotProduct(collisionNormal)*collisionNormal;
+		core::vector3d<f32> velocityCheck = playerToUpdate->getVelocityPerSecond();
 		// if the dot product is smaller than 0, then keep with the usual checks, otherwise stop the procedure
 		if (!insideStageBox && movementDirection < 0){
 			if (playerCanSufferRingout && !playerToUpdate->getRingoutFlag() && 

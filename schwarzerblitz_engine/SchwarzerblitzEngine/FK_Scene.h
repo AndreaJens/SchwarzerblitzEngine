@@ -32,7 +32,8 @@ namespace fk_engine{
 			SceneCharacterSelectionExtra = 1 << 19,
 			SceneArcadeCutscene = 1 << 20,
 			AnySceneStory = SceneStoryModeMatch | SceneStoryModeDialogue,
-			SceneGameAttractMode = 1 << 21
+			SceneGameAttractMode = 1 << 21,
+			SceneMusicPlayer = 1 << 22,
 		};
 		const enum FK_SceneFreeMatchType : u32{
 			FreeMatchMultiplayer = 0,
@@ -58,6 +59,8 @@ namespace fk_engine{
 			ExtraGallerySelection = 7,
 			ExtraArcadeEndingSelection = 8,
 			ExtraArcadeEndingGallery = 9,
+			ExtraMusicPlayer = 10,
+			ExtraDiscordLink = 11,
 		};
 		const enum FK_SceneArcadeType : u32{
 			ArcadeClassic = 0,

@@ -44,6 +44,7 @@ namespace fk_engine{
 	void FK_InputReceiver::setJoypadInfo(core::array<SJoystickInfo> &joypadInfo)
 	{
 		joypadRecordedNumber = joypadInfo.size();
+		//joypadIndexMap.clear();
 		for (u32 joypadId = 0; joypadId < joypadInfo.size(); ++joypadId){
 			if (KeyIsDownJoypad.count(joypadId) > 0 && KeyIsDownJoypad[joypadId] != NULL) {
 				delete [] KeyIsDownJoypad[joypadId];
@@ -53,6 +54,7 @@ namespace fk_engine{
 			for (u32 i = 0; i < maxInputSize; ++i){
 				KeyIsDownJoypad[joypadId][i] = false;
 			}
+			//joypadIndexMap[joypadId] = joypadId;
 		}
 	};
 

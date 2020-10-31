@@ -105,10 +105,11 @@ namespace fk_engine{
 	}
 
 	void FK_SceneStoryDialogue::update(){
-		now = device->getTimer()->getTime();
-		delta_t_ms = now - then;
-		then = now;
 		if (cycleId == 0){
+			now = device->getTimer()->getTime();
+			nowReal = device->getTimer()->getRealTime();
+			thenReal = nowReal;
+			then = now;
 			cycleId = 1;
 			delta_t_ms = 0;
 			setupInitialBGM();
@@ -119,190 +120,197 @@ namespace fk_engine{
 			}
 		}
 		else{
-			// update typing sound
-			typingSoundTimerMS += delta_t_ms;
-			// update transition progress
-			if (transitionPicture != NULL) {
-				transitionTimerMS += delta_t_ms;
-			}
-			// update outro and intro
-			if (isPerformingIntro || isPerformingOutro){
-				fadeoutTimerMS += delta_t_ms;
-				for each(auto window in windows){
-					if (window->isClosing()){
-						window->update(delta_t_ms);
-					}
+			now = device->getTimer()->getTime();
+			nowReal = device->getTimer()->getRealTime();
+			delta_t_ms = now - then;
+			if (nowReal - thenReal >= 16) {
+				then = now;
+				thenReal = nowReal;
+				// update typing sound
+				typingSoundTimerMS += delta_t_ms;
+				// update transition progress
+				if (transitionPicture != NULL) {
+					transitionTimerMS += delta_t_ms;
 				}
-				if (isPerformingOutro) {
-					f32 ratio = 1 - (f32)fadeoutTimerMS / (f32)FK_SceneStoryDialogue::FadeoutTimeMS;
-					if (ratio < 0) {
-						ratio = 0.f;
-					}
-					bgm.setVolume(currentBGM.bgmVolume * gameOptions->getMusicVolume() * ratio);
-				}
-				if (isPerformingIntro && fadeoutTimerMS > FK_SceneStoryDialogue::FadeinTimeMS){
-					fadeoutTimerMS = FK_SceneStoryDialogue::FadeinTimeMS;
-					isPerformingIntro = false;
-				}
-				else if (isPerformingOutro && fadeoutTimerMS > FK_SceneStoryDialogue::FadeoutTimeMS){
-					fadeoutTimerMS = FK_SceneStoryDialogue::FadeoutTimeMS;
-					isPerformingOutro = false;
-					if (!(skippingScene && !storyEvent->saveWhenSkipped)) {
-						if (storyEvent->saveStoryCompletion){
-							updateSaveFileData();
+				// update outro and intro
+				if (isPerformingIntro || isPerformingOutro) {
+					fadeoutTimerMS += delta_t_ms;
+					for each (auto window in windows) {
+						if (window->isClosing()) {
+							window->update(delta_t_ms);
 						}
-						storyEvent->saveStoryCompletion = true;
 					}
-				}
-			}
-			else{
-				fadeoutTimerMS = 0;
-				if (chapterMenu->isActive()) {
-					updateChapterMenu();
+					if (isPerformingOutro) {
+						f32 ratio = 1 - (f32)fadeoutTimerMS / (f32)FK_SceneStoryDialogue::FadeoutTimeMS;
+						if (ratio < 0) {
+							ratio = 0.f;
+						}
+						bgm.setVolume(currentBGM.bgmVolume * gameOptions->getMusicVolume() * ratio);
+					}
+					if (isPerformingIntro && fadeoutTimerMS > FK_SceneStoryDialogue::FadeinTimeMS) {
+						fadeoutTimerMS = FK_SceneStoryDialogue::FadeinTimeMS;
+						isPerformingIntro = false;
+					}
+					else if (isPerformingOutro && fadeoutTimerMS > FK_SceneStoryDialogue::FadeoutTimeMS) {
+						fadeoutTimerMS = FK_SceneStoryDialogue::FadeoutTimeMS;
+						isPerformingOutro = false;
+						if (!(skippingScene && !storyEvent->saveWhenSkipped)) {
+							if (storyEvent->saveStoryCompletion) {
+								updateSaveFileData();
+							}
+							storyEvent->saveStoryCompletion = true;
+						}
+					}
 				}
 				else {
-					updateInput();
-					if (switchWindow) {
-						switchWindowTimer += delta_t_ms;
+					fadeoutTimerMS = 0;
+					if (chapterMenu->isActive()) {
+						updateChapterMenu();
 					}
-					for each(auto window in windows) {
-						window->update(delta_t_ms);
-					}
-				}
-			}
-			// update windows
-			std::string mugshotPath;
-			f32 scaleFactor = screenSize.Width / (f32)fk_constants::FK_DefaultResolution.Width;
-			u32 additionalTime = FK_SceneStoryDialogue::WindowActivityTimeMS;
-			if (dialogueIndex >= 0 && dialogueIndex < (s32)dialogues.size()) {
-				if (dialogues[dialogueIndex].ignoreBufferTime) {
-					additionalTime = 0;
-				}
-				additionalTime += dialogues[dialogueIndex].autoProgress ?
-					dialogues[dialogueIndex].additionalTimeAfterDialogue : 0;
-			}
-			if (!switchWindow){
-				if (dialogueIndex >= 0 &&
-					dialogueIndex < dialogues.size() &&
-					dialogues[dialogueIndex].autoProgress && (
-					(windows[0]->isAllTextDisplayed() && windows[0]->isActive()) ||
-					(windows[1]->isAllTextDisplayed() && windows[1]->isActive()) ||
-					(windows[2]->isAllTextDisplayed() && windows[2]->isActive())
-					)){
-					switchWindow = true;
-					switchWindowTimer = 0;
-				}
-				else 
-				if (!windows[0]->isActive() && !windows[1]->isActive() && !windows[2]->isActive()){
-					switchWindow = true;
-					switchWindowTimer = 0;
-				}
-			}
-			// set new dialogue
-			else if (switchWindowTimer > additionalTime){
-				canSkipDialogue = true;
-				switchWindowTimer = 0;
-				switchWindow = false;
-				if (dialogueIndex < (s32)dialogues.size()){
-					dialogueIndex += 1;
-				}
-				if (dialogueIndex >= 1 && dialogues[dialogueIndex - 1].closeSingleWindowAfterDialogue){
-					if (dialogueIndex < (s32)dialogues.size() &&
-						dialogues[dialogueIndex - 1].position != dialogues[dialogueIndex].position){
-						u32 windowIndex = (u32)(dialogues[dialogueIndex - 1].position);
-						windows[windowIndex]->close(200);
-					}
-				}
-				if (dialogueIndex >= 1 && dialogues[dialogueIndex - 1].closeWindowsAfterDialogue){
-					for each (auto window in windows){
-						window->close(500);
-					}
-				}
-				if (dialogueIndex >= (s32)dialogues.size()){
-					for each (auto window in windows){
-						window->close(500);
-					}
-					if (!isPerformingOutro && !endScene){
-						//if (!(skippingScene && !storyEvent->saveWhenSkipped)) {
-						//	updateSaveFileData();
-						//}
-						//storyEvent->saveStoryCompletion = true;
-						isPerformingOutro = true;
-						endScene = true;
-						fadeoutTimerMS = 0;
-					}
-					return;
-				}
-				// update BGM
-				setupBGM(dialogueIndex);
-				// play sound effect
-				setupSFX(dialogueIndex);
-				// update background
-				std::string backgroundPath = 
-					mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory + dialogues[dialogueIndex].backgroundTextureName;
-				if (dialogues[dialogueIndex].takeBackgroundFromStagePreview){
-					backgroundPath = stagesPath + dialogues[dialogueIndex].backgroundTextureName + "preview.jpg";
-				}
-				if (dialogues[dialogueIndex].noBackgroundPicture){
-					backgroundPicture = NULL;
-					currentBackground = std::string();
-				}
-				else{
-					if (backgroundPath != currentBackground && !(backgroundPath == mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory)){
-						//delete backgroundPicture;
-						backgroundPicture = driver->getTexture(backgroundPath.c_str());
-						if (!backgroundPicture){
-							backgroundPath = episodeResourceDirectory +
-								dialogues[dialogueIndex].backgroundTextureName;
-							backgroundPicture = driver->getTexture(backgroundPath.c_str());
+					else {
+						updateInput();
+						if (switchWindow) {
+							switchWindowTimer += delta_t_ms;
 						}
-						currentBackground = backgroundPath;
+						for each (auto window in windows) {
+							window->update(delta_t_ms);
+						}
 					}
 				}
-				std::string transitionPath =
-					mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory + dialogues[dialogueIndex].backgroundTransitionTextureName;
-				if (/*dialogues[dialogueIndex].autoProgress &&*/ !(transitionPath == mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory)) {
-					transitionPicture = driver->getTexture(transitionPath.c_str());
-					if (!transitionPicture) {
-						transitionPath = episodeResourceDirectory +
-							dialogues[dialogueIndex].backgroundTransitionTextureName;
-						transitionPicture = driver->getTexture(transitionPath.c_str());
+				// update windows
+				std::string mugshotPath;
+				f32 scaleFactor = screenSize.Width / (f32)fk_constants::FK_DefaultResolution.Width;
+				u32 additionalTime = FK_SceneStoryDialogue::WindowActivityTimeMS;
+				if (dialogueIndex >= 0 && dialogueIndex < (s32)dialogues.size()) {
+					if (dialogues[dialogueIndex].ignoreBufferTime) {
+						additionalTime = 0;
 					}
-					if (!transitionPicture) {
+					additionalTime += dialogues[dialogueIndex].autoProgress ?
+						dialogues[dialogueIndex].additionalTimeAfterDialogue : 0;
+				}
+				if (!switchWindow) {
+					if (dialogueIndex >= 0 &&
+						dialogueIndex < dialogues.size() &&
+						dialogues[dialogueIndex].autoProgress && (
+							(windows[0]->isAllTextDisplayed() && windows[0]->isActive()) ||
+							(windows[1]->isAllTextDisplayed() && windows[1]->isActive()) ||
+							(windows[2]->isAllTextDisplayed() && windows[2]->isActive())
+							)) {
+						switchWindow = true;
+						switchWindowTimer = 0;
+					}
+					else
+						if (!windows[0]->isActive() && !windows[1]->isActive() && !windows[2]->isActive()) {
+							switchWindow = true;
+							switchWindowTimer = 0;
+						}
+				}
+				// set new dialogue
+				else if (switchWindowTimer > additionalTime) {
+					canSkipDialogue = true;
+					switchWindowTimer = 0;
+					switchWindow = false;
+					if (dialogueIndex < (s32)dialogues.size()) {
+						dialogueIndex += 1;
+					}
+					if (dialogueIndex >= 1 && dialogues[dialogueIndex - 1].closeSingleWindowAfterDialogue) {
+						if (dialogueIndex < (s32)dialogues.size() &&
+							dialogues[dialogueIndex - 1].position != dialogues[dialogueIndex].position) {
+							u32 windowIndex = (u32)(dialogues[dialogueIndex - 1].position);
+							windows[windowIndex]->close(200);
+						}
+					}
+					if (dialogueIndex >= 1 && dialogues[dialogueIndex - 1].closeWindowsAfterDialogue) {
+						for each (auto window in windows) {
+							window->close(500);
+						}
+					}
+					if (dialogueIndex >= (s32)dialogues.size()) {
+						for each (auto window in windows) {
+							window->close(500);
+						}
+						if (!isPerformingOutro && !endScene) {
+							//if (!(skippingScene && !storyEvent->saveWhenSkipped)) {
+							//	updateSaveFileData();
+							//}
+							//storyEvent->saveStoryCompletion = true;
+							isPerformingOutro = true;
+							endScene = true;
+							fadeoutTimerMS = 0;
+						}
+						return;
+					}
+					// update BGM
+					setupBGM(dialogueIndex);
+					// play sound effect
+					setupSFX(dialogueIndex);
+					// update background
+					std::string backgroundPath =
+						mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory + dialogues[dialogueIndex].backgroundTextureName;
+					if (dialogues[dialogueIndex].takeBackgroundFromStagePreview) {
+						backgroundPath = stagesPath + dialogues[dialogueIndex].backgroundTextureName + "preview.jpg";
+					}
+					if (dialogues[dialogueIndex].noBackgroundPicture) {
+						backgroundPicture = NULL;
+						currentBackground = std::string();
+					}
+					else {
+						if (backgroundPath != currentBackground && !(backgroundPath == mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory)) {
+							//delete backgroundPicture;
+							backgroundPicture = driver->getTexture(backgroundPath.c_str());
+							if (!backgroundPicture) {
+								backgroundPath = episodeResourceDirectory +
+									dialogues[dialogueIndex].backgroundTextureName;
+								backgroundPicture = driver->getTexture(backgroundPath.c_str());
+							}
+							currentBackground = backgroundPath;
+						}
+					}
+					std::string transitionPath =
+						mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory + dialogues[dialogueIndex].backgroundTransitionTextureName;
+					if (/*dialogues[dialogueIndex].autoProgress &&*/ !(transitionPath == mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory)) {
+						transitionPicture = driver->getTexture(transitionPath.c_str());
+						if (!transitionPicture) {
+							transitionPath = episodeResourceDirectory +
+								dialogues[dialogueIndex].backgroundTransitionTextureName;
+							transitionPicture = driver->getTexture(transitionPath.c_str());
+						}
+						if (!transitionPicture) {
+							transitionPicture = NULL;
+						}
+						transitionTimerMS = 0;
+					}
+					else {
 						transitionPicture = NULL;
 					}
-					transitionTimerMS = 0;
-				}
-				else {
-					transitionPicture = NULL;
-				}
-				// update mugshot for dialogue
-				if (dialogues[dialogueIndex].takeMugshotFromCharacterPreview){
-					mugshotPath = charactersPath + dialogues[dialogueIndex].mugshotFilename + "FightPreview.png";
-				}
-				else{
-					mugshotPath = mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory +
-						FK_SceneStoryDialogue::StoryFilesMugshotDirectory + dialogues[dialogueIndex].mugshotFilename;
-					if (!driver->getTexture(mugshotPath.c_str())){
-						mugshotPath = episodeResourceDirectory +
-							dialogues[dialogueIndex].mugshotFilename;
+					// update mugshot for dialogue
+					if (dialogues[dialogueIndex].takeMugshotFromCharacterPreview) {
+						mugshotPath = charactersPath + dialogues[dialogueIndex].mugshotFilename + "FightPreview.png";
 					}
+					else {
+						mugshotPath = mediaPath + FK_SceneStoryDialogue::StoryFilesDirectory +
+							FK_SceneStoryDialogue::StoryFilesMugshotDirectory + dialogues[dialogueIndex].mugshotFilename;
+						if (!driver->getTexture(mugshotPath.c_str())) {
+							mugshotPath = episodeResourceDirectory +
+								dialogues[dialogueIndex].mugshotFilename;
+						}
+					}
+					for each (auto window in windows) {
+						window->setActive(false);
+					}
+					u32 activeWinIndex = dialogues[dialogueIndex].position;
+					FK_DialogueWindow::DialogueWindowAlignment alignment = FK_DialogueWindow::DialogueWindowAlignment::Left;
+					if (activeWinIndex == StoryDialogue::WindowPosition::Top) {
+						alignment = FK_DialogueWindow::DialogueWindowAlignment::Right;
+					}
+					windows[activeWinIndex]->setActive(true);
+					windows[activeWinIndex]->setVisibility(true);
+					windows[activeWinIndex]->setBackgroundVisibility(dialogues[dialogueIndex].isBackgroundVisible);
+					windows[activeWinIndex]->reset(scaleFactor, mugshotPath, dialogues[dialogueIndex].dialogueText,
+						alignment,
+						FK_DialogueWindow::DialogueTextMode::CharByChar);
+					if (windows[activeWinIndex]->isClosed()) windows[activeWinIndex]->open(100);
 				}
-				for each (auto window in windows){
-					window->setActive(false);
-				}
-				u32 activeWinIndex = dialogues[dialogueIndex].position;
-				FK_DialogueWindow::DialogueWindowAlignment alignment = FK_DialogueWindow::DialogueWindowAlignment::Left;
-				if (activeWinIndex == StoryDialogue::WindowPosition::Top){
-					alignment = FK_DialogueWindow::DialogueWindowAlignment::Right;
-				}
-				windows[activeWinIndex]->setActive(true);
-				windows[activeWinIndex]->setVisibility(true);
-				windows[activeWinIndex]->setBackgroundVisibility(dialogues[dialogueIndex].isBackgroundVisible);
-				windows[activeWinIndex]->reset(scaleFactor, mugshotPath, dialogues[dialogueIndex].dialogueText,
-					alignment,
-					FK_DialogueWindow::DialogueTextMode::CharByChar);
-				if (windows[activeWinIndex]->isClosed()) windows[activeWinIndex]->open(100);
 			}
 		}
 		// draw all

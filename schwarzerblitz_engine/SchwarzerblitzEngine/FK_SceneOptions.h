@@ -17,6 +17,8 @@ using namespace gui;
 
 namespace fk_engine{
 	class FK_SceneOptions : public FK_SceneWithInput{
+	private:
+		const u32 maxInputDelay = 12;
 	public:
 		FK_SceneOptions();
 		FK_SceneOptions(IrrlichtDevice *newDevice, core::array<SJoystickInfo> joypadInfo, FK_Options* newOptions);
@@ -37,7 +39,7 @@ namespace fk_engine{
 		void updateKeyMapping(bool drawScene = true);
 		void initializeKeyboardMappingSolo();
 		void initializeKeyboardMappingMultiplayer();
-		void initializeJoypadMapping();
+		void initializeJoypadMapping(u32 playerIndex = -1);
 		virtual void drawBackground();
 		virtual void drawCaptions();
 		void drawTitle();
@@ -73,6 +75,8 @@ namespace fk_engine{
 			KeyboardRemappingSolo = 3,
 			KeyboardRemappingMultiplayer = 4,
 			JoypadRemapping = 5,
+			JoypadRemappingPlayer1 = 9,
+			JoypadRemappingPlayer2 = 10,
 			JoypadToXboxTranslation = 6,
 			ShowTutorial = 7,
 			ShowCredits = 8,
@@ -98,6 +102,10 @@ namespace fk_engine{
 			Opt_ArcadeRounds = 13,
 			Opt_PostProcessingEffects = 4,
 			Opt_LightEffects = 2,
+			Opt_Player1InputDelay = 17,
+			Opt_Player2InputDelay = 18,
+			Opt_MasterVolume = 19,
+			Opt_TourneyMode = 20,
 		};
 
 		std::vector<std::string> menuOptionsStrings;

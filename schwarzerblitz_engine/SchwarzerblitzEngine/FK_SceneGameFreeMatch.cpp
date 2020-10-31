@@ -7,6 +7,7 @@ namespace fk_engine{
 	}
 	// process match end
 	void FK_SceneGameFreeMatch::processMatchEnd(){
+		processCharacterStats();
 		matchStatistics.setMatchResult(winnerId);
 		processingSceneEnd = true;
 		FK_SceneGame::updateSaveFileData();
@@ -137,6 +138,7 @@ namespace fk_engine{
 				characterStatisticsStructure[key2].VsRecords[key1].numberOfDraws += 1;
 			}
 		}
+		FK_SceneGame::processEndOfRoundStatistics();
 	}
 
 	// update additional scene logic
