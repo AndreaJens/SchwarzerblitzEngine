@@ -1,4 +1,4 @@
-# Schwarzerblitz 3D Fighting Game Engine
+# Schwarzerblitz - 3D Fighting Game Engine
 
 Schwarzerblitz ([link to GameJolt page](https://gamejolt.com/games/schwarzerblitz/242456)) is a 
 free (as in beer) 3D fighting game project built by me, Andrea "Jens" Demetrio, in the time spanning from 2016 to 2020.
