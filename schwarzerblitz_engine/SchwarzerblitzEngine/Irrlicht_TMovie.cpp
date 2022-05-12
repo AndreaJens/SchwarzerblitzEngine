@@ -1,4 +1,4 @@
-// class implemented on 06.12.2018 fllowing the thread by Emil_halim » Tue Apr 12, 2005 8:06 pm
+// class implemented on 06.12.2018 following the thread by Emil_halim » Tue Apr 12, 2005 8:06 pm
 //http://irrlicht.sourceforge.net/forum/viewtopic.php?t=6389
 
 #pragma once

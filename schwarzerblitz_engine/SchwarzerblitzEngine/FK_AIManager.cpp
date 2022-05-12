@@ -1,3 +1,49 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
+
 #include"FK_AIManager.h"
 #include<iostream>
 #include<algorithm>
@@ -97,7 +143,7 @@ namespace fk_engine{
 		if (AIPlayer->getLifePercentage() < 0.3) {
 			total *= 2;
 		}
-		/* do not increase odds above 40% */
+		/* do not increase odds above 90% */
 		if (total > 90){
 			return 90;
 		}
@@ -177,7 +223,7 @@ namespace fk_engine{
 	//! get waiting time after move ends
 	u32 FK_AIManager::getAfterMoveCooldown() {
 		/* base value = 600 ms of time delay between moves at level 0 */
-		u32 baseValue = 2500;
+		u32 baseValue = 2200;
 		/* decrement the percentage by 75ms for each level above 0*/
 		u32 decrementPerLevelUntil5 = 240;
 		u32 decrementPerLevelAbove5 = 60;
@@ -293,27 +339,6 @@ namespace fk_engine{
 					return false;
 				}
 			}
-			//u32 count = AIPlayer->getCharacterAdditionalObjects().size();
-			//for (u32 i = 0; i < count; ++i){
-			//	std::string nameTag = AIPlayer->getCharacterAdditionalObjects().at(i).uniqueNameId;
-			//	if (nameTag != std::string()){
-			//		if (move.isObjectRequired(nameTag)){
-			//			moveAvailable &= AIPlayer->getCharacterAdditionalObjects().at(i).isActive();
-			//		}
-			//		else if (move.isObjectForbidden(nameTag)){
-			//			moveAvailable &= !AIPlayer->getCharacterAdditionalObjects().at(i).isActive();
-			//		}
-			//		// check if move can pick up object only
-			//		if (move.canPickUpItem(nameTag) &&
-			//			AIPlayer->getPickableObjectId() != nameTag &&
-			//			!move.canBeTriggered()){
-			//			moveAvailable = false;
-			//		}
-			//	}
-			//	if (!moveAvailable){
-			//		return false;
-			//	}
-			//}
 		}
 		return moveAvailable;
 	}
@@ -391,25 +416,6 @@ namespace fk_engine{
 				return false;
 			}
 		}
-		else{
-			if (AIPlayer->getCurrentMove() != NULL && !AIPlayer->hasActiveMove()) {
-				return true;
-			}
-			else {
-				if (move.isInvincible(move.getStartingFrame(), FK_Attack_Type::AllAtk) &&
-					!move.canBeTriggered() &&
-					move.getTotalBulletDamage() == 0) {
-					if (AIPlayer->getStance() == FK_Stance_Type::GroundStance ||
-						AIPlayer->getStance() == FK_Stance_Type::CrouchedStance/* ||
-						AIPlayer->getStance() == FK_Stance_Type::RunningStance*/) {
-						return false;
-					}
-				}
-				else {
-					return true;
-				}
-			}
-		}
 		return true;
 	}
 
@@ -417,24 +423,6 @@ namespace fk_engine{
 	bool FK_AIManager::additionalJackOfAllTradesConditionsAreFulfilled(FK_Move& move, FK_Stance_Type stance, f32 distance){
 		return additionalLuchadorConditionsAreFulfilled(move, stance, distance) && 
 			additionalBalancedConditionsAreFulfilled(move, stance, distance);
-	}
-
-	/* load additional settings for the AI, if any*/
-	void FK_AIManager::loadAIAdvancedSettings()
-	{
-		if (AIPlayer == NULL) {
-			return;
-		}
-		std::string rootPath = AIPlayer->getCharacterDirectory();
-		std::string testPath = rootPath + AIPlayer->getOutfitPath();
-		std::ifstream configFile((testPath + AdvancedAISettingsFileName).c_str());
-		if (!configFile) {
-			configFile.clear();
-			configFile.open((rootPath + AdvancedAISettingsFileName).c_str());
-			if (!configFile) {
-				return;
-			}
-		}
 	}
 
 	void FK_AIManager::getAvailableMovesIndices(std::vector<int>&availableMovesIndices, FK_Stance_Type stance, f32 distanceValue){
@@ -1020,19 +1008,6 @@ namespace fk_engine{
 								button = (u32)FK_Input_Buttons::Left_Direction;
 							buttonsPressed |= button;
 						}
-						else {
-							/*
-							u32 button = 0;
-							double random = ((double)rand() / (RAND_MAX)) * 100;
-							if (random >= 65){
-							button = button | FK_Input_Buttons::Up_Direction;
-							}
-							else if (random >= 30){
-							button = button | FK_Input_Buttons::Down_Direction;
-							}
-							*/
-							//buttonsPressed |= button;
-						}
 					}
 				}
 			}
@@ -1045,12 +1020,6 @@ namespace fk_engine{
 				if (targetPlayer->isGuarding()){
 					random /= 1.5;
 				}
-				/*if (random < getTriggerAttackLikelihood() && 
-					((targetPlayer->isGuarding() && AIPlayer->getCurrentMove()->hasFollowup()) ||
-					!targetPlayer->isGuarding())){
-					u32 button = fk_constants::FK_TriggerButton;
-					buttonsPressed |= button;
-				}*/
 				if (random < getTriggerAttackLikelihood() &&
 					AIPlayer->getCurrentMove()->hasFollowup() && 
 					(targetPlayer->isGuarding() || targetPlayer->isHitStun())) {

@@ -1,3 +1,48 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
 #ifndef FK_SCENEGAME_CLASS
 #define FK_SCENEGAME_CLASS
 
@@ -204,6 +249,7 @@ namespace fk_engine{
 		// process character stats
 		virtual void processCharacterStats();
 		virtual void processArcadeAchievements(FK_SceneArcadeType arcadeType);
+		virtual void closeReplayFiles();
 	public:
 		FK_SceneGame();
 		virtual ~FK_SceneGame() {};
@@ -220,7 +266,7 @@ namespace fk_engine{
 			bool player1AI = false, bool player2AI = false,
 			int player1AILevel = 0, int player2AILevel = 0);
 		void initialize();
-		void update();
+		virtual void update();
 		virtual void dispose();
 		virtual bool isRunning();
 		FK_Scene::FK_SceneType nameId();
@@ -321,7 +367,7 @@ namespace fk_engine{
 		bool isTriggerComboActive();
 		void activateTriggerComboEffect();
 		void cancelTriggerComboEffect();
-		virtual void updateTriggerComboEffect(u32 frameDelta, bool newMovePlayer1, bool newMovePlayer2);
+		void updateTriggerComboEffect(u32 frameDelta, bool newMovePlayer1, bool newMovePlayer2);
 		/* counter attack SFX*/
 		void updateCounterattackEffects(u32 frameDelta);
 		void activateCounterattackEffects();
@@ -372,6 +418,9 @@ namespace fk_engine{
 		void updateFreeCameraPosition(u32 pressedButtons, u32 delta_t_ms);
 		void setFreeCameraPosition(f32 &distance, f32 angle, f32 offsetY, f32 targetOffsetY = 0.f);
 		void saveFreeCameraScreenshot();
+		void playBgm();
+		void synchronizeMeshes();
+		bool isProcessingCounterAttackEffect();
 	protected:
 		/* scaling damage array */
 		std::vector<f32> damageScaling;
@@ -465,6 +514,9 @@ namespace fk_engine{
 		u32 thenReal;
 		std::chrono::time_point<std::chrono::steady_clock> nowClock;
 		std::chrono::time_point<std::chrono::steady_clock> thenClock;
+		// cinematic camera
+		bool cinematicCameraActivePlayer1;
+		bool cinematicCameraActivePlayer2;
 	private:
 		/* voice clips path */
 		std::string voiceClipsPath;
@@ -585,9 +637,6 @@ namespace fk_engine{
 		// shaders
 		std::vector<s32> characterMeshMaterialPlayer1;
 		std::vector<s32> characterMeshMaterialPlayer2;
-		// cinematic camera
-		bool cinematicCameraActivePlayer1;
-		bool cinematicCameraActivePlayer2;
 		u32 counterAttackEffectCounterMs;
 		u32 counterAttackEffectCooldownCounterMs;
 		bool updateCounterAttackEffectFlag;

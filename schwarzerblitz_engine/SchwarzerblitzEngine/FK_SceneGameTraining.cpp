@@ -1,3 +1,48 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
 #include"FK_SceneGameTraining.h"
 
 namespace fk_engine{
@@ -73,6 +118,7 @@ namespace fk_engine{
 		isRecordingDummyActions = false;
 		isControllingPlayer2ForRecording = false;
 		isReplayingDummyActions = false;
+		refreshBuffer = false;
 		recordBuffer.clear();
 		recordTimerMs = 0;
 		dummyRecoveryOptionsToCheck = dummyRecoveryOptions;
@@ -232,7 +278,6 @@ namespace fk_engine{
 		}
 	}
 
-
 	// update input for Record & Replay mode
 	void FK_SceneGameTraining::updateInputForRecordAndReplayMode(const u32& inputButtons, u32 delta_t_ms) {
 		if (!isControllingPlayer2ForRecording && !isReplayingDummyActions) {
@@ -243,13 +288,14 @@ namespace fk_engine{
 				player1input->clearBuffer();
 				inputCooldownForReset = FK_SceneGameTraining::InputCooldownForResetMs;
 			}
-			else if (!isReplayingDummyActions && 
-				recordBufferSize > 0 && 
+			else if (!isReplayingDummyActions &&
+				recordBufferSize > 0 &&
 				(inputButtons & FK_Input_Buttons::Modifier_Button) != 0) {
 				isReplayingDummyActions = true;
 				isControllingPlayer2ForRecording = false;
 				recordTimerMs = 0;
 				recordReplayInputIndexMs = 0;
+				refreshBuffer = false;
 				inputReceiver->reset();
 				player1input->clearBuffer();
 				inputCooldownForReset = FK_SceneGameTraining::InputCooldownForResetMs;
@@ -281,6 +327,7 @@ namespace fk_engine{
 				isReplayingDummyActions = true;
 				recordTimerMs = 0;
 				recordReplayInputIndexMs = 0;
+				refreshBuffer = false;
 				inputReceiver->reset();
 				player1input->clearBuffer();
 				isControllingPlayer2ForRecording = false;
@@ -309,7 +356,7 @@ namespace fk_engine{
 			}
 		}
 		else if (isReplayingDummyActions) {
-			if ((inputButtons & (FK_Input_Buttons::Cancel_Button | 
+			if ((inputButtons & (FK_Input_Buttons::Cancel_Button |
 				FK_Input_Buttons::Modifier_Button |
 				FK_Input_Buttons::Selection_Button)) != 0) {
 				getSoundManager()->playSound("cancel", 100.0 * gameOptions->getSFXVolume());
@@ -351,12 +398,14 @@ namespace fk_engine{
 		// manage record timer
 		if (isReplayingDummyActions) {
 			recordTimerMs += (s32)delta_t_ms;
+			refreshBuffer = false;
 			if (recordReplayInputIndexMs >= (s32)recordBufferSize) {
 				recordTimerMs = 0;
 				recordReplayInputIndexMs = 0;
 			}
 			while (recordTimerMs > recordBuffer[recordReplayInputIndexMs].time) {
 				recordReplayInputIndexMs += 1;
+				refreshBuffer = true;
 				if (recordReplayInputIndexMs >= (s32)recordBufferSize) {
 					break;
 				}
@@ -971,7 +1020,7 @@ namespace fk_engine{
 				}
 			}
 			else if (isReplayingDummyActions) {
-				if (recordReplayInputIndexMs < recordBufferSize) {
+				if (recordReplayInputIndexMs < recordBufferSize && refreshBuffer) {
 					player2input->setBuffer(recordBuffer[recordReplayInputIndexMs].buffer, true);
 					bool success = player2->performMove(player2input->readBuffer(player2));
 				}

@@ -1,3 +1,48 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
 #include "FK_Stage.h"
 #include "FK_Database.h"
 #include<fstream>
@@ -58,9 +103,9 @@ namespace fk_engine{
 	}
 	// constructor #2 (main one): it's just a wrapper for the setup method
 	FK_Stage::FK_Stage(IrrlichtDevice* new_device, video::IVideoDriver* new_driver, 
-		scene::ISceneManager* new_smgr, std::string new_path) : FK_Stage(){
+		scene::ISceneManager* new_smgr, std::string new_path, std::string player1Path, std::string player2Path) : FK_Stage(){
 		setup(new_device, new_driver,
-			new_smgr, new_path);
+			new_smgr, new_path, player1Path, player2Path);
 	}
 
 	// destructor
@@ -109,13 +154,13 @@ namespace fk_engine{
 
 	// setup (true initializer of the class, called during multi-thread processes)
 	void FK_Stage::setup(IrrlichtDevice* new_device, video::IVideoDriver* new_driver,
-		scene::ISceneManager* new_smgr, std::string new_path){
+		scene::ISceneManager* new_smgr, std::string new_path, std::string player1Path, std::string player2Path){
 		device = new_device;
 		driver = new_driver;
 		smgr = new_smgr;
 		path = new_path;
 		prepareKeysForFileLoad();
-		loadStageFromFile();
+		loadStageFromFile(player1Path, player2Path);
 		setNode();
 		setWaterNode();
 		setAdditionalObjects();
@@ -165,6 +210,8 @@ namespace fk_engine{
 		fileKeys[FK_StageFileKeys::StageRain] = "#WEATHER";
 		fileKeys[FK_StageFileKeys::StageRaindropEffect] = "#RAINDROP_EFFECT";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject] = "#ADDITIONAL_OBJECT";
+		fileKeys[FK_StageFileKeys::StageAdditionalObject_ExclusiveVisibilityCharacterCondition] = "#only_with_character";
+		fileKeys[FK_StageFileKeys::StageAdditionalObject_ExclusiveInvisibilityCharacterCondition] = "#only_without_character";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_Position] = "#position";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_Rotation] = "#rotation";
 		fileKeys[FK_StageFileKeys::StageAdditionalObject_Scale] = "#scale";
@@ -194,7 +241,7 @@ namespace fk_engine{
 		fileKeys[FK_StageFileKeys::StageComplexRingoutPlaneIndices_End] = "#COMPLEX_RINGOUT_ALLOWANCE_FLAGS_END";
 	}
 
-	void FK_Stage::loadStageFromFile(){
+	void FK_Stage::loadStageFromFile(std::string player1Path, std::string player2Path){
 		/* open file and start parsing it */
 		std::string defaultConfigFileName = "Config.txt";
 		std::string filename(path + defaultConfigFileName);
@@ -220,6 +267,30 @@ namespace fk_engine{
 		pixelShaderParameters["character_positions"] = FK_StagePixelShader::FK_StagePixelShaderParameters::characterPositionsXY;
 		pixelShaderParameters["time_ms"] = FK_StagePixelShader::FK_StagePixelShaderParameters::timeMs;
 		pixelShaderParameters["timer_value"] = FK_StagePixelShader::FK_StagePixelShaderParameters::timerValue;
+
+		std::string player1CharacterPath = player1Path;
+		std::string player1OutfitName = std::string();
+		// find mesh path
+		auto pos = player1Path.find('\\');
+		if (pos != std::string::npos) {
+			player1CharacterPath = player1Path.substr(0, pos);
+			player1OutfitName = player1Path.substr(pos + 1, player1Path.length());
+			auto posStart = player1OutfitName.find_first_not_of('\\');
+			auto posEnd = player1OutfitName.find_last_not_of('\\');
+			player1OutfitName = player1OutfitName.substr(posStart, posEnd - posStart + 1);
+		}
+
+		std::string player2CharacterPath = player2Path;
+		std::string player2OutfitName = std::string();
+		// find mesh path
+		auto pos2 = player2Path.find('\\');
+		if (pos2 != std::string::npos) {
+			player2CharacterPath = player2Path.substr(0, pos2);
+			player2OutfitName = player2Path.substr(pos2 + 1, player2Path.length());
+			auto posStart = player2OutfitName.find_first_not_of('\\');
+			auto posEnd = player2OutfitName.find_last_not_of('\\');
+			player2OutfitName = player2OutfitName.substr(posStart, posEnd - posStart + 1);
+		}
 
 		while (inputFile && !inputFile.eof()){
 			std::string temp;
@@ -598,11 +669,49 @@ namespace fk_engine{
 			/* add additional mesh */
 			else if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject]){
 				FK_StageAdditionalObject tempObject;
+				bool visibleInCurrentMatch = true;
 				while (temp != fileKeys[FK_StageFileKeys::StageAdditionalObject_End]){
 					inputFile >> temp;
 					if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject_MeshName]){
 						inputFile >> temp;
 						tempObject.setMeshName(temp);
+					}
+					else if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject_ExclusiveInvisibilityCharacterCondition]) {
+						inputFile >> temp;
+						std::string characterPath = temp;
+						std::string outfitName = std::string();
+						// find mesh path
+						auto posT = temp.find('\\');
+						if (posT != std::string::npos) {
+							characterPath = temp.substr(0, posT);
+							outfitName = temp.substr(posT + 1, temp.length());
+							auto posStart = outfitName.find_first_not_of('\\');
+							auto posEnd = outfitName.find_last_not_of('\\');
+							outfitName = outfitName.substr(posStart, posEnd - posStart + 1);
+						}
+						if ((characterPath == player1CharacterPath && 
+							(player1OutfitName.empty() || outfitName.empty() || outfitName == player1OutfitName)) ||
+							(characterPath == player2CharacterPath &&
+								(player2OutfitName.empty() || outfitName.empty() || outfitName == player2OutfitName))) {
+							visibleInCurrentMatch = false;
+						}
+					}
+					else if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject_ExclusiveVisibilityCharacterCondition]) {
+						inputFile >> temp;
+						std::string characterPath = temp;
+						std::string outfitName = std::string();
+						// find mesh path
+						auto posT = temp.find('\\');
+						if (posT != std::string::npos) {
+							characterPath = temp.substr(0, posT);
+							outfitName = temp.substr(posT + 1, temp.length());
+							auto posStart = outfitName.find_first_not_of('\\');
+							auto posEnd = outfitName.find_last_not_of('\\');
+							outfitName = outfitName.substr(posStart, posEnd - posStart + 1);
+						}
+						bool player1Check = characterPath == player1CharacterPath && (outfitName.empty() || outfitName == player1OutfitName);
+						bool player2Check = characterPath == player2CharacterPath && (outfitName.empty() || outfitName == player2OutfitName);
+						visibleInCurrentMatch &= (player1Check || player2Check);
 					}
 					else if (temp == fileKeys[FK_StageFileKeys::StageAdditionalObject_ParticleSystemName]){
 						inputFile >> temp;
@@ -681,7 +790,7 @@ namespace fk_engine{
 					}
 					
 				}
-				if (tempObject.isBuildable()){
+				if (tempObject.isBuildable() && visibleInCurrentMatch){
 					additionalObjectsArray.push_back(tempObject);
 				}
 			}

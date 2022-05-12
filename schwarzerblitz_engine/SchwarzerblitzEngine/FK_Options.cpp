@@ -1,3 +1,48 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
 #include <irrlicht.h>
 #include "FK_Database.h"
 #include "FK_Options.h"
@@ -38,6 +83,7 @@ namespace fk_engine{
 		inputDelayPlayer2Frames = 0;
 	    masterVolume = 0.3f;
 		tourneyModeFlag = false;
+		fpsLimit = FK_FPSLimit::Limit144FPS;
 
 		optionLabels = std::map<FK_OptionType, std::string>();
 		optionLabels[FK_OptionType::FullscreenMode] = "Fullscreen";
@@ -63,6 +109,7 @@ namespace fk_engine{
 		optionLabels[FK_OptionType::InputDelayPlayer2] = "InputDelay_Player2_Frames";
 		optionLabels[FK_OptionType::MasterVolume] = "Master_Volume";
 		optionLabels[FK_OptionType::TourneyMode] = "Tourney_Mode";
+		optionLabels[FK_OptionType::FPSLimiter] = "Screen_Refresh_Limit_Microseconds";
 	}
 
 	FK_Options::FK_Options(core::dimension2d<u32> newMonitorSize) : FK_Options(){
@@ -165,6 +212,9 @@ namespace fk_engine{
 				else if (temp == optionLabels[FK_OptionType::TourneyMode]) {
 					setTourneyMode((bool)tempVal);
 				}
+				else if (temp == optionLabels[FK_OptionType::FPSLimiter]) {
+					setFPSLimiter((FK_FPSLimit)tempVal);
+				}
 				else{
 					continue;
 				}
@@ -199,12 +249,14 @@ namespace fk_engine{
 		optionValues[FK_OptionType::InputDelayPlayer2] = (u32)inputDelayPlayer2Frames;
 		optionValues[FK_OptionType::MasterVolume] = (u32)(masterVolume * 100);
 		optionValues[FK_OptionType::TourneyMode] = (u32)(tourneyModeFlag);
+		optionValues[FK_OptionType::FPSLimiter] = (u32)fpsLimit;
 
 		FK_OptionType* keys = new FK_OptionType[numberOfOptions] {
 			FullscreenMode,
 			FullscreenResolution,
 			WindowedModeResolution,
 			DynamicResolution,
+			FPSLimiter,
 			SFXVolume,
 			SFXMute,
 			VoiceVolume,
@@ -271,7 +323,12 @@ namespace fk_engine{
 
 	void FK_Options::setTourneyMode(bool tourneyFlag) {
 		tourneyModeFlag = tourneyFlag;
-	};
+	}
+
+	void FK_Options::setFPSLimiter(FK_FPSLimit newFpsLimit)
+	{
+		fpsLimit = newFpsLimit;
+	}
 
 	void FK_Options::setMasterVolume(f32 new_volume) {
 		masterVolume = new_volume;
@@ -408,6 +465,11 @@ namespace fk_engine{
 
 	bool FK_Options::getTourneyMode() {
 		return tourneyModeFlag;
+	}
+
+	FK_Options::FK_FPSLimit FK_Options::getFPSLimiter()
+	{
+		return fpsLimit;
 	}
 
 	f32 FK_Options::getMasterVolume()

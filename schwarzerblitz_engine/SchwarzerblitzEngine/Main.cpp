@@ -1,7 +1,47 @@
-//#define _CRTDBG_MAP_ALLOC  
-//#include <stdlib.h>  
-//#include <crtdbg.h> 
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
 
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
 
 #include <irrlicht.h>
 #include <string>
@@ -32,7 +72,8 @@
 #include "FK_SceneArcadeCutscene.h"
 #include "FK_SceneEpisodeSelectionStoryMode.h"
 #include "FK_SceneGallery.h"
-#include"FK_SceneGameAttractMode.h"
+#include "FK_SceneGameAttractMode.h"
+#include "FK_SceneMusicPlayer.h"
 
 #include "FK_SceneMainMenu.h"
 #include "FK_SceneDiorama.h"
@@ -52,53 +93,20 @@ using namespace fk_engine;
 
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#ifndef _DEBUG
+#if !defined(_DEBUG) && !defined(SHOW_CONSOLE) 
 	#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 #endif
 
-HWND hWnd;
-HWND hIrrlichtWindow;
-
-static LRESULT CALLBACK CustomWndProc(HWND hwnd, UINT message,
-	WPARAM wParam, LPARAM lParam)
-{
-	if (wParam == SC_KEYMENU && (lParam >> 16) <= 0){
-		return 0;
-	}
-	switch (message)
-	{
-	case WM_SETFOCUS:
-		SetFocus(hIrrlichtWindow);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	}
-	return DefWindowProc(hwnd, message, wParam, lParam);
-}
-
 void readGameConfigFile(FK_Options* gameOptions){
-	HMODULE hModule = GetModuleHandleW(NULL);
-	TCHAR path[MAX_PATH];
-	int pathLength = GetModuleFileName(hModule, path, MAX_PATH);
-	TCHAR * out = PathFindFileName(path);
-	std::string exeName(out);
-	std::string applicationPath = std::string(path).substr(0, pathLength - exeName.length());
-	std::string filePath = applicationPath + fk_constants::FK_ConfigurationFileFolder + fk_constants::FK_ConfigurationFileName;
-	filePath = applicationPath + fk_constants::FK_ConfigurationFileFolder + fk_constants::FK_GameOptionsFileName;
+	std::string filePath = fk_constants::FK_ConfigurationFileFolder + fk_constants::FK_ConfigurationFileName;
+	filePath = fk_constants::FK_ConfigurationFileFolder + fk_constants::FK_GameOptionsFileName;
 	gameOptions->loadFromFile(filePath);
 }
 
 // read stages from file
 void readStageFile(std::vector<std::string> &stagePath){
-	HMODULE hModule = GetModuleHandleW(NULL);
-	TCHAR path[MAX_PATH];
-	int pathLength = GetModuleFileName(hModule, path, MAX_PATH);
-	TCHAR * out = PathFindFileName(path);
-	std::string exeName(out);
-	std::string applicationPath = std::string(path).substr(0, pathLength - exeName.length());
-	std::string filePath = applicationPath + "media\\stages\\stages.txt";
+	std::string filePath = "media\\stages\\stages.txt";
 	std::ifstream stageFile(filePath.c_str());
 	std::string temp;
 	while (stageFile){
@@ -110,145 +118,56 @@ void readStageFile(std::vector<std::string> &stagePath){
 	stageFile.close();
 };
 
-// this function resets the irrlicht device. This works independently on the Win32 embedding
-IrrlichtDevice* resetDevice(IrrlichtDevice* oldDevice, bool fullscreen, core::dimension2d<u32> resolution){
+/** this function resets the irrlicht device.
+*/
+enum class IrrlichtVideoMode {
+	Windowed,
+	Borderless,
+	Fullscreen
+};
 
-	HWND mediaPlayerHWnd = FindWindow("BUTTON", "video");
-	if (mediaPlayerHWnd != NULL) {
-		DestroyWindow(mediaPlayerHWnd);
-	}
-	DestroyWindow(hIrrlichtWindow);
-	DestroyWindow(hWnd);
-
-	if (oldDevice != NULL){
-		oldDevice->closeDevice();
-		oldDevice->run();
-		oldDevice->drop();
-	}
-
-	IrrlichtDevice* device = createDevice(video::EDT_DIRECT3D9, resolution, 32,
-		fullscreen, false, false, NULL);
-	if (!device){
-		return NULL;
-	}
-	device->getCursorControl()->setVisible(false);
-	core::stringw windowCaption = L"Schwarzerblitz";
-	device->setWindowCaption(windowCaption.c_str());
-	core::array<SJoystickInfo> joystickInfo;
-	device->activateJoysticks(joystickInfo);
-
-	return device;
-}
-
-// this function resets the Irrlicht device, but it embeds it into a win32 window - borderless mode is also available
-IrrlichtDevice* resetDeviceWin32(IrrlichtDevice* oldDevice, bool borderless, core::dimension2d<u32> resolution){
-
-	//FK_InputReceiver* inputReceiver = new FK_InputReceiver;
-	HWND mediaPlayerHWnd = FindWindow("BUTTON", "video");
-	if (mediaPlayerHWnd != NULL) {
-		DestroyWindow(mediaPlayerHWnd);
-	}
-	DestroyWindow(hIrrlichtWindow);
-	DestroyWindow(hWnd);
-
-	if (oldDevice != NULL){
+IrrlichtDevice* resetDevice(IrrlichtDevice* oldDevice, IrrlichtVideoMode videoMode, core::dimension2d<u32> resolution) {
+	//HWND windowHandler = FindWindow(NULL, "Schwarzerblitz");
+	if (oldDevice != NULL) {
 		oldDevice->closeDevice();
 		oldDevice->run();
 		oldDevice->drop();
 		oldDevice = NULL;
 	}
-
-	//create Win32 window
-	HINSTANCE hInstance = 0;
-	// create dialog
-
-	const char* Win32ClassName = "CIrrlichtWindowsTestDialog";
-
-	WNDCLASSEX wcex;
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = (WNDPROC)CustomWndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = DLGWINDOWEXTRA;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = NULL;
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW);
-	wcex.lpszMenuName = 0;
-	wcex.lpszClassName = Win32ClassName;
-	wcex.hIconSm = 0;
-
-	RegisterClassEx(&wcex);
-
-	// set window style
-	DWORD styleBase = WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-	DWORD styleAddon1 = WS_MAXIMIZEBOX | WS_SIZEBOX;
-	DWORD styleAddon2 = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_MINIMIZEBOX;
-	DWORD style = styleBase | styleAddon2;
-
-	// set window size
-	int windowWidth = resolution.Width + 16;
-	int windowHeight = resolution.Height + 39;
-
-	//get screen size
-	HMONITOR monitor = MonitorFromWindow(NULL, MONITOR_DEFAULTTONEAREST);
-	MONITORINFO info;
-	info.cbSize = sizeof(MONITORINFO);
-	GetMonitorInfo(monitor, &info);
-	int monitor_width = info.rcMonitor.right - info.rcMonitor.left;
-	int monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
-
-	if (borderless){
-		windowWidth = monitor_width;
-		windowHeight = monitor_height;
-		style = styleBase;
+	bool fullscreen = videoMode == IrrlichtVideoMode::Fullscreen;
+	IrrlichtDevice* device = NULL;
+	if (videoMode != IrrlichtVideoMode::Borderless) {
+		device = createDevice(video::EDT_DIRECT3D9, resolution, 32,
+			fullscreen, false, false, NULL);
 	}
-	int x = (monitor_width - windowWidth) / 2;
-	int y = (monitor_height - windowHeight) / 2;
-	hWnd = CreateWindow(Win32ClassName, "Schwarzerblitz",
-		style, x, y, windowWidth, windowHeight,
-		NULL, NULL, hInstance, NULL);
-	
-	ShowWindow(hWnd, SW_SHOW);
-	SetFocus(hWnd);
-	UpdateWindow(hWnd);
-
-	RECT clientRect;
-	GetClientRect(hWnd, &clientRect);
-	windowWidth = clientRect.right;
-	windowHeight = clientRect.bottom;
-
-	hIrrlichtWindow = CreateWindow("BUTTON", "",
-		WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
-		0, 0, windowWidth, windowHeight, hWnd, NULL, hInstance, NULL);
-
-	irr::SIrrlichtCreationParameters param;
-	param.DriverType = video::EDT_DIRECT3D9;
-	param.Fullscreen = false;
-	param.Bits = 32;
-	param.Stencilbuffer = false;
-	param.Vsync = true;
-	param.WindowSize = resolution;
-	//param.EventReceiver = inputReceiver;
-	param.WindowId = reinterpret_cast<void*>(hIrrlichtWindow);
-
-	IrrlichtDevice* device = irr::createDeviceEx(param);
-
-	if (!device){
+	else {
+		HMONITOR monitor = MonitorFromWindow(NULL, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO info;
+		info.cbSize = sizeof(MONITORINFO);
+		GetMonitorInfo(monitor, &info);
+		int monitor_width = info.rcMonitor.right - info.rcMonitor.left;
+		int monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
+		resolution.Width = (u32)monitor_width;
+		resolution.Height = (u32)monitor_height;
+		irr::SIrrlichtCreationParameters param;
+		param.DriverType = video::EDT_DIRECT3D9;
+		param.Fullscreen = false;
+		param.Borderless = true;
+		param.Bits = 32;
+		param.Stencilbuffer = false;
+		param.Vsync = false;
+		param.WindowSize = resolution;
+		device = createDeviceEx(param);
+	}
+	if (!device) {
 		return NULL;
 	}
 	device->getCursorControl()->setVisible(false);
-	core::stringw windowCaption = L"Schwarzerblitz";
+	core::stringw windowCaption = L"Schwarzerblitz Engine v1.4.6";
 	device->setWindowCaption(windowCaption.c_str());
-	SetFocus(hWnd);
-	ShowWindow(hWnd, SW_SHOW);
-	UpdateWindow(hWnd);
-
 	core::array<SJoystickInfo> joystickInfo;
 	device->activateJoysticks(joystickInfo);
 
-	SetFocus(hIrrlichtWindow);
-	//ShowWindow(hIrrlichtWindow, SW_HIDE);
 	return device;
 }
 
@@ -262,8 +181,24 @@ void checkJoypadConnection(IrrlichtDevice* device, std::atomic_bool& hasToUpdate
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Helper to display critical errors
+//-----------------------------------------------------------------------------
+int Alert(const char* lpCaption, const char* lpText)
+{
+#ifndef _WIN32
+	fprintf(stderr, "Message: '%s', Detail: '%s'\n", lpCaption, lpText);
+	return 0;
+#else
+	return ::MessageBox(NULL, lpText, lpCaption, MB_OK);
+#endif
+}
+
+//*****************************************************************************
+// *  Main function
+//*****************************************************************************
 int main(){
-	/* check for memory leaks */
+
 	/* get monitor size */
 	HMONITOR monitor = MonitorFromWindow(NULL, MONITOR_DEFAULTTONEAREST);
 	MONITORINFO info;
@@ -307,26 +242,25 @@ int main(){
 	/* create irrlicht device */
 	IrrlichtDevice *device = NULL;
 	bool borderless = gameOptions->getBorderlessWindowMode();
-	if (!fullscreen){
-		device = resetDeviceWin32(device, borderless, screenResolution);
+	IrrlichtVideoMode videoMode = IrrlichtVideoMode::Windowed;
+	if (fullscreen) {
+		videoMode = IrrlichtVideoMode::Fullscreen;
 	}
-	else{
-		device = resetDevice(device, fullscreen, screenResolution);
+	else if (borderless) {
+		videoMode = IrrlichtVideoMode::Borderless;
 	}
+	device = resetDevice(device, videoMode, screenResolution);
 	/* reset random number generator */
-	srand(time(0));
+	srand((u32)time(0));
 	/* extract first random to improve quality later (first random is notoriously similar for nearby system times) */
 	rand();
+	std::chrono::high_resolution_clock::time_point clockTimeThen = std::chrono::high_resolution_clock::now();
 
-	/* initalize scene */
-	//FK_Scene *currentScene = new FK_SceneGame;
-	//FK_Scene *currentScene = new FK_SceneCharacterSelect;
-	FK_Scene *currentScene = new FK_SceneMainMenu;
-	//FK_Scene *currentScene = new FK_SceneIntro;
-	//FK_Scene *currentScene = new FK_SceneStoryDialogue;
-#ifndef _DEBUG
-	currentScene = new FK_SceneIntro;
-#endif
+//#ifndef _DEBUG
+	FK_Scene *currentScene = new FK_SceneIntro;
+//#else
+//FK_Scene* currentScene = new FK_SceneMainMenu;
+//#endif
 	core::array<SJoystickInfo> joyInfo = core::array<SJoystickInfo>();
 	bool AIplayer1 = AIPlayer1Level >= 0;
 	bool AIplayer2 = AIPlayer2Level >= 0;
@@ -341,10 +275,10 @@ int main(){
 	FK_SceneGame::FK_AdditionalSceneGameOptions additionalOptions = FK_SceneGame::FK_AdditionalSceneGameOptions();
 	std::vector<std::string> stagePath;
 	readStageFile(stagePath);
-	stageId = stageId > stagePath.size() - 1 ? stagePath.size() - 1 : stageId;
+	stageId = stageId > (int)stagePath.size() - 1 ? (int)stagePath.size() - 1 : stageId;
 	bool vsCPU = AIplayer1 || AIplayer2;
 
-	u32 joypadTimerCheckInterval = 1000;
+	u32 joypadTimerCheckInterval = 2000;
 	u32 joypadTimerReference = device->getTimer()->getRealTime();
 	std::atomic_bool hasToUpdateInput;
 	hasToUpdateInput.store(false);
@@ -371,14 +305,14 @@ int main(){
 	while (device->run() && currentScene->isRunning()){
 		//bool deviceStatus = device->run();
 		// set name of window
-		core::stringw windowCaption = L"Schwarzerblitz";
+		core::stringw windowCaption = L"Schwarzerblitz Engine v1.4.6";
 #ifdef _DEBUG
-		windowCaption = L"Schwarzerblitz - FPS:";
+		windowCaption = L"Schwarzerblitz Engine - FPS:";
 		windowCaption += device->getVideoDriver()->getFPS();
 #endif
 		device->setWindowCaption(windowCaption.c_str());
 		if (device->isWindowActive() && !device->isWindowFocused()){
-			SetFocus(hIrrlichtWindow);
+			//SetFocus(hIrrlichtWindow);
 			//std::cout << "WINDOW FOCUS LOST!" << std::endl;
 		}
 		if (!device->isWindowActive() || device->isWindowMinimized()){
@@ -413,8 +347,12 @@ int main(){
 			((FK_SceneWithInput*)currentScene)->resetInputRoutines();
 			hasToUpdateInput.store(false);
 		}
-
 		/*if (device->isWindowActive() && (!device->isWindowMinimized() && device->isWindowFocused())) {*/
+		std::chrono::high_resolution_clock::time_point clockTimeNow = std::chrono::high_resolution_clock::now();
+		auto timeSpanMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(clockTimeNow - clockTimeThen);
+		long long frameUpdateTimeUs = gameOptions->getFPSLimiter();
+		if (timeSpanMicroseconds.count() > frameUpdateTimeUs) {
+			clockTimeThen = clockTimeNow;
 			currentScene->update();
 			if (!currentScene->isRunning()) {
 				u32 currentActiveCheats = ((FK_SceneWithInput*)currentScene)->getCurrentActiveCheatCodes();
@@ -456,12 +394,14 @@ int main(){
 						fullscreen = gameOptions->getFullscreen();
 						screenResolution = gameOptions->getResolution();
 						bool borderless = gameOptions->getBorderlessWindowMode();
-						if (!fullscreen) {
-							device = resetDeviceWin32(device, borderless, screenResolution);
+						IrrlichtVideoMode videoMode = IrrlichtVideoMode::Windowed;
+						if (fullscreen) {
+							videoMode = IrrlichtVideoMode::Fullscreen;
 						}
-						else {
-							device = resetDevice(device, fullscreen, screenResolution);
+						else if (borderless) {
+							videoMode = IrrlichtVideoMode::Borderless;
 						}
+						device = resetDevice(device, videoMode, screenResolution);
 					}
 					currentScene = new FK_SceneMainMenu;
 					player1SelectionIndex = -1;
@@ -491,12 +431,14 @@ int main(){
 						fullscreen = gameOptions->getFullscreen();
 						screenResolution = gameOptions->getResolution();
 						bool borderless = gameOptions->getBorderlessWindowMode();
-						if (!fullscreen) {
-							device = resetDeviceWin32(device, borderless, screenResolution);
+						IrrlichtVideoMode videoMode = IrrlichtVideoMode::Windowed;
+						if (fullscreen) {
+							videoMode = IrrlichtVideoMode::Fullscreen;
 						}
-						else {
-							device = resetDevice(device, fullscreen, screenResolution);
+						else if (borderless) {
+							videoMode = IrrlichtVideoMode::Borderless;
 						}
+						device = resetDevice(device, videoMode, screenResolution);
 					}
 					currentScene = new FK_SceneOptions;
 					((FK_SceneOptions*)currentScene)->setup(device, joyInfo, gameOptions);
@@ -528,9 +470,10 @@ int main(){
 						(currentScene->nameId() & FK_Scene::AnySceneStory) != 0 ||
 						currentScene->nameId() == FK_Scene::FK_SceneType::SceneArcadeCutscene;
 					//fadeToBlack = true;
+					bool slideshowPictures = (currentScene->nameId() & FK_Scene::AnySceneStory) != 0;
 					currentScene->dispose();
 					delete currentScene;
-					currentScene = new FK_SceneCredits(device, joyInfo, gameOptions, fadeToBlack);
+					currentScene = new FK_SceneCredits(device, joyInfo, gameOptions, fadeToBlack, slideshowPictures);
 					if (tempSceneId == FK_Scene::FK_SceneType::SceneOptions) {
 						currentScene->setNextScene(tempSceneId);
 					}
@@ -600,6 +543,15 @@ int main(){
 					else if (item->getType() == FK_StoryItem::ItemType::Match) {
 						currentScene = new FK_SceneGameStory;
 						((FK_SceneGameStory*)currentScene)->setup(device, joyInfo, gameOptions, (FK_StoryMatch*)item);
+					}
+					else if (item->getType() == FK_StoryItem::ItemType::Credits) {
+						currentScene = new FK_SceneCredits(device, joyInfo, gameOptions, true, true, item->configFileName);
+						if (item->returnToStoryMenu) {
+							currentScene->setNextScene(FK_Scene::FK_SceneType::SceneStoryModeSelection);
+						}
+						else {
+							currentScene->setNextScene(FK_Scene::FK_SceneType::SceneStoryModeDialogue);
+						}
 					}
 					item = NULL;
 					currentScene->setPreviousScene(FK_Scene::FK_SceneType::SceneStoryModeSelection);
@@ -1042,6 +994,14 @@ int main(){
 					currentScene->setNextScene(sceneId);
 					
 				}
+				// settings
+				else if (currentScene->getNextScene() == FK_Scene::FK_SceneType::SceneMusicPlayer) {
+					joyInfo = ((FK_SceneWithInput*)currentScene)->getJoypadInfo();
+					currentScene->dispose();
+					delete currentScene;
+					currentScene = new FK_SceneMusicPlayer;
+					((FK_SceneMusicPlayer*)currentScene)->setup(device, joyInfo, gameOptions);
+				}
 				// extra
 				else if (currentScene->getNextScene() == FK_Scene::FK_SceneType::SceneExtra) {
 					FK_Scene::FK_SceneType tempSceneId = currentScene->nameId();
@@ -1074,7 +1034,10 @@ int main(){
 				}
 			}
 		}
-	//}
+		else {
+			std::this_thread::sleep_for(std::chrono::microseconds(100));
+		}
+	}
 	SetThreadExecutionState(ES_CONTINUOUS);
 	previouslyUnlockedContent.clear();
 	currentlyUnlockedContent.clear();

@@ -1,3 +1,48 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
 /* FK_InputBuffer is a class which handles input and input reading, translating them into game actions. 
 The input is read continuously and stored in a buffer, then pattern-matched to every possible move in 
 order to get the best possible combination. This file contains the implementation of FK_InputBuffer.h
@@ -50,8 +95,17 @@ namespace fk_engine{
 				holdingTimeForButton[currentButton] = 0;
 			}
 		}
+#ifdef DIAGNOSTICS
+		std::time_t t = std::time(0);  // t is an integer type
+		std::string fileName = "replays/input_diagnostics_" + std::to_string(t) + "_";
+		fileName += std::to_string(newPlayerIndex) + ".txt";
+		diagnosticsFile = std::ofstream(fileName);
+#endif
 	}
 	FK_InputBuffer::~FK_InputBuffer(){
+#ifdef DIAGNOSTICS
+		diagnosticsFile.close();
+#endif
 		delete [] previousState;
 	}
 
@@ -621,7 +675,264 @@ namespace fk_engine{
 			readable = true;
 		}
 		lastPressedButtons = pressedButtons;
-	};
+	}
+
+	void FK_InputBuffer::update(int totalTimeMs, u32 originalInputButtons, bool updateBuffer)
+	{
+		/* get time difference from last input received*/
+		u32 delta_t_ms = totalTimeMs - lastRecordedTimeMs;
+		int timeSinceLast = totalTimeMs - lastInputTimeMs;
+		historyCounterMs += delta_t_ms;
+		//u32 fixedDeltaDelayMs = 100;
+		lastRecordedTimeMs = totalTimeMs;
+		bool updateHistory = true;
+		/* if too much time has passed, clear the buffer*/
+		if (timeSinceLast > inputSpanTimeMs)
+		{
+			inputBuffer.clear();
+			bufferCurrentSize = 0;
+		}
+		if (timeSinceLast > historyDurationMs) {
+			historyDepth = 0;
+			inputBufferHistory.clear();
+		}
+		/* re-initialize the pressed buttons value (used by the player for one update) */
+		u32 lastFramePressedButtons = allPressedButtons;
+		allPressedButtons = originalInputButtons;
+		/* initialize bitmasks */
+		u32 buttonMap = 0;
+		u32 pressedButtons = 0;
+		u32 oldBufferSize = bufferCurrentSize;
+		bool addTriggerToInput = false;
+		u32 numberOfNonDirectionButtons = 0;
+
+		// new inputs
+		u32 inputDirectionButtons = originalInputButtons & FK_Input_Buttons::Any_Direction;
+		u32 inputActionButtons = originalInputButtons & FK_Input_Buttons::Any_NonDirectionButton;
+
+		// old inputs
+		u32 lastDirectionButtons = lastFramePressedButtons & FK_Input_Buttons::Any_Direction;
+		u32 lastActionButtons = lastFramePressedButtons & FK_Input_Buttons::Any_NonDirectionButton;
+		// check trigger
+		if (inputActionButtons & FK_Input_Buttons::Trigger_Button) {
+			addTriggerToInput = true;
+		}
+		if ((inputActionButtons & (~FK_Input_Buttons::Trigger_Button)) > 0) {
+			numberOfNonDirectionButtons = 1;
+		}
+		// check newly pressed buttons
+		u32 pressedActionButtons = inputActionButtons & (inputActionButtons ^ lastActionButtons);
+		buttonMap |= inputDirectionButtons;
+		buttonMap |= pressedActionButtons;
+		pressedButtons = pressedActionButtons & (~FK_Input_Buttons::Trigger_Button);
+		// update held time
+		for (u32 i = 0; i < 4; ++i) {
+			u32 bitmask = 1 << i;
+			if (buttonMap & bitmask) {
+				holdingTimeForButton[bitmask] += delta_t_ms;
+			}
+			else {
+				holdingTimeForButton[bitmask] = -1;
+			}
+		}
+#ifdef DIAGNOSTICS
+		diagnosticsFile << totalTimeMs << " " << delta_t_ms << " " << timeSinceLast <<
+			" " << originalInputButtons << " " << lastFramePressedButtons << " " << buttonMap << " " << lastButtonMap << std::endl;
+#endif
+		bool sameInputFlag = false;
+		bool sameDirectionFlag = false;
+		if (lastFramePressedButtons == allPressedButtons) {
+			sameInputFlag = true;
+			if (!updateBuffer) {
+				if ((allPressedButtons & FK_Input_Buttons::Any_Direction_Plus_Held) != 0 ||
+					allPressedButtons != 0) {
+					lastInputTimeMs = totalTimeMs;
+				}
+				else {
+					timeForRepeatCounterMs = 0;
+				}
+			}
+		}
+		else {
+			timeForRepeatCounterMs = 0;
+		}
+
+		if (numberOfNonDirectionButtons > 0 && addTriggerToInput) {
+			pressedButtons |= FK_Input_Buttons::Trigger_Button;
+		}
+
+		lastButtonMap = allPressedButtons;
+		// It is very hard to press two buttons on exactly the same frame.
+		// If they are close enough, consider them pressed at the same time.
+		bool mergeInput = (bufferCurrentSize > 0 && timeSinceLast < inputMergeTimeMs);
+		// now, check for direction and compare it to the last stored
+		u32 newDirection = getNewDirection(buttonMap);
+		pressedButtons |= newDirection;
+		if (lastDirection != newDirection)
+		{
+			lastDirection = newDirection;
+			// combine the direction with the buttons.
+			// pressedButtons |= newDirection;
+			if (lastDirection != 0) {
+				if (updateBuffer) {
+					inputBuffer.push_back(newDirection);
+					bufferCurrentSize += 1;
+					inputBufferHistory.push_back(newDirection);
+					historyDepth += 1;
+				}
+				lastInputTimeMs = totalTimeMs;
+			}
+			// Don't merge two different directions. This avoids having impossible
+			// directions such as Left+Up+Right. This also has the side effect that
+			// the direction needs to be pressed at the same time or slightly before
+			// the buttons for merging to work.
+			mergeInput = false;
+		}
+		// store NULL button
+		else if (newDirection == FK_Input_Buttons::None && timeSinceLast > inputNullTimeMs && bufferCurrentSize > 0) {
+			if (updateBuffer) {
+				if (inputBuffer[bufferCurrentSize - 1] != newDirection) {
+					inputBuffer.push_back(newDirection);
+					bufferCurrentSize += 1;
+					lastInputTimeMs = totalTimeMs;
+					inputBufferHistory.push_back(newDirection);
+					historyDepth += 1;
+				}
+			}
+		}
+		else if (newDirection != FK_Input_Buttons::None && bufferCurrentSize > 0) {
+			if (updateBuffer) {
+				if (inputBuffer[bufferCurrentSize - 1] == newDirection) {
+					bool buttonHeldSuccesfully = false;
+					switch (newDirection) {
+					case FK_Input_Buttons::UpRight_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Up_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Right_Direction] >= inputHoldTimeMs;
+						break;
+					case FK_Input_Buttons::UpLeft_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Up_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Left_Direction] >= inputHoldTimeMs;
+						break;
+					case FK_Input_Buttons::DownRight_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Down_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Right_Direction] >= inputHoldTimeMs;
+						break;
+					case FK_Input_Buttons::DownLeft_Direction:
+						buttonHeldSuccesfully = holdingTimeForButton[FK_Input_Buttons::Down_Direction] >= inputHoldTimeMs &&
+							holdingTimeForButton[FK_Input_Buttons::Left_Direction] >= inputHoldTimeMs;
+						break;
+					default:
+						buttonHeldSuccesfully = holdingTimeForButton[newDirection] >= inputHoldTimeMs;
+						break;
+					}
+					if (buttonHeldSuccesfully) {
+						inputBuffer[bufferCurrentSize - 1] = newDirection << FK_Input_Buttons::TaptoHoldButtonShift;
+						mergeInput = false;
+						lastInputTimeMs = totalTimeMs;
+						if (historyDepth > 0) {
+							inputBufferHistory[historyDepth - 1] = inputBuffer[bufferCurrentSize - 1];
+						}
+					}
+				}
+			}
+		}
+		else if (bufferCurrentSize == 0 && lastDirection != FK_Input_Buttons::None &&
+			newDirection == lastDirection) {
+			if (updateBuffer) {
+				inputBuffer.push_back(lastDirection << FK_Input_Buttons::TaptoHoldButtonShift);
+				updateHistory = false;
+				bufferCurrentSize = 1;
+				mergeInput = false;
+				lastInputTimeMs = totalTimeMs;
+			}
+		}
+		/* if at least one button has been pressed, update buffer */
+		u32 inputToAddToBuffer = pressedButtons /*& ~fk_constants::FK_TriggerButton*/;
+		pressedButtons &= FK_Input_Buttons::Any_NonDirectionButton;
+		u32 bitmask = ~((u32)FK_Input_Buttons::Any_SystemButton | (u32)FK_Input_Buttons::Any_MenuButton);
+		pressedButtons &= bitmask;
+		/* exclude trigger button */
+		u32 inputButtons = pressedButtons /*& ~fk_constants::FK_TriggerButton*/;
+		if (inputButtons != 0) {
+			if (updateBuffer) {
+				if (mergeInput) {
+					if (!(inputBuffer[bufferCurrentSize - 1] & FK_Input_Buttons::Any_Direction_Plus_Held)) {
+						inputBuffer[bufferCurrentSize - 1] = inputBuffer[bufferCurrentSize - 1] | inputButtons;
+						updateHistory = true;
+						if (historyDepth > 0) {
+							inputBufferHistory[historyDepth - 1] = inputBuffer[bufferCurrentSize - 1] | inputButtons;
+						}
+					}
+					else {
+						inputBuffer.push_back(inputToAddToBuffer);
+						bufferCurrentSize += 1;
+						inputBufferHistory.push_back(inputToAddToBuffer);
+						historyDepth += 1;
+						updateHistory = true;
+					}
+				}
+				else {
+					inputBuffer.push_back(inputToAddToBuffer);
+					bufferCurrentSize += 1;
+					inputBufferHistory.push_back(inputToAddToBuffer);
+					historyDepth += 1;
+					updateHistory = true;
+				}
+				if (bufferCurrentSize > bufferCapacity) {
+					inputBuffer.pop_front();
+					bufferCurrentSize -= 1;
+				}
+			}
+			/* record the time this function has been called*/
+			lastInputTimeMs = totalTimeMs;
+		}
+		if (lastInputTimeMs == totalTimeMs && updateBuffer) {
+			modified = true;
+			if (updateHistory) {
+				while (historyDepth > maxHistoryDepth) {
+					inputBufferHistory.pop_front();
+					historyDepth -= 1;
+				}
+				historyCounterMs = 0;
+			}
+		}
+		if (modified) {
+			readable = true;
+		}
+		lastPressedButtons = pressedButtons;
+	}
+
+	u32 FK_InputBuffer::convertKeyArrayToPressedButtons(std::vector<bool>& keyArray)
+	{
+		/* re-initialize the pressed buttons value (used by the player for one update) */
+		u32 pressedButtons = 0;
+		for (std::map<FK_Input_Buttons, u32>::iterator iter = rawInputToButtons.begin(); iter != rawInputToButtons.end(); ++iter)
+		{
+			FK_Input_Buttons currentButton = iter->first;
+			u32 keyCode = iter->second;
+			/* check first for non-direction buttons*/
+			if (keyArray[keyCode] == true) {
+				pressedButtons |= currentButton;
+			}
+		}
+		return pressedButtons;
+	}
+
+	u32 FK_InputBuffer::convertKeyArrayToPressedButtons(bool* keyArray)
+	{
+		/* re-initialize the pressed buttons value (used by the player for one update) */
+		u32 pressedButtons = 0;
+		for (std::map<FK_Input_Buttons, u32>::iterator iter = rawInputToButtons.begin(); iter != rawInputToButtons.end(); ++iter)
+		{
+			FK_Input_Buttons currentButton = iter->first;
+			u32 keyCode = iter->second;
+			/* check first for non-direction buttons*/
+			if (keyArray[keyCode] == true) {
+				pressedButtons |= currentButton;
+			}
+		}
+		return pressedButtons;
+	}
 
 	/* set new buffer */
 	void FK_InputBuffer::setBuffer(const std::deque<u32>& newBuffer, bool checkBeforeReplacing){

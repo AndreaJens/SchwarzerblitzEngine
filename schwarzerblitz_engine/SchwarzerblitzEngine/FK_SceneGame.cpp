@@ -1,3 +1,48 @@
+/*
+	*** Schwarzerblitz 3D Fighting Game Engine  ***
+
+	=================== Source Code ===================
+	Copyright (C) 2016-2022 Andrea Demetrio
+
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this
+	   list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright notice,
+	   this list of conditions and the following disclaimer in the documentation and/or
+	   other materials provided with the distribution.
+	3. Neither the name of the copyright holder nor the names of its contributors may be
+	   used to endorse or promote products derived from  this software without specific
+	   prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+	OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+	IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+	THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+	=============== Additional Components ==============
+	Please refer to the license/irrlicht/ and license/SFML/ folder for the license
+	indications concerning those components. The irrlicht-schwarzerlicht engine and
+	the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
+
+	=============== Assets and resources ================
+	Unless specificed otherwise in the Credits file, the assets and resources
+	bundled with this engine are to be considered "all rights reserved" and
+	cannot be redistributed without the owner's consent. This includes but it is
+	not limited to the characters concepts / designs, the 3D models, the music,
+	the sound effects, 2D and 3D illustrations, stages, icons, menu art.
+
+	Tutorial Man, Evil Tutor, and Random:
+	Copyright (C) 2016-2022 Andrea Demetrio - all rights reserved
+*/
+
 #include "FK_SceneGame.h"
 #include"ExternalAddons.h"
 #include"FK_CharacterMaterialShaderCallback.h"
@@ -446,23 +491,33 @@ namespace fk_engine{
 				nowReal = device->getTimer()->getRealTime();
 				now = device->getTimer()->getTime();
 				f32 timerSpeed = device->getTimer()->getSpeed();
-				// slow game down if fps are dwindling
-				// try to set an FPS limiter to 60 (test?)
-				inputUpdateDeltaTime = milliseconds;
-				if (microseconds < 16500) {
-					performLogicUpdate = false;
-					//Sleep(1);
-					//return;
-				}
-				else {
-					thenClock = nowClock;
-				}
-				u32 targetFrameSpeed = 40;
-				if (cycleId > 0 && (nowReal - thenReal) > targetFrameSpeed) {
-					u32 newTime = (u32)std::ceil((f32)then + (f32)targetFrameSpeed * timerSpeed);
-					//std::cout << then << " "<< now << " " << newTime << std::endl;
-					device->getTimer()->setTime(newTime);
-					now = newTime;
+				// this check is meant to prevent situations where the duration yields a negative number (can it even happen?)
+				if (microseconds > 0) {
+					// try to set an FPS limiter to 60 (test?)
+					if (gameOptions->getFPSLimiter() < FK_Options::FK_FPSLimit::Limit60FPS) {
+						if (microseconds < 16500) {
+							performLogicUpdate = false;
+						}
+						else {
+							thenClock = nowClock;
+							performLogicUpdate = true;
+							inputUpdateDeltaTime = 16;
+						}
+					}
+					else {
+						thenClock = nowClock;
+						performLogicUpdate = true;
+						inputUpdateDeltaTime = milliseconds;
+					}
+					u32 targetFrameSpeed = 42;
+					// slow game down if fps are dwindling
+					
+					if (cycleId > 0 && (nowReal - thenReal) > targetFrameSpeed) {
+						u32 newTime = (u32)std::ceil((f32)then + (f32)targetFrameSpeed * timerSpeed);
+						//std::cout << then << " "<< now << " " << newTime << std::endl;
+						device->getTimer()->setTime(newTime);
+						now = newTime;
+					}
 				}
 			}
 			f32 frameDeltaTime = (f32)(now - then) / 1000.f; // Time in seconds
@@ -535,6 +590,7 @@ namespace fk_engine{
 				}
 				if (canUpdateInput() && !isPaused()){
 					if (performLogicUpdate) {
+						//std::cout << inputUpdateDeltaTime << std::endl;
 						updateInput(inputUpdateDeltaTime);
 					}
 				}
@@ -573,19 +629,11 @@ namespace fk_engine{
 			}
 			/* update camera position*/
 			updateCamera(frameDeltaTime);
-
-			/* draw */
 			draw(frameDeltaTime);
-
 			/* update bounding box after having drawn the scene */
 			updateCharacterArenaInteraction();
 			// synchronize animated object for character mesh after the first draw call of new round
-			if (needMeshSynchronization){
-				// synchronize objects
-				player1->synchronizeAnimatedObjects();
-				player2->synchronizeAnimatedObjects();
-				needMeshSynchronization = false;
-			}
+			synchronizeMeshes();
 		}
 	};
 
@@ -1635,9 +1683,10 @@ namespace fk_engine{
 		if (character->isGuarding()){
 			return false;
 		}
+		double pitch = 1.0;// 0.98 + (0.04 * rand()) / RAND_MAX;
 		bool hasPlayedSound = false;
 		if (character->isKO()){
-			hasPlayedSound |= battleSoundManager->playSound(playerTag + "ko", 100.0 * gameOptions->getVoicesVolume());
+			hasPlayedSound |= battleSoundManager->playSound(playerTag + "ko", 100.0 * gameOptions->getVoicesVolume(), pitch);
 			if (hasPlayedSound) {
 				character->resetSoundTimer();
 			}
@@ -1645,7 +1694,7 @@ namespace fk_engine{
 		else if (reaction == FK_Reaction_Type::StrongFlight || 
 			reaction == FK_Reaction_Type::ReverseStrongFlight ||
 			reaction == FK_Reaction_Type::StandingFlight){
-			bool playSound = battleSoundManager->playSound(playerTag + "flight", 100.0 * gameOptions->getVoicesVolume());
+			bool playSound = battleSoundManager->playSound(playerTag + "flight", 100.0 * gameOptions->getVoicesVolume(), pitch);
 			if (!playSound){
 				hasPlayedSound |= playHitSounds(FK_Reaction_Type::StrongHigh, playerTag, character);
 			}
@@ -1654,7 +1703,7 @@ namespace fk_engine{
 			}
 		}
 		else if (isStrongReaction(reaction)){
-			bool playSound = battleSoundManager->playSound(playerTag + "hit_strong", 100.0 * gameOptions->getVoicesVolume());
+			bool playSound = battleSoundManager->playSound(playerTag + "hit_strong", 100.0 * gameOptions->getVoicesVolume(), pitch);
 			if (!playSound){
 				hasPlayedSound |= playHitSounds(FK_Reaction_Type::WeakHigh, playerTag, character);
 			}
@@ -1663,7 +1712,7 @@ namespace fk_engine{
 			}
 		}
 		else{
-			hasPlayedSound |= battleSoundManager->playSound(playerTag + "hit_weak", 100.0 * gameOptions->getVoicesVolume());
+			hasPlayedSound |= battleSoundManager->playSound(playerTag + "hit_weak", 100.0 * gameOptions->getVoicesVolume(), pitch);
 			if (hasPlayedSound) {
 				character->resetSoundTimer();
 			}
@@ -1836,7 +1885,9 @@ namespace fk_engine{
 		}
 		//std::string newStagePath = stagesPath + "Elevator\\";
 		//m_threadMutex.try_lock();
-		stage->setup(device, driver, smgr, newStagePath);
+		stage->setup(device, driver, smgr, newStagePath, 
+			player1_configPath + "\\" + player1Outfit.outfitDirectory, 
+			player2_configPath + "\\" + player2Outfit.outfitDirectory);
 		//m_threadMutex.unlock();
 		/* play BGM!!!! */
 		std::string filePath = newStagePath + stage->getBGMName();
@@ -3259,6 +3310,9 @@ namespace fk_engine{
 				else if (player1->getCharacterAdditionalObjects().at(i).needsRefresh()){
 					lightManager->addShadowToNode(player1->getCharacterAdditionalObjectsNodes().at(i), shadowFilterType,
 						shadowModeCharacters);
+					if (player1->getCharacterAdditionalObjects().at(i).animateWithMesh) {
+						needMeshSynchronization = true;
+					}
 					if (player1->getCharacterAdditionalObjectsNodes().at(i)->getMesh() != NULL){
 						//player1->getCharacterAdditionalObjectsNodes().at(i)->setTransitionTime(0.f);
 						player1->getCharacterAdditionalObjectsNodes().at(i)->setCurrentFrame(0, true);
@@ -3309,6 +3363,9 @@ namespace fk_engine{
 				else if (player2->getCharacterAdditionalObjects().at(i).needsRefresh()){
 					lightManager->addShadowToNode(player2->getCharacterAdditionalObjectsNodes().at(i), shadowFilterType,
 						shadowModeCharacters);
+					if (player2->getCharacterAdditionalObjects().at(i).animateWithMesh) {
+						needMeshSynchronization = true;
+					}
 					if (player2->getCharacterAdditionalObjectsNodes().at(i)->getMesh() != NULL){
 						player2->getCharacterAdditionalObjectsNodes().at(i)->setCurrentFrame(0, true);
 						player2->getCharacterAdditionalObjectsNodes().at(i)->OnRegisterSceneNode();
@@ -5226,7 +5283,14 @@ namespace fk_engine{
 										u32 numberOfRepetitions =
 											attackingPlayer->getNumberOfRepetitionOfSameMoveInCombo(moveId, hitboxId);
 										// apply hitstun multipliers for repeating moves
+										// check if this move is inside the combo log for infinite prevention system
 										if (targetPlayer->isBeingThrown()) {
+											if ((reactionToApply & FK_Reaction_Type::AnyImpactReaction)) {
+												// this was added because of Kaya's Sukeban corner infinite
+												if (numberOfRepetitions > 1) {
+													reactionToApply = FK_Reaction_Type::WeakFlight;
+												}
+											}
 											if (numberOfRepetitions > 1 && 
 												(targetPlayer->getThrowReaction() & FK_Reaction_Type::AnyImpactReaction)) {
 												//reactionToApply = FK_Reaction_Type::StrongFlight;
@@ -5237,9 +5301,10 @@ namespace fk_engine{
 											!cinematicCameraActivePlayer2 && 
 											!cinematicCameraActivePlayer1) {
 											if ((reactionToApply & FK_Reaction_Type::AnyImpactReaction)) {
-												//if (numberOfRepetitions > 1) {
-												//	reactionToApply = FK_Reaction_Type::WeakFlight;
-												//}
+												// this was added because of Kaya's Sukeban corner infinite
+												if (numberOfRepetitions > 1) {
+													reactionToApply = FK_Reaction_Type::WeakFlight;
+												}
 											}
 											else {
 												if (numberOfRepetitions > 1) {
@@ -5254,8 +5319,6 @@ namespace fk_engine{
 										}
 									}
 									attackingPlayer->increaseComboCounter(damage, moveId, hitboxId);
-									// check if this move is inside the combo log for infinite prevention system
-	
 								}
 							}
 							// add hitbox to the HUD collection for use in z.B. training mode
@@ -5873,12 +5936,7 @@ namespace fk_engine{
 		lastSkipInputTime = now;
 		if (isEndOfMatch()){
 			winnerId = getMatchWinner();
-			if (additionalOptions.playReplay) {
-				replayFileIn.close();
-			}
-			else if (additionalOptions.saveReplay) {
-				replayFileOut.close();
-			}
+			closeReplayFiles();
 		}
 		if (winnerId != 0){
 			player1->cancelJumpVariables();
@@ -6249,6 +6307,25 @@ namespace fk_engine{
 			image->drop();
 		}
 	}
+	// play BGM
+	void FK_SceneGame::playBgm()
+	{
+		stage_bgm.play();
+	}
+	// sync animated meshes
+	void FK_SceneGame::synchronizeMeshes()
+	{
+		if (needMeshSynchronization) {
+			// synchronize objects
+			player1->synchronizeAnimatedObjects();
+			player2->synchronizeAnimatedObjects();
+			needMeshSynchronization = false;
+		}
+	}
+	bool FK_SceneGame::isProcessingCounterAttackEffect()
+	{
+		return updateCounterAttackEffectFlag;
+	}
 	// process character stats
 	void FK_SceneGame::processCharacterStats()
 	{
@@ -6279,6 +6356,16 @@ namespace fk_engine{
 	void FK_SceneGame::processArcadeAchievements(FK_SceneArcadeType arcadeType)
 	{
 		statManager.checkForArcadeAchievements(arcadeType);
+	}
+
+	void FK_SceneGame::closeReplayFiles()
+	{
+		if (additionalOptions.playReplay) {
+			replayFileIn.close();
+		}
+		else if (additionalOptions.saveReplay) {
+			replayFileOut.close();
+		}
 	}
 
 	/* update save file data */
