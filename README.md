@@ -37,7 +37,7 @@ me in case you want/need to have access to the source code.
 
 This engine runs only on Windows and uses some Windows-specific libraries and headers. 
 The engine has been developed on Windows 10, but it could probably be adapted for development on Windows 8.1 or previous. 
-I cannot offer support for this porting, as I don't have access to the relevant SDK. Please, notice that no support for Unix system is provided or planned.
+I cannot offer support for this port, as I don't have access to the relevant SDK. Please, notice that no support for Unix system is provided or planned.
 
 ## Installation
 - Download and install the [DirectX 9 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=8109);
@@ -47,19 +47,20 @@ I cannot offer support for this porting, as I don't have access to the relevant 
 - Switch the configuration to Release / Win32 (or Debug, in case of need to debug some features);
 - Compile and run the engine with the sample resources;
 - The executable is placed inside the schwarzerblitz_engine/bin directory;
-- While running in Debug mode, an additional terminal window displays some diagnostic messages.
+- While running in Debug mode, an additional terminal window displays some diagnostic messages;
+- If you want to compile your own version of the irrlicht DLL, [the full source code is available here](https://github.com/AndreaJens/irrlicht4schwarzerblitz). You'll need to replace the .lib and .dll files in the relevant folders.
 
 ## License
 Please, refer to the license files in the *license* folder, these contain all the needed details. Long story short: my code is released under a 
-[*GPLv3 license*](https://www.gnu.org/licenses/gpl-3.0.html), the irrlicht engine and SFML have their own
+[*BSD 3 clauses license*](https://fossa.com/blog/open-source-software-licenses-101-bsd-3-clause-license/), the irrlicht engine and SFML have their own
 licenses untouched, the assets (unless specified in the file *licens/credits.txt*) **cannot** be redistributed
 or uploaded to another repository - specifically, the characters, stage and music files - all rights are 
 reserved to their respective creator and they have been used with permission.
 You are allowed to create commercial derivatives of this engine as long as you comply with the above license terms 
-(quick summary: GPLv3 means that if you distribute this or your own version of this engine, even for free, 
-you must also convey the entirety of the source code to the end users).
 If you need a more permissive license, please contact me directly.
 
-## Contacts and links
+### About the precvious licensing
+Originally, this project was released under a GPL3 license, but I have failed to take into account the fact that irrlicht links to the DirectX9 SDK (arguably not open source). Thus, to allow people to link to any version of irrlicht and to legally distribute this code, I have decided to re-license my full project as a permisive BSD 3-clauses license instead. **This license still DOESN'T cover the graphic, sound and 3D assets, those are "all rights reserved" and cannot be re-released with your version of the engine**.
 
+## Contacts and links
 You can contact me through [Twitter](https://twitter.com/AndreaDProjects) or the [Schwarzerblitz Discord Server](https://discord.gg/vXKrvpV).
