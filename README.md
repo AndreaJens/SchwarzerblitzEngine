@@ -5,7 +5,7 @@ free (as in beer) 3D fighting game project built by me, Andrea "Jens" Demetrio, 
 It was originally intended as a stress relief project, a hobby I curated while pursuing my Ph.D. in physics, 
 but with time it evolved into a fully fledged game, which achieved a certain degree of success and a couple dedicated tourneys.
 Since now I am moving on to work on other projects, I have decided to publish the source code of the engine 
-under a [**GPLv3 license**](https://www.gnu.org/licenses/gpl-3.0.html), with the goal of sharing it with
+under a **[BSD 3 clauses license](https://fossa.com/blog/open-source-software-licenses-101-bsd-3-clause-license/)**, with the goal of sharing it with
 other developers who might be going down the same path and need a reference or just something to look up.
 
 ## Disclaimer
