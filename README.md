@@ -34,8 +34,7 @@ The engine uses a custom version of the [irrlicht engine](http://irrlicht.source
 as a rendering engine and input manager, and SFML 2.3.2 as a backend for audio. 
 This project can be run and compiled using Visual Studio 2017 or 2019 (I cannot provide project files for previous versions).
 Some redistributable for older versions might also be needed to run some of the DLLs included.
-Concerning the Schwarzerlicht engine, only headers and binaries are included in this repository. Please, contact
-me in case you want/need to have access to the source code.
+Concerning the Schwarzerlicht engine, only headers and binaries are included in this repository. See [this repository](https://github.com/AndreaJens/irrlicht4schwarzerblitz) if you want to compile it for yourself and/or edit it.
 
 This engine runs only on Windows and uses some Windows-specific libraries and headers. 
 The engine has been developed on Windows 10, but it could probably be adapted for development on Windows 8.1 or previous. 
