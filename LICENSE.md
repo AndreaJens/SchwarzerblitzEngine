@@ -1,4 +1,3 @@
-    
 
     *** Schwarzerblitz 3D Fighting Game Engine  ***
 
@@ -30,9 +29,8 @@
     =============== Additional Components ==============
     Please refer to the license/irrlicht/ and license/SFML/ folder for the license
     indications concerning those components. The irrlicht-schwarzerlicht engine and 
-    the SFML code and binaries are subject to their licenses and are *not* released 
-    under GNU General Public License, version 3 or higher - they instead retain their
-    own license.
+    the SFML code and binaries are subject to their own licenses, see the relevant
+	folders for more information.
 
     =============== Assets and resources ================
     Unless specificed otherwise in the Credits file, the assets and resources
