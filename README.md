@@ -24,6 +24,8 @@ this aspect before using this engine for your game.
 - Due to non-stellar optimizations, when this engine runs with 3D models with more than 5000 triangles, it might
 not reach stable 60fps on older systems. 
 - The only 3D model format that the engine can use for skeletal models (i.e. characters) is .x (directX skeletal mesh file) without normal maps. 
+- A guide to how to export models for the engine can be found [here](https://steamcommunity.com/sharedfiles/filedetails/?id=2147297081). Alternatively, YouTube video guides to export characters for the engine are available [here](https://youtu.be/74qcxNz4rtg) and [here](https://youtu.be/Uj1hG3JtTPw) respectively.
+A YouTube video guide on how to import models from the .x format is available [here](https://youtu.be/R9b0D9O4sm8).
 - irrlicht is **not** multithread. Implementing multi-threading for resource loading has not been an option.
 
 ## Notes

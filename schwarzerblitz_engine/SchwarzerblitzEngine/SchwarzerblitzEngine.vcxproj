@@ -49,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)..\SFML-2.3.2\include;$(SolutionDir)..\irrlicht\schwarzerlicht\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\SFML-2.3.2\lib;$(SolutionDir)..\irrlicht\schwarzerlicht\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
-    <TargetName>Schwarzerblitz Engine v1.3</TargetName>
+    <TargetName>Schwarzerblitz Engine v1.4.6</TargetName>
     <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
